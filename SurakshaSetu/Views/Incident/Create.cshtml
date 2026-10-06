@@ -1,0 +1,186 @@
+@model SurakshaSetu.ViewModels.CreateIncidentViewModel
+@{
+    ViewData["Title"] = "Report Incident";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+<style>
+    .form-section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .form-section-title {
+        font-weight: 800;
+        font-size: 1.15rem;
+        color: #111827;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #f3f4f6;
+        padding-bottom: 15px;
+    }
+    .form-label {
+        font-weight: 700;
+        color: #374151;
+        font-size: 0.9rem;
+    }
+    .btn-submit {
+        background-color: #1a365d;
+        color: white;
+        font-weight: 800;
+        padding: 12px 35px;
+        border-radius: 6px;
+        border: none;
+        transition: background-color 0.2s;
+    }
+    .btn-submit:hover {
+        background-color: #1e3a8a;
+    }
+    .anonymous-box {
+        background-color: #f3f4f6;
+        border-left: 4px solid #4b5563;
+        padding: 15px 20px;
+        border-radius: 4px;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #374151;
+    }
+</style>
+
+<div class="mb-4">
+    <h2 class="fw-bold" style="color: #111827;">Report a Safety Concern</h2>
+    <p class="text-muted">Tell us what happened. Your report will be handled according to campus safety procedures.</p>
+</div>
+
+<!-- enctype="multipart/form-data" is required for file uploads! -->
+<form asp-action="Create" asp-controller="Incident" method="post" enctype="multipart/form-data" id="incidentForm">
+    
+    <!-- Generates a secure Anti-forgery token -->
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4 fw-bold"></div>
+
+    <!-- 1. What happened? -->
+    <div class="form-section">
+        <h4 class="form-section-title">1. What happened?</h4>
+        <div class="mb-4">
+            <label asp-for="CategoryId" class="form-label"></label>
+            <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select border-2">
+                <option value="">[ Select Incident Category ]</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger small fw-bold"></span>
+        </div>
+        
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control border-2" rows="5" placeholder="Please provide specific details about what occurred..."></textarea>
+            <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
+        </div>
+    </div>
+
+    <!-- 2. When and Where? -->
+    <div class="form-section">
+        <h4 class="form-section-title">2. When & Where did it happen?</h4>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label asp-for="IncidentDate" class="form-label"></label>
+                <input asp-for="IncidentDate" class="form-control border-2" />
+                <span asp-validation-for="IncidentDate" class="text-danger small fw-bold"></span>
+            </div>
+            <div class="col-md-6 mt-3 mt-md-0">
+                <label asp-for="IncidentTime" class="form-label"></label>
+                <input asp-for="IncidentTime" class="form-control border-2" />
+                <span asp-validation-for="IncidentTime" class="text-danger small fw-bold"></span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="LocationId" class="form-label"></label>
+            <select asp-for="LocationId" asp-items="Model.Locations" class="form-select border-2">
+                <option value="">[ Select Campus Location ]</option>
+            </select>
+            <span asp-validation-for="LocationId" class="text-danger small fw-bold"></span>
+        </div>
+    </div>
+
+    <!-- 3. Severity & Evidence -->
+    <div class="form-section">
+        <h4 class="form-section-title">3. Severity & Evidence</h4>
+        <div class="mb-4">
+            <label asp-for="Severity" class="form-label">Severity Level</label>
+            <select asp-for="Severity" class="form-select border-2">
+                <option value="Low">Low — General concern</option>
+                <option value="Medium">Medium — Requires attention</option>
+                <option value="High">High — Serious safety concern</option>
+                <option value="Critical">Critical — Immediate/urgent safety concern</option>
+            </select>
+        </div>
+        
+        <div>
+            <label asp-for="EvidenceFile" class="form-label">Attach Supporting Evidence (Optional)</label>
+            <input asp-for="EvidenceFile" class="form-control border-2" type="file" accept=".jpg,.jpeg,.png,.pdf" />
+            <div class="form-text mt-2 text-muted fw-bold">Accepted: Images / PDF. Max size: 5MB.</div>
+        </div>
+    </div>
+
+    <!-- 4. Privacy -->
+    <div class="form-section">
+        <h4 class="form-section-title">4. Reporting Preference</h4>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" asp-for="IsAnonymous" value="false" id="modeIdentified" checked style="width: 1.2rem; height: 1.2rem;">
+            <label class="form-check-label fw-bold text-dark ms-2" for="modeIdentified" style="padding-top: 2px;">
+                Report with my identity
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="IsAnonymous" value="true" id="modeAnonymous" style="width: 1.2rem; height: 1.2rem;">
+            <label class="form-check-label fw-bold text-dark ms-2" for="modeAnonymous" style="padding-top: 2px;">
+                Report anonymously
+            </label>
+        </div>
+        
+        <div class="anonymous-box" id="anonymousWarning" style="display: none;">
+            <strong>Privacy Information:</strong> Your identity will be hidden from users who are not authorized to access restricted reporter information. Your report will still be stored securely so that authorized personnel can manage the case.
+        </div>
+    </div>
+
+    <!-- Submit Section -->
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-5">
+        <a href="/Student/Dashboard" class="btn btn-outline-secondary fw-bold px-4">Cancel</a>
+        <button type="submit" class="btn-submit" id="submitBtn">Submit Report</button>
+    </div>
+</form>
+
+@section Scripts {
+    <!-- Enable standard client-side validation using jQuery -->
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Logic to show/hide the Privacy Information box based on anonymous selection
+        const radioAnonymous = document.getElementById('modeAnonymous');
+        const radioIdentified = document.getElementById('modeIdentified');
+        const warningBox = document.getElementById('anonymousWarning');
+
+        function toggleWarning() {
+            if (radioAnonymous.checked) {
+                warningBox.style.display = 'block';
+            } else {
+                warningBox.style.display = 'none';
+            }
+        }
+
+        radioAnonymous.addEventListener('change', toggleWarning);
+        radioIdentified.addEventListener('change', toggleWarning);
+        
+        // Disable submit button after the first click to prevent duplicate database entries
+        document.getElementById('incidentForm').addEventListener('submit', function(e) {
+            // Check if form is valid using jQuery validation before disabling
+            if ($(this).valid()) {
+                const btn = document.getElementById('submitBtn');
+                btn.innerHTML = 'Submitting...';
+                btn.disabled = true;
+            }
+        });
+    </script>
+}

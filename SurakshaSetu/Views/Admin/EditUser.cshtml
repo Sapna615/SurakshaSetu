@@ -1,0 +1,126 @@
+@model SurakshaSetu.ViewModels.AdminUserEditViewModel
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex align-items-center">
+        <a href="/Admin/Users" class="btn btn-light rounded-circle shadow-sm me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <span>⬅️</span>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-1">Edit User Profile</h2>
+            <p class="text-muted mb-0">Update account details, roles, and status for @Model.FullName</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
+            <div class="card-body p-4 p-md-5">
+                
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger rounded-3 p-3 mb-4">
+                        <div asp-validation-summary="All" class="text-danger fw-bold small mb-0"></div>
+                    </div>
+                }
+
+                <form method="post" action="/Admin/EditUser">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">Personal Information</h5>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="FullName" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="FullName" class="form-control bg-light" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="Email" class="form-control bg-light" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="StudentId" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="StudentId" class="form-control bg-light" placeholder="Optional" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Department" class="form-label fw-bold text-muted small"></label>
+                            <input asp-for="Department" class="form-control bg-light" placeholder="Optional" />
+                        </div>
+                    </div>
+                    
+                    <h5 class="fw-bold text-primary mb-4 border-bottom pb-2 mt-5">Security & Authorization</h5>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small d-block mb-3">System Roles</label>
+                        <div class="row g-3">
+                            @foreach(var role in Model.AvailableRoles)
+                            {
+                                <div class="col-md-4">
+                                    <div class="form-check form-switch p-3 bg-light rounded-3 border">
+                                        <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" name="SelectedRoles" value="@role.Value" id="role_@role.Value" 
+                                               @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "")>
+                                        <label class="form-check-label fw-bold mt-1" for="role_@role.Value">@role.Text</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <label class="form-label fw-bold text-muted small d-block mb-3">Account Status</label>
+                        <div class="form-check form-switch p-3 rounded-3 border @(Model.IsActive ? "bg-success bg-opacity-10 border-success border-opacity-25" : "bg-danger bg-opacity-10 border-danger border-opacity-25")">
+                            <input class="form-check-input ms-0 me-3 mt-2" type="checkbox" role="switch" asp-for="IsActive" style="transform: scale(1.3);">
+                            <label class="form-check-label ms-1" asp-for="IsActive">
+                                <div class="fw-bold text-dark">Active Account</div>
+                                <div class="text-muted small" style="margin-top: -2px;">If disabled, the user will be locked out and cannot log in.</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a href="/Admin/Users" class="btn btn-light fw-bold px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary fw-bold px-5 shadow-sm">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3"><span class="me-2">ℹ️</span> Account Information</h6>
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="text-muted">User ID</span>
+                        <span class="fw-bold font-monospace text-secondary" style="font-size: 0.75rem;">@Model.Id</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <span class="text-muted">Current Roles</span>
+                        <span class="fw-bold">@string.Join(", ", Model.CurrentRoles)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
+            <div class="card-body p-4" style="background-color: #fef2f2; border-radius: 1rem;">
+                <h6 class="fw-bold text-danger mb-3"><span class="me-2">⚠️</span> Administrative Warning</h6>
+                <p class="small text-danger mb-0" style="opacity: 0.8;">
+                    Changes to user roles apply immediately. Be careful not to inadvertently remove your own <strong>Admin</strong> role or deactivate your own account, which could lock you out of the system.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

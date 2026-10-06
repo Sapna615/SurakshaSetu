@@ -1,0 +1,100 @@
+<canvas id="global-interactive-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;"></canvas>
+
+<script>
+    (function() {
+        const bgCanvas = document.getElementById('global-interactive-bg');
+        if(!bgCanvas) return;
+        const bgCtx = bgCanvas.getContext('2d');
+        
+        let bgWidth, bgHeight;
+        let ambientOrbs = [];
+        let globMouse = { x: -1000, y: -1000 };
+        
+        function resizeBg() {
+            bgWidth = bgCanvas.width = window.innerWidth;
+            bgHeight = bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBg);
+        resizeBg();
+
+        document.addEventListener('mousemove', (e) => {
+            globMouse.x = e.clientX;
+            globMouse.y = e.clientY;
+        });
+
+        class AmbientOrb {
+            constructor() {
+                this.x = Math.random() * bgWidth;
+                this.y = Math.random() * bgHeight;
+                this.radius = Math.random() * 150 + 50;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                // Soft gradient colors for light theme (blues, teals, soft purples)
+                const colors = [
+                    'rgba(59, 130, 246, 0.15)',  // Blue
+                    'rgba(14, 165, 233, 0.15)',  // Sky
+                    'rgba(99, 102, 241, 0.12)', // Indigo
+                    'rgba(45, 212, 191, 0.12)'  // Teal
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.targetRadius = this.radius;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bounce off edges gently
+                if (this.x < -200 || this.x > bgWidth + 200) this.vx *= -1;
+                if (this.y < -200 || this.y > bgHeight + 200) this.vy *= -1;
+
+                // Interact with mouse (expand and glow when near)
+                const dx = globMouse.x - this.x;
+                const dy = globMouse.y - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 300) {
+                    this.targetRadius = this.radius * 1.5;
+                    this.x -= dx * 0.005; // Slightly move away from mouse
+                    this.y -= dy * 0.005;
+                } else {
+                    this.targetRadius = this.radius;
+                }
+                
+                // Smooth radius transition
+                this.radius += (this.targetRadius - this.radius) * 0.05;
+            }
+            draw() {
+                const gradient = bgCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                
+                bgCtx.beginPath();
+                bgCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                bgCtx.fillStyle = gradient;
+                bgCtx.fill();
+            }
+        }
+
+        // Initialize orbs
+        for (let i = 0; i < 15; i++) {
+            ambientOrbs.push(new AmbientOrb());
+        }
+
+        function animateBg() {
+            // Clear canvas
+            bgCtx.clearRect(0, 0, bgWidth, bgHeight);
+            
+            // Draw all orbs
+            bgCtx.globalCompositeOperation = 'multiply';
+            for (let i = 0; i < ambientOrbs.length; i++) {
+                ambientOrbs[i].update();
+                ambientOrbs[i].draw();
+            }
+            bgCtx.globalCompositeOperation = 'source-over';
+            
+            requestAnimationFrame(animateBg);
+        }
+        
+        animateBg();
+    })();
+</script>

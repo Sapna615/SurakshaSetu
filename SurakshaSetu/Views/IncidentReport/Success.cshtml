@@ -1,0 +1,139 @@
+@model SurakshaSetu.Models.SafetyReport
+@{
+    ViewData["Title"] = "Report Submitted Successfully";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/safety-reports.css" />
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .success-icon {
+            font-size: 60px;
+            color: #16a34a;
+            margin-bottom: 20px;
+        }
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+        .success-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .report-summary-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .summary-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .summary-label {
+            font-weight: 600;
+            width: 120px;
+            color: #4b5563;
+        }
+        .summary-value {
+            flex: 1;
+            color: #111827;
+        }
+        .btn-group-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .btn-main {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-main:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+    </style>
+}
+
+<div class="success-container">
+    <div class="success-icon">✓</div>
+    <h1 class="success-title">Report Submitted Successfully</h1>
+    <p class="success-subtitle">Your safety report has been received and is currently Pending review.</p>
+
+    <div class="report-summary-box">
+        <div class="summary-row">
+            <div class="summary-label">Report ID:</div>
+            <div class="summary-value" style="font-weight: 700; color: #2563eb;">@Model.ReportId</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Status:</div>
+            <div class="summary-value">@Model.Status</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Category:</div>
+            <div class="summary-value">@Model.IncidentCategory</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Location:</div>
+            <div class="summary-value">@Model.IncidentLocation</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Submitted:</div>
+            <div class="summary-value">@Model.CreatedAt.ToLocalTime().ToString("dd MMMM yyyy, hh:mm tt")</div>
+        </div>
+        <div class="summary-row">
+            <div class="summary-label">Privacy:</div>
+            <div class="summary-value">
+                @if (Model.IsAnonymous)
+                {
+                    <span style="color: #059669; font-weight: 600;">🔒 Submitted Anonymously</span>
+                }
+                else
+                {
+                    <span>Normal Report</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <p style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">
+        Please keep your Report ID safe. You can use it to track the status of your report.
+    </p>
+
+    <div class="btn-group-custom">
+        <a asp-action="Details" asp-route-id="@Model.ReportId" class="btn-main">View Report Details</a>
+        <a asp-action="MyReports" class="btn-secondary">View My Reports</a>
+        <a asp-action="Create" class="btn-secondary">Report Another Concern</a>
+        <a asp-controller="StudentDashboard" asp-action="Index" class="btn-secondary" style="background: transparent; border: 1px solid #d1d5db;">Back to Dashboard</a>
+    </div>
+</div>

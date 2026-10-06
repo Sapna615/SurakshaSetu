@@ -1,0 +1,451 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Welcome to SurakshaSetu";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Campus Safety</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS for grid structure -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--secondary);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, rgba(37,99,235,0) 70%);
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0) 70%);
+            z-index: 0;
+        }
+
+        .navbar-custom {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        
+        .brand-icon {
+            font-size: 2rem;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 0 4rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            color: var(--secondary);
+        }
+
+        .hero-title span {
+            background: linear-gradient(to right, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #475569;
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+        }
+        
+        .btn-outline-custom {
+            background-color: white;
+            color: var(--secondary);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn-outline-custom:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            color: var(--secondary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Features Section */
+        .features-grid {
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+        }
+        
+        .icon-blue { background: #eff6ff; color: #3b82f6; }
+        .icon-red { background: #fef2f2; color: #ef4444; }
+        .icon-purple { background: #faf5ff; color: #a855f7; }
+        .icon-amber { background: #fffbeb; color: #f59e0b; }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--secondary);
+        }
+
+        .feature-desc {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Floating UI Elements (Decorative) */
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
+            animation: float 6s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .fc-1 {
+            top: 25%;
+            right: 5%;
+            width: 280px;
+        }
+
+        .fc-2 {
+            bottom: 15%;
+            right: 15%;
+            width: 320px;
+            animation-delay: -3s;
+        }
+
+        @@keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-row:last-child { margin-bottom: 0; }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .stat-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-val { font-weight: 700; color: var(--secondary); }
+        .stat-lbl { font-size: 0.75rem; color: #64748b; }
+
+        .alert-toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+        
+        .alert-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Mobile Adjustments */
+        @@media (max-width: 991px) {
+            .hero-title { font-size: 3rem; }
+            .floating-card { display: none; }
+            .navbar-custom { padding: 1.5rem 2rem; }
+            .hero-content { padding: 0 2rem; margin-top: 80px; }
+            .action-buttons { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <nav class="navbar-custom">
+            <a href="#" class="brand-logo">
+                <span class="brand-icon">🛡️</span>
+                SurakshaSetu
+            </a>
+            <a href="/Identity/Account/Login" class="btn-custom btn-outline-custom py-2 px-4">
+                Sign In
+            </a>
+        </nav>
+
+        <!-- Decorative Floating Cards -->
+        <div class="floating-card fc-1">
+            <div class="fw-bold mb-3" style="font-size: 0.9rem;">Campus Safety Status</div>
+            <div class="stat-row">
+                <div class="stat-icon">✓</div>
+                <div class="stat-text">
+                    <span class="stat-val">12</span>
+                    <span class="stat-lbl">Active Patrols</span>
+                </div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">⏱</div>
+                <div class="stat-text">
+                    <span class="stat-val">2.4 mins</span>
+                    <span class="stat-lbl">Avg Response Time</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="floating-card fc-2">
+            <div class="alert-toast">
+                <div class="alert-dot"></div>
+                <div>
+                    <div style="font-weight: 600; font-size: 0.85rem; color: #991b1b;">Campus Alert System</div>
+                    <div style="font-size: 0.75rem; color: #b91c1c;">Instantly broadcasts critical warnings to all students.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-badge">
+                        <span>✨</span> Next-Gen Campus Safety Platform
+                    </div>
+                    <h1 class="hero-title">
+                        Empowering a <span>Safer</span> Campus Environment.
+                    </h1>
+                    <p class="hero-subtitle">
+                        SurakshaSetu is an integrated security and reporting platform designed to protect students, streamline incident response, and provide immediate support exactly when it's needed.
+                    </p>
+                    
+                    <div class="action-buttons">
+                        <a href="/Identity/Account/Login" class="btn-custom btn-primary-custom">
+                            Access Portal
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <a href="#features" class="btn-custom btn-outline-custom">
+                            Explore Features
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mt-5 mt-lg-0 features-grid">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon icon-red">🚨</div>
+                                <h3 class="feature-title">Emergency SOS</h3>
+                                <p class="feature-desc">Instantly dispatch security personnel to your exact GPS location with a single tap.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 40px;">
+                            <div class="feature-card">
+                                <div class="feature-icon icon-purple">🕵️</div>
+                                <h3 class="feature-title">Anonymous Reports</h3>
+                                <p class="feature-desc">Safely report incidents without revealing your identity, protecting you from retaliation.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon icon-blue">🧠</div>
+                                <h3 class="feature-title">Counseling Center</h3>
+                                <p class="feature-desc">Directly connect with mental health professionals and grievance officers for support.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 40px;">
+                            <div class="feature-card">
+                                <div class="feature-icon icon-amber">⚠️</div>
+                                <h3 class="feature-title">Safety Alerts</h3>
+                                <p class="feature-desc">Receive real-time notifications about campus threats, weather events, or road closures.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background-color: var(--secondary); color: rgba(255,255,255,0.7); padding: 40px 0; text-align: center;">
+        <div class="container">
+            <div class="brand-logo justify-content-center mb-3" style="color: white;">
+                <span class="brand-icon">🛡️</span>
+                SurakshaSetu
+            </div>
+            <p style="font-size: 0.9rem; max-width: 500px; margin: 0 auto 20px auto;">
+                A comprehensive digital safety net for educational institutions. Designed for students, security personnel, and administrators.
+            </p>
+            <div style="font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                &copy; 2026 SurakshaSetu Platform. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

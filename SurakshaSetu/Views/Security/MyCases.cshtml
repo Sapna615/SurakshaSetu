@@ -1,0 +1,69 @@
+@model SurakshaSetu.ViewModels.SecurityIncidentQueueViewModel
+@{
+    Layout = "_SecurityLayout";
+    ViewData["Title"] = "My Assigned Cases";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 text-gray-800">My Assigned Cases</h2>
+        <p class="text-muted">Manage safety incidents that have been assigned to you.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Last Updated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Incidents)
+                    {
+                        <tr>
+                            <td class="fw-bold">@item.ReportId</td>
+                            <td>@item.IncidentCategory</td>
+                            <td>@item.IncidentLocation</td>
+                            <td>
+                                @if(item.Severity == "Critical") {
+                                    <span class="badge bg-danger">Critical</span>
+                                } else if(item.Severity == "High") {
+                                    <span class="badge bg-warning text-dark">High</span>
+                                } else if(item.Severity == "Medium") {
+                                    <span class="badge bg-info text-dark">Medium</span>
+                                } else {
+                                    <span class="badge bg-secondary">Low</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">@item.Status</span>
+                            </td>
+                            <td><span title="@item.UpdatedAt?.ToLocalTime()">@(item.UpdatedAt?.ToLocalTime().ToString("dd MMM yyyy, HH:mm") ?? item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy"))</span></td>
+                            <td>
+                                <a asp-controller="Security" asp-action="IncidentDetails" asp-route-id="@item.SafetyReportId" class="btn btn-sm btn-outline-primary">Open Case</a>
+                            </td>
+                        </tr>
+                    }
+                    @if(!Model.Incidents.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <div style="font-size: 2rem; margin-bottom: 10px;">📋</div>
+                                You have no active assigned cases at this time.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

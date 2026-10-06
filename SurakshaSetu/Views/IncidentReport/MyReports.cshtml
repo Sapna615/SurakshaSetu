@@ -1,0 +1,197 @@
+@model SurakshaSetu.ViewModels.SafetyReportListViewModel
+@{
+    ViewData["Title"] = "My Safety Reports";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/safety-reports.css" />
+}
+
+<div class="report-dashboard-container">
+    <div class="report-header">
+        <h1>MY SAFETY REPORTS</h1>
+        <p>Track and manage the safety concerns you have submitted.</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="summary-card">
+            <h3>Total Reports</h3>
+            <div class="count">@Model.TotalReports</div>
+        </div>
+        <div class="summary-card">
+            <h3>Pending</h3>
+            <div class="count" style="color: #d97706;">@Model.PendingCount</div>
+        </div>
+        <div class="summary-card">
+            <h3>Under Review</h3>
+            <div class="count" style="color: #2563eb;">@Model.UnderReviewCount</div>
+        </div>
+        <div class="summary-card">
+            <h3>Investigation</h3>
+            <div class="count" style="color: #7c3aed;">@Model.InvestigationCount</div>
+        </div>
+        <div class="summary-card">
+            <h3>Action Taken</h3>
+            <div class="count" style="color: #4f46e5;">@Model.ActionTakenCount</div>
+        </div>
+        <div class="summary-card">
+            <h3>Resolved</h3>
+            <div class="count" style="color: #16a34a;">@Model.ResolvedCount</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <form method="get" asp-action="MyReports">
+            <div class="search-bar-container">
+                <input type="text" asp-for="Filter.Search" class="search-input" placeholder="🔎 Search by Report ID, category, location, or description..." />
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select asp-for="Filter.Status" class="filter-select">
+                        <option value="All">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Under Review">Under Review</option>
+                        <option value="Investigation">Investigation</option>
+                        <option value="Action Taken">Action Taken</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Withdrawn">Withdrawn</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select asp-for="Filter.Category" class="filter-select">
+                        <option value="All">All Categories</option>
+                        <option value="Harassment">Harassment</option>
+                        <option value="Stalking">Stalking</option>
+                        <option value="Sexual Harassment">Sexual Harassment</option>
+                        <option value="Unsafe Area">Unsafe Area</option>
+                        <option value="Suspicious Activity">Suspicious Activity</option>
+                        <option value="Ragging">Ragging</option>
+                        <option value="Hostel Safety">Hostel Safety</option>
+                        <option value="Women's Safety">Women's Safety</option>
+                        <option value="Transport Safety">Transport Safety</option>
+                        <option value="Cyber Harassment">Cyber Harassment</option>
+                        <option value="Cyber Safety">Cyber Safety</option>
+                        <option value="Lighting Problem">Lighting Problem</option>
+                        <option value="Infrastructure Issue">Infrastructure Issue</option>
+                        <option value="Emergency Request">Emergency Request</option>
+                        <option value="Emergency">Emergency</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Severity</label>
+                    <select asp-for="Filter.Severity" class="filter-select">
+                        <option value="All">All Severities</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Date Range</label>
+                    <select asp-for="Filter.DateRange" class="filter-select">
+                        <option value="All Time">All Time</option>
+                        <option value="Today">Today</option>
+                        <option value="Last 7 Days">Last 7 Days</option>
+                        <option value="Last 30 Days">Last 30 Days</option>
+                        <option value="Last 3 Months">Last 3 Months</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Sort By</label>
+                    <select asp-for="Filter.SortBy" class="filter-select">
+                        <option value="Newest">Newest First</option>
+                        <option value="Oldest">Oldest First</option>
+                        <option value="Recently Updated">Recently Updated</option>
+                        <option value="Severity">Highest Severity</option>
+                        <option value="Status">Status</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-filter">Apply Filters</button>
+            <a asp-action="MyReports" class="btn-view" style="margin-left: 10px;">Clear</a>
+        </form>
+    </div>
+
+    <!-- Reports List -->
+    <div class="report-list">
+        @if (!Model.Reports.Any())
+        {
+            <div style="text-align: center; padding: 40px; background: white; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <div style="font-size: 40px; margin-bottom: 10px;">📋</div>
+                <h3>No safety reports found</h3>
+                <p style="color: #6b7280; margin-bottom: 20px;">You have not submitted any safety concerns matching this criteria.</p>
+                <a asp-action="Create" class="btn-filter" style="text-decoration: none;">Report a Safety Concern</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var report in Model.Reports)
+            {
+                <div class="report-card">
+                    <div class="report-card-main">
+                        <div class="report-card-id">@report.ReportId</div>
+                        <div class="report-card-category">@report.IncidentCategory</div>
+                        
+                        <div class="report-card-details">
+                            <span>📍 @report.IncidentLocation</span>
+                            <span>📅 @report.IncidentDate.ToString("dd MMM yyyy")</span>
+                            <span>🕐 @report.IncidentTime</span>
+                        </div>
+
+                        <div class="report-card-meta">
+                            <span class="badge badge-severity-@report.Severity.ToLower()">Severity: @report.Severity.ToUpper()</span>
+                            
+                            @{
+                                var statusClass = report.Status.ToLower().Replace(" ", "-");
+                            }
+                            <span class="badge badge-status-@statusClass">Status: @report.Status.ToUpper()</span>
+                            
+                            @if (report.IsAnonymous)
+                            {
+                                <span class="badge badge-private">🔒 Private Report</span>
+                            }
+
+                            <span style="color: #9ca3af;">Last updated: @(report.UpdatedAt?.ToString("dd MMM yyyy, hh:mm tt") ?? report.CreatedAt.ToString("dd MMM yyyy, hh:mm tt"))</span>
+                        </div>
+                    </div>
+
+                    <div class="report-card-actions">
+                        <a asp-action="Details" asp-route-id="@report.ReportId" class="btn-view">View Details</a>
+                    </div>
+                </div>
+            }
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="pagination">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <a href="?page=@(Model.CurrentPage - 1)&Search=@Model.Filter.Search&Status=@Model.Filter.Status&Category=@Model.Filter.Category&Severity=@Model.Filter.Severity&DateRange=@Model.Filter.DateRange&SortBy=@Model.Filter.SortBy" class="page-btn">Previous</a>
+                    }
+                    
+                    <span style="font-size: 14px; color: #6b7280;">Showing page @Model.CurrentPage of @Model.TotalPages</span>
+
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <a href="?page=@(Model.CurrentPage + 1)&Search=@Model.Filter.Search&Status=@Model.Filter.Status&Category=@Model.Filter.Category&Severity=@Model.Filter.Severity&DateRange=@Model.Filter.DateRange&SortBy=@Model.Filter.SortBy" class="page-btn">Next</a>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>

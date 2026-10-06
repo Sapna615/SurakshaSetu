@@ -1,0 +1,107 @@
+@model SurakshaSetu.ViewModels.AdminLocationFormViewModel
+@{
+    bool isCreate = Model.CampusLocationId == 0;
+    ViewData["Title"] = isCreate ? "Add Location" : "Edit Location";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex align-items-center">
+        <a href="/Admin/Locations" class="btn btn-light rounded-circle shadow-sm me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <span>⬅️</span>
+        </a>
+        <div>
+            <h2 class="fw-bold mb-1">@(isCreate ? "Add Campus Location" : "Edit Campus Location")</h2>
+            <p class="text-muted mb-0">@(isCreate ? "Register a new building or point of interest in the campus map system" : "Update details for an existing campus location")</p>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
+            <div class="card-body p-4 p-md-5">
+                
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger rounded-3 p-3 mb-4">
+                        <div asp-validation-summary="All" class="text-danger fw-bold small mb-0"></div>
+                    </div>
+                }
+
+                <form method="post" action="@(isCreate ? "/Admin/CreateLocation" : "/Admin/EditLocation")">
+                    @Html.AntiForgeryToken()
+                    @if (!isCreate)
+                    {
+                        <input type="hidden" asp-for="CampusLocationId" />
+                    }
+                    
+                    <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">Location Details</h5>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-7">
+                            <label asp-for="Name" class="form-label fw-bold text-muted small">Location Name <span class="text-danger">*</span></label>
+                            <input asp-for="Name" class="form-control bg-light fs-5 fw-bold" placeholder="e.g. Science Building A" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <label asp-for="LocationType" class="form-label fw-bold text-muted small">Type <span class="text-danger">*</span></label>
+                            <select asp-for="LocationType" asp-items="Model.AvailableTypes" class="form-select bg-light"></select>
+                            <span asp-validation-for="LocationType" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label fw-bold text-muted small">Description (Optional)</label>
+                            <textarea asp-for="Description" class="form-control bg-light" rows="3" placeholder="Additional details or navigation instructions..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    
+                    <h5 class="fw-bold text-primary mb-4 border-bottom pb-2 mt-5">Coordinates (Optional)</h5>
+                    <p class="small text-muted mb-3">Add GPS coordinates to display this location on the interactive campus safety map.</p>
+                    
+                    <div class="row g-3 mb-5">
+                        <div class="col-md-6">
+                            <label asp-for="Latitude" class="form-label fw-bold text-muted small"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">LAT</span>
+                                <input asp-for="Latitude" class="form-control bg-light font-monospace" type="number" step="any" placeholder="e.g. 40.7128" />
+                            </div>
+                            <span asp-validation-for="Latitude" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Longitude" class="form-label fw-bold text-muted small"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">LNG</span>
+                                <input asp-for="Longitude" class="form-control bg-light font-monospace" type="number" step="any" placeholder="e.g. -74.0060" />
+                            </div>
+                            <span asp-validation-for="Longitude" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 border p-3 rounded-3 @(Model.IsActive ? "bg-success bg-opacity-10 border-success border-opacity-25" : "bg-danger bg-opacity-10 border-danger border-opacity-25")">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ms-0 me-3 mt-2" type="checkbox" role="switch" asp-for="IsActive" style="transform: scale(1.3);">
+                            <label class="form-check-label ms-1" asp-for="IsActive">
+                                <div class="fw-bold text-dark">Location is Active</div>
+                                <div class="text-muted small" style="margin-top: -2px;">If disabled, this location will not appear in dropdowns or on the map.</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a href="/Admin/Locations" class="btn btn-light fw-bold px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary fw-bold px-5 shadow-sm">
+                            <i class="bi bi-save me-2"></i> @(isCreate ? "Add Location" : "Save Changes")
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

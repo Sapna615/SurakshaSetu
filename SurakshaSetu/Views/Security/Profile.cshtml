@@ -1,0 +1,203 @@
+@model SurakshaSetu.ViewModels.SecurityProfileViewModel
+@{
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : 
+             User.IsInRole("Admin") ? "_AdminLayout" : 
+             User.IsInRole("Student") ? "_DashboardLayout" : "_SecurityLayout";
+    ViewData["Title"] = "My Profile";
+}
+
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 16px 16px 0 0;
+        position: relative;
+    }
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        border: 4px solid #eff6ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        position: absolute;
+        bottom: -50px;
+        left: 40px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .profile-body {
+        padding: 70px 40px 40px 40px;
+        background-color: white;
+        border-radius: 0 0 16px 16px;
+    }
+    .info-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #f3f4f6;
+        padding-bottom: 10px;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 text-gray-800">Security Personnel Profile</h2>
+        <p class="text-muted">Manage your security access and personal information.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="profile-header">
+                <h3 class="mb-0 fw-bold">@Model.FullName</h3>
+                <p class="mb-0 opacity-75">@Model.Department Division</p>
+                
+                <div class="profile-avatar text-primary">
+                    👤
+                </div>
+            </div>
+            <div class="profile-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">@Model.FullName</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">@Model.Email</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-label">Department</div>
+                        <div class="info-value">@Model.Department</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-label">Role Assignments</div>
+                        <div class="info-value">
+                            @foreach(var role in Model.Roles)
+                            {
+                                <span class="badge bg-primary me-1">@role</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-label">Account Status</div>
+                        <div class="info-value text-success">
+                            <i class="bi bi-check-circle-fill me-1"></i> Active & Verified
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value">@Model.CreatedAt.ToString("MMMM yyyy")</div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <a href="/@(ViewContext.RouteData.Values["Controller"]?.ToString())/ChangePassword" class="btn btn-outline-primary">Change Password</a>
+                    <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#notificationPrefsModal">Update Notification Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold"><span style="color:#f59e0b;">🛡️</span> Security Clearance</h5>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted small">Based on your current role assignment, you have the following system permissions:</p>
+                
+                <ul class="list-group list-group-flush mt-3">
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 mb-2">
+                        <div>
+                            <div class="fw-bold text-dark">Access Incident Queue</div>
+                            <div class="text-muted small">View all campus safety reports</div>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Granted</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 mb-2">
+                        <div>
+                            <div class="fw-bold text-dark">Update Case Status</div>
+                            <div class="text-muted small">Acknowledge, assign, and resolve</div>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Granted</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 mb-2">
+                        <div>
+                            <div class="fw-bold text-dark">Emergency Dispatch</div>
+                            <div class="text-muted small">Respond to active SOS alerts</div>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Granted</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 mb-2 opacity-50">
+                        <div>
+                            <div class="fw-bold text-dark">System Configuration</div>
+                            <div class="text-muted small">Modify roles and permissions</div>
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">Denied</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Preferences Modal -->
+<div class="modal fade" id="notificationPrefsModal" tabindex="-1" aria-labelledby="notificationPrefsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold" id="notificationPrefsModalLabel">
+                    <span style="color:#f59e0b; margin-right:8px;">🔔</span> Notification Preferences
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <p class="text-muted small mb-4">Choose how you want to be notified about campus safety updates and emergency alerts.</p>
+                
+                <div class="list-group list-group-flush rounded-3 border mb-3">
+                    <label class="list-group-item d-flex gap-3 py-3" style="cursor: pointer;">
+                        <input class="form-check-input flex-shrink-0 mt-1" type="checkbox" checked style="transform: scale(1.2);">
+                        <span>
+                            <strong class="d-block text-dark">Email Alerts</strong>
+                            <span class="d-block text-muted small">Receive immediate email notifications for High Priority safety alerts.</span>
+                        </span>
+                    </label>
+                    <label class="list-group-item d-flex gap-3 py-3" style="cursor: pointer;">
+                        <input class="form-check-input flex-shrink-0 mt-1" type="checkbox" checked style="transform: scale(1.2);">
+                        <span>
+                            <strong class="d-block text-dark">SMS / Text Messages</strong>
+                            <span class="d-block text-muted small">Receive text messages for Emergency SOS and critical campus lockdowns.</span>
+                        </span>
+                    </label>
+                    <label class="list-group-item d-flex gap-3 py-3" style="cursor: pointer;">
+                        <input class="form-check-input flex-shrink-0 mt-1" type="checkbox" style="transform: scale(1.2);">
+                        <span>
+                            <strong class="d-block text-dark">Weekly Summary</strong>
+                            <span class="d-block text-muted small">Receive a weekly digest of low priority infrastructure & transport notices.</span>
+                        </span>
+                    </label>
+                </div>
+                
+                <div class="text-end mt-4">
+                    <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal" onclick="alert('Preferences successfully saved!');">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1601 @@
+@model SurakshaSetu.ViewModels.EmergencyContactsViewModel
+
+@{
+    ViewData["Title"] = "Emergency Contacts";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+<style>
+
+    /* ============================================================
+       PAGE
+       ============================================================ */
+
+    .ec-page {
+        max-width: 1150px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .ec-kicker {
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: #2563eb;
+        text-transform: uppercase;
+    }
+
+    .ec-title {
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: #111827;
+        margin: 5px 0 8px;
+    }
+
+    .ec-subtitle {
+        color: #6b7280;
+        font-size: .95rem;
+        margin-bottom: 30px;
+    }
+
+
+    /* ============================================================
+       EMERGENCY BANNER
+       ============================================================ */
+
+    .ec-danger {
+        background: linear-gradient(
+            135deg,
+            #fff1f2,
+            #fff7f7
+        );
+
+        border: 1px solid #fecdd3;
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .ec-danger-title {
+        color: #be123c;
+        font-weight: 800;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .ec-danger-text {
+        color: #4b5563;
+        margin: 0;
+        font-size: .85rem;
+        line-height: 1.5;
+    }
+
+
+    /* ============================================================
+       SEARCH
+       ============================================================ */
+
+    .ec-search-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .ec-search {
+        flex: 1;
+        padding: 13px 16px;
+        border: 1px solid #dbe1e8;
+        border-radius: 9px;
+        outline: none;
+        font-size: .9rem;
+    }
+
+    .ec-search:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+    }
+
+    .ec-category {
+        width: 220px;
+        padding: 13px;
+        border: 1px solid #dbe1e8;
+        border-radius: 9px;
+        background: #fff;
+    }
+
+
+    /* ============================================================
+       CONTACTS
+       ============================================================ */
+
+    .ec-contact {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 20px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .ec-icon {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: #f1f5f9;
+        font-size: 1.25rem;
+    }
+
+    .ec-info {
+        flex: 1;
+    }
+
+    .ec-name-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
+    .ec-name {
+        margin: 0;
+        font-size: .98rem;
+        font-weight: 750;
+        color: #111827;
+    }
+
+    .ec-badge {
+        font-size: .65rem;
+        padding: 3px 8px;
+        border-radius: 20px;
+        color: #2563eb;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    .ec-description {
+        margin: 0 0 6px;
+        color: #6b7280;
+        font-size: .82rem;
+    }
+
+    .ec-meta {
+        color: #9ca3af;
+        font-size: .72rem;
+        display: flex;
+        gap: 15px;
+    }
+
+    .ec-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .ec-small-btn {
+        border: 0;
+        text-decoration: none;
+        padding: 7px 15px;
+        border-radius: 20px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: .75rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .ec-small-btn:hover {
+        background: #dbeafe;
+    }
+
+
+    /* ============================================================
+       SECTION
+       ============================================================ */
+
+    .ec-section-title {
+        margin: 40px 0 18px;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #111827;
+    }
+
+
+    /* ============================================================
+       WHO TO CONTACT
+       ============================================================ */
+
+    .ec-who-grid {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 15px;
+    }
+
+    .ec-who-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px;
+        background: #fff;
+    }
+
+    .ec-who-icon {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+
+    .ec-who-title {
+        font-weight: 750;
+        color: #111827;
+        font-size: .9rem;
+        margin-bottom: 5px;
+    }
+
+    .ec-who-text {
+        color: #6b7280;
+        font-size: .77rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+
+    /* ============================================================
+       ACTION CARDS
+       ============================================================ */
+
+    .ec-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 15px;
+    }
+
+    .ec-action-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        background: #fff;
+    }
+
+    .ec-action-icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .ec-action-title {
+        font-weight: 750;
+        color: #111827;
+        font-size: .9rem;
+    }
+
+    .ec-action-text {
+        font-size: .76rem;
+        color: #6b7280;
+        line-height: 1.5;
+        min-height: 55px;
+    }
+
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+
+    .ec-btn {
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: .8rem;
+        font-weight: 750;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .ec-btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    .ec-btn-primary:hover {
+        background: #1d4ed8;
+        color: white;
+    }
+
+    .ec-btn-danger {
+        background: #dc2626;
+        color: white;
+    }
+
+    .ec-btn-danger:hover {
+        background: #b91c1c;
+    }
+
+    .ec-btn-light {
+        background: white;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+
+    /* ============================================================
+       INFORMATION
+       ============================================================ */
+
+    .ec-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 15px;
+    }
+
+    .ec-info-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .ec-info-box h4 {
+        font-size: .9rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .ec-info-box p,
+    .ec-info-box li {
+        font-size: .78rem;
+        color: #64748b;
+        line-height: 1.6;
+    }
+
+
+    /* ============================================================
+       REPORT MODAL
+       ============================================================ */
+
+    .report-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,.68);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 20px;
+    }
+
+    .report-overlay.active {
+        display: flex;
+    }
+
+    .report-modal {
+        background: white;
+        width: 100%;
+        max-width: 680px;
+        max-height: 92vh;
+        overflow-y: auto;
+        border-radius: 18px;
+        box-shadow: 0 30px 80px rgba(0,0,0,.25);
+    }
+
+    .report-header {
+        padding: 22px 25px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .report-header h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .report-close {
+        width: 35px;
+        height: 35px;
+        border: 0;
+        border-radius: 50%;
+        background: #f3f4f6;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .report-body {
+        padding: 25px;
+    }
+
+    .report-group {
+        margin-bottom: 18px;
+    }
+
+    .report-label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: .82rem;
+        font-weight: 750;
+        color: #374151;
+    }
+
+    .report-input {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        outline: none;
+        font-size: .85rem;
+        background: white;
+    }
+
+    .report-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+
+    textarea.report-input {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .report-two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .anonymous-option {
+        padding: 15px;
+        border: 1px solid #dbeafe;
+        background: #eff6ff;
+        border-radius: 10px;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .anonymous-option input {
+        margin-top: 4px;
+    }
+
+    .anonymous-option strong {
+        font-size: .82rem;
+        display: block;
+    }
+
+    .anonymous-option small {
+        color: #64748b;
+        display: block;
+        margin-top: 3px;
+    }
+
+    .report-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+
+    /* ============================================================
+       SUCCESS TOAST
+       ============================================================ */
+
+    .report-success {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        width: 370px;
+        background: white;
+        border-left: 5px solid #16a34a;
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.18);
+        z-index: 100000;
+        display: none;
+    }
+
+    .report-success.show {
+        display: block;
+    }
+
+    .report-success-title {
+        color: #15803d;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .report-success-text {
+        color: #4b5563;
+        font-size: .82rem;
+    }
+
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @@media(max-width:900px) {
+
+        .ec-who-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .ec-actions-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+    }
+
+    @@media(max-width:650px) {
+
+        .ec-page {
+            padding: 22px;
+        }
+
+        .ec-danger {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ec-search-row {
+            flex-direction: column;
+        }
+
+        .ec-category {
+            width: 100%;
+        }
+
+        .ec-contact {
+            align-items: flex-start;
+        }
+
+        .ec-actions {
+            flex-direction: column;
+        }
+
+        .ec-who-grid,
+        .ec-actions-grid,
+        .ec-info-grid,
+        .report-two-column {
+            grid-template-columns: 1fr;
+        }
+
+        .report-success {
+            left: 15px;
+            right: 15px;
+            width: auto;
+        }
+
+    }
+
+</style>
+
+
+<div class="ec-page">
+
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+
+    <div class="ec-kicker">
+        24x7 Emergency & Support Center
+    </div>
+
+    <h1 class="ec-title">
+        Emergency Contacts
+    </h1>
+
+    <p class="ec-subtitle">
+        Find the right campus support quickly, locate safety points,
+        report concerns and request emergency assistance.
+    </p>
+
+
+    <!-- ============================================================
+         EMERGENCY BANNER
+         ============================================================ -->
+
+    <div class="ec-danger">
+
+        <div>
+
+            <div class="ec-danger-title">
+                🚨 Immediate Danger?
+            </div>
+
+            <p class="ec-danger-text">
+                If you or someone else is in immediate danger,
+                move to a safer location if possible and contact
+                campus security or the appropriate emergency service.
+            </p>
+
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-danger"
+                onclick="activateSOS()">
+
+                🚨 Activate SOS
+
+            </button>
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-light"
+                onclick="openSafetyMap()">
+
+                📍 Safety Map
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         SEARCH
+         ============================================================ -->
+
+    <div class="ec-search-row">
+
+        <input
+            type="search"
+            id="contactSearch"
+            class="ec-search"
+            placeholder="🔎 Search security, medical, hostel, counselling..." />
+
+        <select
+            id="categoryFilter"
+            class="ec-category">
+
+            <option value="All">
+                All Support
+            </option>
+
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category">
+                    @category
+                </option>
+            }
+
+        </select>
+
+    </div>
+
+
+    <!-- ============================================================
+         CONTACT LIST
+         ============================================================ -->
+
+    <div id="contactsList">
+
+        @foreach (var contact in Model.Contacts)
+        {
+            <div
+                class="ec-contact"
+                data-category="@contact.Category"
+                data-search="@($"{contact.Name} {contact.Category} {contact.Description} {contact.Location} {contact.Department} {contact.Role}")">
+
+                <div class="ec-icon">
+                    @GetIconForCategory(contact.Category)
+                </div>
+
+                <div class="ec-info">
+
+                    <div class="ec-name-row">
+
+                        <h3 class="ec-name">
+                            @contact.Name
+                        </h3>
+
+                        <span class="ec-badge">
+                            @contact.Category
+                        </span>
+
+                    </div>
+
+                    <p class="ec-description">
+                        @contact.Description
+                    </p>
+
+                    <div class="ec-meta">
+
+                        @if (contact.Is24x7)
+                        {
+                            <span>🕐 24x7</span>
+                        }
+                        else if (!string.IsNullOrWhiteSpace(contact.Availability))
+                        {
+                            <span>
+                                🕐 @contact.Availability
+                            </span>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(contact.Location))
+                        {
+                            <span>
+                                📍 @contact.Location
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="ec-actions">
+
+                    @if (!string.IsNullOrWhiteSpace(contact.PhoneNumber))
+                    {
+                        <a
+                            class="ec-small-btn"
+                            href="tel:@contact.PhoneNumber.Replace(" ", "")">
+
+                            ☎ Contact
+
+                        </a>
+                    }
+
+                    <a
+                        class="ec-small-btn"
+                        href="/Safety/Map?q=@Uri.EscapeDataString(contact.Name)">
+
+                        📍 Map
+
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+
+    <div
+        id="noResults"
+        style="display:none;text-align:center;padding:40px;color:#6b7280;">
+
+        No support contacts match your search.
+
+    </div>
+
+
+    <!-- ============================================================
+         WHO SHOULD I CONTACT
+         ============================================================ -->
+
+    <h2 class="ec-section-title">
+        Who should I contact?
+    </h2>
+
+    <div class="ec-who-grid">
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">🚨</div>
+            <div class="ec-who-title">
+                Immediate Danger
+            </div>
+            <p class="ec-who-text">
+                Activate SOS and contact campus security.
+            </p>
+        </div>
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">👩</div>
+            <div class="ec-who-title">
+                Women's Safety
+            </div>
+            <p class="ec-who-text">
+                Contact the Women's Safety Officer or submit
+                a safety report.
+            </p>
+        </div>
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">🏥</div>
+            <div class="ec-who-title">
+                Medical Emergency
+            </div>
+            <p class="ec-who-text">
+                Contact the configured Medical Center or emergency
+                medical support.
+            </p>
+        </div>
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">🏠</div>
+            <div class="ec-who-title">
+                Hostel Safety
+            </div>
+            <p class="ec-who-text">
+                Contact the Hostel Warden for residential safety issues.
+            </p>
+        </div>
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">💻</div>
+            <div class="ec-who-title">
+                Cyber Harassment
+            </div>
+            <p class="ec-who-text">
+                Contact Cyber Safety / IT support and preserve
+                relevant evidence.
+            </p>
+        </div>
+
+        <div class="ec-who-card">
+            <div class="ec-who-icon">🚌</div>
+            <div class="ec-who-title">
+                Transport Safety
+            </div>
+            <p class="ec-who-text">
+                Contact Transport Security for route and pickup concerns.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ACTIONS
+         ============================================================ -->
+
+    <h2 class="ec-section-title">
+        Emergency & Safety Actions
+    </h2>
+
+    <div class="ec-actions-grid">
+
+
+        <!-- SAFETY MAP -->
+
+        <div class="ec-action-card">
+
+            <div class="ec-action-icon">
+                📍
+            </div>
+
+            <div class="ec-action-title">
+                Find a Security Point
+            </div>
+
+            <p class="ec-action-text">
+                View security, medical and support points
+                on the campus safety map.
+            </p>
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-primary"
+                onclick="openSafetyMap()">
+
+                Open Safety Map
+
+            </button>
+
+        </div>
+
+
+        <!-- REPORT INCIDENT -->
+
+        <div class="ec-action-card">
+
+            <div class="ec-action-icon">
+                📝
+            </div>
+
+            <div class="ec-action-title">
+                Report a Safety Concern
+            </div>
+
+            <p class="ec-action-text">
+                Report harassment, unsafe areas, suspicious
+                activity, hostel or transport concerns.
+            </p>
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-primary"
+                onclick="openReportModal()">
+
+                Report Incident
+
+            </button>
+
+        </div>
+
+
+        <!-- ANONYMOUS REPORT -->
+
+        <div class="ec-action-card">
+
+            <div class="ec-action-icon">
+                🔒
+            </div>
+
+            <div class="ec-action-title">
+                Anonymous Report
+            </div>
+
+            <p class="ec-action-text">
+                Submit a safety concern without attaching
+                your student identity.
+            </p>
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-light"
+                onclick="openAnonymousReport()">
+
+                Report Anonymously
+
+            </button>
+
+        </div>
+
+
+        <!-- MY REPORTS -->
+
+        <div class="ec-action-card">
+
+            <div class="ec-action-icon">
+                📋
+            </div>
+
+            <div class="ec-action-title">
+                My Reports
+            </div>
+
+            <p class="ec-action-text">
+                View safety reports submitted from this account.
+            </p>
+
+            <button
+                type="button"
+                class="ec-btn ec-btn-light"
+                onclick="loadMyReports()">
+
+                View My Reports
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         SAFETY INFORMATION
+         ============================================================ -->
+
+    <h2 class="ec-section-title">
+        Safety Reporting Guide
+    </h2>
+
+    <div class="ec-info-grid">
+
+        <div class="ec-info-box">
+
+            <h4>
+                📝 What can you report?
+            </h4>
+
+            <ul>
+                <li>Harassment or stalking</li>
+                <li>Unsafe campus areas</li>
+                <li>Suspicious activity</li>
+                <li>Hostel safety concerns</li>
+                <li>Transport safety problems</li>
+                <li>Cyber harassment</li>
+                <li>Lighting or infrastructure issues</li>
+                <li>Ragging-related concerns</li>
+            </ul>
+
+        </div>
+
+
+        <div class="ec-info-box">
+
+            <h4>
+                🔄 What happens after submission?
+            </h4>
+
+            <ul>
+                <li>Your report receives a unique Report ID.</li>
+                <li>The initial status is Pending.</li>
+                <li>Authorized staff can review the report.</li>
+                <li>The report can move to investigation.</li>
+                <li>Resolution can be recorded by authorized staff.</li>
+                <li>The Report ID can be used for tracking.</li>
+            </ul>
+
+        </div>
+
+
+        <div class="ec-info-box">
+
+            <h4>
+                🔒 Privacy
+            </h4>
+
+            <p>
+                Anonymous reports are stored without attaching
+                the student's User ID to the report. Normal reports
+                remain associated with the authenticated student
+                account for authorized follow-up.
+            </p>
+
+        </div>
+
+
+        <div class="ec-info-box">
+
+            <h4>
+                🚨 Emergency vs Report
+            </h4>
+
+            <p>
+                Use SOS for situations requiring immediate
+                assistance. Use the report form for safety
+                concerns that need review, investigation or
+                follow-up.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ACTIVE SOS
+         ============================================================ -->
+
+    <h2 class="ec-section-title">
+        Recent Emergency Request
+    </h2>
+
+    <div class="ec-info-box">
+
+        @if (Model.ActiveSOS != null)
+        {
+            <h4>
+                🚨 Active Request:
+                @Model.ActiveSOS.RequestId
+            </h4>
+
+            <p>
+                Status:
+                <strong style="color:#dc2626;">
+                    @Model.ActiveSOS.Status
+                </strong>
+            </p>
+
+            <p>
+                Submitted:
+                @Model.ActiveSOS.CreatedAt
+                    .ToLocalTime()
+                    .ToString("g")
+            </p>
+        }
+        else
+        {
+            <h4>
+                No active emergency requests
+            </h4>
+
+            <p>
+                Your active SOS requests will appear here.
+            </p>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     REPORT MODAL
+     ================================================================ -->
+
+<div
+    id="reportOverlay"
+    class="report-overlay">
+
+    <div class="report-modal">
+
+
+        <div class="report-header">
+
+            <h2 id="reportTitle">
+                📝 Report a Safety Concern
+            </h2>
+
+            <button
+                type="button"
+                class="report-close"
+                onclick="closeReportModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="report-body">
+
+            <form id="safetyReportForm">
+
+                @Html.AntiForgeryToken()
+
+
+                <!-- CATEGORY -->
+
+                <div class="report-group">
+
+                    <label class="report-label">
+                        Incident Category *
+                    </label>
+
+                    <select
+                        id="incidentCategory"
+                        name="incidentCategory"
+                        class="report-input"
+                        required>
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="Harassment">
+                            Harassment
+                        </option>
+
+                        <option value="Stalking">
+                            Stalking
+                        </option>
+
+                        <option value="Unsafe Area">
+                            Unsafe Area
+                        </option>
+
+                        <option value="Suspicious Activity">
+                            Suspicious Activity
+                        </option>
+
+                        <option value="Ragging">
+                            Ragging
+                        </option>
+
+                        <option value="Hostel Safety">
+                            Hostel Safety
+                        </option>
+
+                        <option value="Transport Safety">
+                            Transport Safety
+                        </option>
+
+                        <option value="Cyber Harassment">
+                            Cyber Harassment
+                        </option>
+
+                        <option value="Lighting">
+                            Lighting / Infrastructure
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="report-group">
+
+                    <label class="report-label">
+                        Incident Location *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="incidentLocation"
+                        name="incidentLocation"
+                        class="report-input"
+                        placeholder="Example: Library Block, Hostel Road"
+                        maxlength="250"
+                        required />
+
+                </div>
+
+
+                <!-- DATE/TIME -->
+
+                <div class="report-two-column">
+
+                    <div class="report-group">
+
+                        <label class="report-label">
+                            Incident Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="incidentDate"
+                            name="incidentDate"
+                            class="report-input"
+                            required />
+
+                    </div>
+
+
+                    <div class="report-group">
+
+                        <label class="report-label">
+                            Incident Time *
+                        </label>
+
+                        <input
+                            type="time"
+                            id="incidentTime"
+                            name="incidentTime"
+                            class="report-input"
+                            required />
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="report-group">
+
+                    <label class="report-label">
+                        What happened? *
+                    </label>
+
+                    <textarea
+                        id="incidentDescription"
+                        name="description"
+                        class="report-input"
+                        maxlength="5000"
+                        placeholder="Describe the incident clearly. Include any important information that can help the safety team understand the situation."
+                        required></textarea>
+
+                    <small
+                        id="descriptionCounter"
+                        style="color:#9ca3af;font-size:.7rem;">
+                        0 / 5000
+                    </small>
+
+                </div>
+
+
+                <!-- ANONYMOUS -->
+
+                <label class="anonymous-option">
+
+                    <input
+                        type="checkbox"
+                        id="isAnonymous"
+                        name="isAnonymous"
+                        value="true" />
+
+                    <span>
+
+                        <strong>
+                            🔒 Submit this report anonymously
+                        </strong>
+
+                        <small>
+                            Your User ID will not be attached to this report.
+                            The report will still receive a Report ID.
+                        </small>
+
+                    </span>
+
+                </label>
+
+
+                <!-- FOOTER -->
+
+                <div class="report-footer">
+
+                    <button
+                        type="button"
+                        class="ec-btn ec-btn-light"
+                        onclick="closeReportModal()">
+
+                        Cancel
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="submitReportButton"
+                        class="ec-btn ec-btn-primary">
+
+                        Submit Report
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     SUCCESS TOAST
+     ================================================================ -->
+
+<div
+    id="successToast"
+    class="report-success">
+
+    <div class="report-success-title">
+        ✓ Report Submitted Successfully
+    </div>
+
+    <div
+        id="successToastText"
+        class="report-success-text">
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     MY REPORTS MODAL
+     ================================================================ -->
+
+<div
+    id="myReportsOverlay"
+    class="report-overlay">
+
+    <div class="report-modal">
+
+        <div class="report-header">
+
+            <h2>
+                📋 My Safety Reports
+            </h2>
+
+            <button
+                type="button"
+                class="report-close"
+                onclick="closeMyReports()">
+
+                ×
+
+            </button>
+
+        </div>
+
+        <div
+            id="myReportsContent"
+            class="report-body">
+
+            Loading reports...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@functions {
+
+    public string GetIconForCategory(string category)
+    {
+        return category?.ToLower() switch
+        {
+            "emergency" => "🚑",
+            "security" => "🛡️",
+            "medical" => "🏥",
+            "women safety" => "👩",
+            "hostel" => "🏠",
+            "counselling" => "🧠",
+            "grievance" => "⚖️",
+            "cyber safety" => "💻",
+            "student welfare" => "🎓",
+            "transport" => "🚌",
+            _ => "📌"
+        };
+    }
+
+}
+
+
+@section Scripts {
+
+<script>
+
+    // ============================================================
+    // SEARCH
+    // ============================================================
+
+    const searchInput =
+        document.getElementById("contactSearch");
+
+    const categoryFilter =
+        document.getElementById("categoryFilter");
+
+    const contactElements =
+        document.querySelectorAll(".ec-contact");
+
+    const noResults =
+        document.getElementById("noResults");
+
+
+    function filterContacts() {
+
+        const search =
+            searchInput.value
+                .toLowerCase()
+                .trim();
+
+        const category =
+            categoryFilter.value;
+
+        let count = 0;
+
+
+        contactElements.forEach(function (contact) {
+
+            const data =
+                (contact.dataset.search || "")
+                .toLowerCase();
+
+            const contactCategory =
+                contact.dataset.category;
+
+
+            const searchMatch =
+                search === "" ||
+                data.includes(search);
+
+            const categoryMatch =
+                category === "All" ||
+                contactCategory === category;
+
+
+            if (searchMatch && categoryMatch) {
+
+                contact.style.display = "flex";
+
+                count++;
+
+            }
+            else {
+
+                contact.style.display = "none";
+
+            }
+
+        });
+
+
+        noResults.style.display =
+            count === 0
+                ? "block"
+                : "none";
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterContacts
+    );
+
+    categoryFilter.addEventListener(
+        "change",
+        filterContacts
+    );
+
+
+    // ============================================================
+    // SAFETY MAP
+    // ============================================================
+
+    function openSafetyMap() {
+
+        window.location.href =
+            '@Url.Action("Map", "Safety")';
+
+    }
+
+
+    // ============================================================
+    // REPORT INCIDENT
+    // ============================================================
+
+    function openReportModal() {
+        window.location.href = '@Url.Action("Create", "IncidentReport")?source=Emergency%20Contacts';
+    }
+
+    function openAnonymousReport() {
+        // We could pass a parameter to check 'anonymous' by default if we wanted, 
+        // but for now, redirecting to the form is sufficient.
+        window.location.href = '@Url.Action("Create", "IncidentReport")?source=Emergency%20Contacts';
+    }
+
+    // ============================================================
+    // MY REPORTS
+    // ============================================================
+
+    function loadMyReports() {
+        window.location.href = '@Url.Action("MyReports", "IncidentReport")';
+    }
+
+
+    // ============================================================
+    // DATE FORMAT
+    // ============================================================
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "";
+        }
+
+        const date =
+            new Date(value);
+
+        if (isNaN(date)) {
+            return value;
+        }
+
+        return date.toLocaleDateString();
+
+    }
+
+
+    // ============================================================
+    // HTML ESCAPE
+    // ============================================================
+
+    function escapeHtml(value) {
+
+        if (value === null ||
+            value === undefined) {
+
+            return "";
+
+        }
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+</script>
+
+}

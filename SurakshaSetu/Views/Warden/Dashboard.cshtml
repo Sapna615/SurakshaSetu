@@ -1,0 +1,85 @@
+@model SurakshaSetu.ViewModels.SecurityDashboardViewModel
+@{
+    ViewData["Title"] = "Hostel Warden Portal";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">Hostel Overview</h2>
+        <p class="text-muted">Welcome, @Model.OfficerName</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0" style="border-left: 4px solid #ef4444 !important;">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase fw-bold mb-2">New Hostel Incidents</h6>
+                <h2 class="fw-bold mb-0">@Model.NewReports</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0" style="border-left: 4px solid #f59e0b !important;">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase fw-bold mb-2">In Progress</h6>
+                <h2 class="fw-bold mb-0">@Model.InProgress</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Recent Hostel Incidents</h5>
+        <a href="/Warden/Incidents" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="border-0">Report ID</th>
+                        <th class="border-0">Category</th>
+                        <th class="border-0">Location</th>
+                        <th class="border-0">Created At</th>
+                        <th class="border-0">Status</th>
+                        <th class="border-0">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.IncidentQueue != null && Model.IncidentQueue.Any())
+                    {
+                        foreach (var incident in Model.IncidentQueue)
+                        {
+                            <tr>
+                                <td class="fw-bold">@incident.ReportId</td>
+                                <td><span class="badge bg-secondary">@incident.IncidentCategory</span></td>
+                                <td>@incident.IncidentLocation</td>
+                                <td>@incident.CreatedAt.ToString("HH:mm:ss") <small class="text-muted">(@incident.CreatedAt.ToString("dd MMM"))</small></td>
+                                <td>
+                                    @if(incident.Status == "Pending" || incident.Status == "Submitted") { <span class="badge bg-danger">@incident.Status</span> }
+                                    else if(incident.Status == "In Progress") { <span class="badge bg-warning text-dark">@incident.Status</span> }
+                                    else { <span class="badge bg-info">@incident.Status</span> }
+                                </td>
+                                <td>
+                                    <a href="/Security/IncidentDetails/@incident.SafetyReportId" class="btn btn-sm btn-primary">Review</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <div><span style="font-size: 2rem;">📋</span></div>
+                                <div>No recent hostel incidents.</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

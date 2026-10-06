@@ -1,0 +1,140 @@
+@model SurakshaSetu.ViewModels.AdminLocationsPageViewModel
+@{
+    ViewData["Title"] = "Campus Locations";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">Campus Locations</h2>
+            <p class="text-muted mb-0">Manage campus buildings, points of interest, and SOS locations</p>
+        </div>
+        <a href="/Admin/CreateLocation" class="btn btn-primary fw-bold px-4 rounded-3 shadow-sm">
+            <span class="me-2">📍</span> Add Location
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+    <div class="card-body p-4">
+        <form method="get" action="/Admin/Locations" class="row g-3">
+            <div class="col-md-7">
+                <label class="form-label fw-bold text-muted small">Search Locations</label>
+                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Search by name or description..." value="@Model.SearchQuery">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Location Type</label>
+                <select name="typeFilter" class="form-select bg-light">
+                    <option value="">All Types</option>
+                    @foreach(var type in Model.AvailableTypes)
+                    {
+                        if (Model.TypeFilter == type.Value)
+                        {
+                            <option value="@type.Value" selected>@type.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@type.Value">@type.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-dark w-100 fw-bold">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Location Name</th>
+                        <th>Type</th>
+                        <th>Coordinates</th>
+                        <th>Status</th>
+                        <th class="pe-4 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Locations.Any())
+                    {
+                        foreach (var location in Model.Locations)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <div class="fw-bold text-dark">@location.Name</div>
+                                    <div class="text-muted small" style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@location.Description</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">@location.LocationType</span>
+                                    @if(location.LocationType == "EmergencyPoint")
+                                    {
+                                        <div class="small text-danger mt-1 fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> SOS Point</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if(location.Latitude.HasValue && location.Longitude.HasValue)
+                                    {
+                                        <div class="text-muted small font-monospace">@location.Latitude.Value.ToString("0.000000"), @location.Longitude.Value.ToString("0.000000")</div>
+                                        <a href="https://www.google.com/maps/search/?api=1&query=@location.Latitude,@location.Longitude" target="_blank" class="small text-primary text-decoration-none">View on Map</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small fst-italic">Not specified</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if(location.IsActive)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">Inactive</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <a href="/Admin/EditLocation/@location.CampusLocationId" class="btn btn-sm btn-outline-primary fw-bold me-2">Edit</a>
+                                    
+                                    <form method="post" action="/Admin/ToggleLocation/@location.CampusLocationId" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        @if(location.IsActive)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">Disable</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-success fw-bold">Enable</button>
+                                        }
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <div><span class="fs-1">📍</span></div>
+                                <div class="mt-2 fw-bold">No locations found.</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

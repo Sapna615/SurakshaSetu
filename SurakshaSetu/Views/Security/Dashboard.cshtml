@@ -1,0 +1,218 @@
+@model SurakshaSetu.ViewModels.SecurityDashboardViewModel
+@{
+    ViewData["Title"] = "Security Operations Center";
+    Layout = "_SecurityLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">Security Operations Center</h2>
+        <p class="text-muted">Good morning, @Model.OfficerName</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; position: relative; overflow: hidden;">
+            <div class="card-body p-4 position-relative z-index-1">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">NEW REPORTS</div>
+                    <i class="bi bi-file-earmark-text fs-4 opacity-50"></i>
+                </div>
+                <div style="font-size: 2.8rem; font-weight: 800; line-height: 1;">@Model.NewReports</div>
+            </div>
+            <div style="position: absolute; bottom: -20px; right: -10px; font-size: 6rem; opacity: 0.1;">📄</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="background: linear-gradient(135deg, #7f1d1d, #ef4444); color: white; position: relative; overflow: hidden;">
+            <div class="card-body p-4 position-relative z-index-1">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">ACTIVE SOS</div>
+                    <i class="bi bi-exclamation-triangle fs-4 opacity-50"></i>
+                </div>
+                <div style="font-size: 2.8rem; font-weight: 800; line-height: 1;">@Model.ActiveSOS</div>
+            </div>
+            <div style="position: absolute; bottom: -20px; right: -10px; font-size: 6rem; opacity: 0.1;">🚨</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="background: linear-gradient(135deg, #b45309, #f59e0b); color: white; position: relative; overflow: hidden;">
+            <div class="card-body p-4 position-relative z-index-1">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">IN PROGRESS</div>
+                    <i class="bi bi-arrow-repeat fs-4 opacity-50"></i>
+                </div>
+                <div style="font-size: 2.8rem; font-weight: 800; line-height: 1;">@Model.InProgress</div>
+            </div>
+            <div style="position: absolute; bottom: -20px; right: -10px; font-size: 6rem; opacity: 0.1;">⏳</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="background: linear-gradient(135deg, #064e3b, #10b981); color: white; position: relative; overflow: hidden;">
+            <div class="card-body p-4 position-relative z-index-1">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">MY CASES</div>
+                    <i class="bi bi-shield-check fs-4 opacity-50"></i>
+                </div>
+                <div style="font-size: 2.8rem; font-weight: 800; line-height: 1;">0</div> <!-- Hardcoded for now -->
+            </div>
+            <div style="position: absolute; bottom: -20px; right: -10px; font-size: 6rem; opacity: 0.1;">🛡️</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Active SOS Alerts -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+        <h4 class="fw-bold" style="color: #dc2626;">🚨 Active SOS Alerts</h4>
+    </div>
+    <div class="card-body p-4">
+        @if (!Model.ActiveSOSList.Any())
+        {
+            <div class="text-center py-4 text-muted">
+                <span style="font-size: 2rem;">✅</span>
+                <p class="mt-2 mb-0 fw-bold">No active SOS alerts at this time.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sos in Model.ActiveSOSList)
+                        {
+                            <tr>
+                                <td class="fw-bold">@sos.ReportId</td>
+                                <td>@sos.CreatedAt.ToString("MMM dd, HH:mm")</td>
+                                <td>@sos.IncidentLocation</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger fw-bold">Respond</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Incident Queue -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+        <h4 class="fw-bold">Incident Queue</h4>
+    </div>
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in Model.IncidentQueue)
+                    {
+                        <tr>
+                            <td class="fw-bold">@report.ReportId</td>
+                            <td>@report.IncidentCategory</td>
+                            <td>@report.IncidentLocation</td>
+                            <td>
+                                @if(report.Severity == "Critical" || report.Severity == "High")
+                                {
+                                    <span class="badge bg-danger">@report.Severity</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">@report.Severity</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@report.Status</span>
+                            </td>
+                            <td>
+                                <a asp-controller="Security" asp-action="IncidentDetails" asp-route-id="@report.SafetyReportId" class="btn btn-sm btn-outline-primary fw-bold">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #f8fafc;">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Quick Actions</h5>
+                <a href="/Security/IncidentQueue" class="btn btn-primary w-100 mb-2 py-2 fw-bold text-start"><i class="bi bi-shield-fill-check me-2"></i> Review All Incidents</a>
+                <a href="/Security/ActiveSOS" class="btn btn-danger w-100 mb-2 py-2 fw-bold text-start"><i class="bi bi-geo-alt-fill me-2"></i> Dispatch Security Team</a>
+                <a href="/Safety/Map" class="btn btn-dark w-100 py-2 fw-bold text-start"><i class="bi bi-map-fill me-2"></i> View Safety Map</a>
+            </div>
+        </div>
+
+        <!-- Duty Roster & Comms -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+                <h6 class="fw-bold text-muted text-uppercase mb-0">Today's Duty Roster</h6>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px; font-size: 0.9rem;">AK</div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 0.95rem;">Anil Kumar</div>
+                            <div class="text-muted" style="font-size: 0.8rem;">Main Library Area</div>
+                        </div>
+                    </div>
+                    <a href="tel:9876543210" class="btn btn-sm btn-light rounded-circle"><span style="font-size: 1.1rem;">📞</span></a>
+                </div>
+                
+                <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px; font-size: 0.9rem;">SM</div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 0.95rem;">Suresh Menon</div>
+                            <div class="text-muted" style="font-size: 0.8rem;">North Gate Patrol</div>
+                        </div>
+                    </div>
+                    <a href="tel:9876543211" class="btn btn-sm btn-light rounded-circle"><span style="font-size: 1.1rem;">📞</span></a>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px; font-size: 0.9rem;">RT</div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 0.95rem;">Ravi Tiwari</div>
+                            <div class="text-muted" style="font-size: 0.8rem;">Quick Response Team</div>
+                        </div>
+                    </div>
+                    <a href="tel:9876543212" class="btn btn-sm btn-light rounded-circle"><span style="font-size: 1.1rem;">📞</span></a>
+                </div>
+                
+                <a href="#" class="btn btn-outline-primary w-100 mt-4 fw-bold" style="font-size: 0.85rem;">View Full Roster</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,390 @@
+@model SurakshaSetu.ViewModels.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout"; // Use our brand new sidebar layout!
+}
+
+<style>
+    .hero-banner {
+        background-color: #1a365d; /* Deep professional blue */
+        border-radius: 12px;
+        padding: 45px 50px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+    .hero-subtitle {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #93c5fd;
+        margin-bottom: 12px;
+    }
+    .hero-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 15px;
+    }
+    .hero-text {
+        font-size: 0.95rem;
+        color: #bfdbfe;
+        max-width: 650px;
+        margin-bottom: 35px;
+    }
+    .btn-report {
+        background-color: white;
+        color: #1e3a8a;
+        font-weight: 700;
+        border-radius: 6px;
+        padding: 12px 24px;
+        border: none;
+        font-size: 0.9rem;
+    }
+    .btn-sos-small {
+        background-color: #dc2626;
+        color: white;
+        font-weight: 700;
+        border-radius: 6px;
+        padding: 12px 24px;
+        border: none;
+        margin-left: 15px;
+        font-size: 0.9rem;
+    }
+    .shield-icon {
+        position: absolute;
+        right: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10rem;
+        color: rgba(255,255,255,0.06); 
+    }
+    
+    .sos-banner {
+        background-color: #fff1f2;
+        border: 1px solid #ffe4e6;
+        border-radius: 8px;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 35px;
+    }
+    .sos-banner-text {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #111827;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+    .sos-banner-text span {
+        color: #6b7280;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .btn-hold-activate {
+        background-color: #ffe4e6;
+        color: #e11d48;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        transition: all 0.2s;
+    }
+    .btn-hold-activate:active {
+        background-color: #e11d48;
+        color: white;
+    }
+
+    .section-heading {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 20px;
+    }
+
+    .quick-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 24px;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+        transition: all 0.2s;
+    }
+    .quick-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .quick-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 1.1rem;
+    }
+    .icon-blue { background-color: #eff6ff; color: #3b82f6; }
+    .icon-indigo { background-color: #eef2ff; color: #6366f1; }
+    .icon-red { background-color: #fef2f2; color: #ef4444; }
+    .icon-green { background-color: #f0fdf4; color: #22c55e; }
+
+    .quick-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+        color: #111827;
+    }
+    .quick-desc {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin: 0;
+    }
+
+    .info-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 24px;
+        height: 100%;
+    }
+    .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .info-title {
+        font-weight: 700;
+        color: #111827;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+    .view-all {
+        font-size: 0.8rem;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .contact-list li {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+        color: #4b5563;
+    }
+    .contact-list li strong {
+        color: #111827;
+    }
+</style>
+
+<!-- HERO SECTION -->
+<div class="hero-banner">
+    <div class="hero-subtitle">CAMPUS SAFETY CENTER</div>
+    <div class="hero-title">Your Safety. Your Voice.<br/>Your Campus.</div>
+    <div class="hero-text">Report concerns, request emergency assistance, track incidents and help create a safer campus community.</div>
+    <div>
+        <a href="/IncidentReport/Create" class="btn-report text-decoration-none">+ Report a Safety Concern</a>
+        <button class="btn-sos-small btn-sos-trigger">🚨 Emergency SOS</button>
+    </div>
+    <div class="shield-icon">🛡️</div>
+</div>
+
+<!-- SOS BANNER -->
+<div class="sos-banner">
+    <div class="sos-banner-text">
+        <span style="color: #e11d48; font-size: 1.2rem;">🚨</span> 
+        Emergency SOS
+        <span>For immediate danger, press and hold for 3 seconds. Your emergency request can include your campus location when permission is available.</span>
+    </div>
+    <button id="mainSosBtn" class="btn-hold-activate btn-sos-trigger">HOLD TO ACTIVATE</button>
+</div>
+
+<!-- QUICK ACTIONS -->
+<h3 class="section-heading">Quick Actions</h3>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a href="@Url.Action("Create", "IncidentReport")" class="quick-card">
+            <div class="quick-title" style="margin-top: 10px;">
+                <span style="display:inline-block; margin-bottom:12px; font-size:1.2rem;">📝</span><br/>
+                Report Incident
+            </div>
+            <p class="quick-desc">Submit a safety concern for review</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="@Url.Action("Create", "IncidentReport")?isAnonymous=true" class="quick-card">
+            <div class="quick-title" style="margin-top: 10px;">
+                <span style="display:inline-block; margin-bottom:12px; font-size:1.2rem; color:#2563eb;">🧿</span><br/>
+                Report Anonymously
+            </div>
+            <p class="quick-desc">Report without displaying your identity</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="@Url.Action("Create", "IncidentReport")?category=Infrastructure%20Safety" class="quick-card">
+            <div class="quick-title" style="margin-top: 10px;">
+                <span style="display:inline-block; margin-bottom:12px; font-size:1.2rem; color:#dc2626;">⚠️</span><br/>
+                Report Unsafe Area
+            </div>
+            <p class="quick-desc">Report lighting, CCTV or infrastructure issues</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="/Safety/Map" class="quick-card">
+            <div class="quick-title" style="margin-top: 10px;">
+                <span style="display:inline-block; margin-bottom:12px; font-size:1.2rem; color:#6b7280;">✛</span><br/>
+                Safety Map
+            </div>
+            <p class="quick-desc">View safety resources and attention areas</p>
+        </a>
+    </div>
+</div>
+
+<!-- SECOND ROW -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="info-card" style="padding: 24px;">
+            <div class="info-header">
+                <h4 class="info-title">My Reports</h4>
+                <a href="@Url.Action("MyReports", "IncidentReport")" class="view-all">View all →</a>
+            </div>
+            
+            <div class="d-flex justify-content-between text-center mb-4 pb-3 border-bottom">
+                <div>
+                    <div class="fw-bold fs-4">@Model.TotalReports</div>
+                    <div class="text-muted" style="font-size: 0.75rem;">Total Reports</div>
+                </div>
+                <div>
+                    <div class="fw-bold fs-4">@Model.PendingReports</div>
+                    <div class="text-muted" style="font-size: 0.75rem;">Pending / Review</div>
+                </div>
+                <div>
+                    <div class="fw-bold fs-4">@Model.InvestigationReports</div>
+                    <div class="text-muted" style="font-size: 0.75rem;">Investigation</div>
+                </div>
+                <div>
+                    <div class="fw-bold fs-4">@Model.ResolvedReports</div>
+                    <div class="text-muted" style="font-size: 0.75rem;">Resolved</div>
+                </div>
+            </div>
+            
+            <div class="report-list">
+                @if (!Model.RecentReports.Any())
+                {
+                    <div class="text-center text-muted py-3" style="font-size: 0.9rem;">
+                        No recent reports found.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var report in Model.RecentReports)
+                    {
+                        var statusColor = report.Status == "Pending" ? "warning" 
+                            : report.Status == "Under Review" ? "primary" 
+                            : report.Status == "Resolved" ? "success" 
+                            : "secondary";
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size: 0.95rem;">@report.ReportId</div>
+                                <div class="text-muted" style="font-size: 0.8rem;">@report.IncidentCategory - @report.IncidentDate.ToString("dd MMM yyyy")</div>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light text-@statusColor border">@report.Status</span>
+                                <a href="@Url.Action("Details", "IncidentReport", new { id = report.ReportId })" class="btn btn-sm btn-light border text-primary" style="font-size: 0.8rem;">View</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="info-card" style="padding: 24px;">
+            <div class="info-header">
+                <h4 class="info-title">Safety Alerts</h4>
+                <a href="/SafetyAlert" class="view-all">View all →</a>
+            </div>
+            
+            <div class="alert-list">
+                @if (!Model.ActiveAlerts.Any())
+                {
+                    <div class="text-center text-muted py-3" style="font-size: 0.9rem;">
+                        No active safety alerts.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var alert in Model.ActiveAlerts)
+                    {
+                        <div class="mb-3">
+                            <div class="fw-bold text-dark" style="font-size: 0.95rem;">@alert.Title</div>
+                            <div class="text-muted mb-1" style="font-size: 0.8rem;">@alert.Message</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">@alert.Priority - @alert.PublishedAt.ToString("dd MMM hh:mm tt")</div>
+                        </div>
+                        <hr class="my-2" style="border-color:#f3f4f6;" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- THIRD ROW -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="info-card" style="padding: 24px;">
+            <div class="info-header mb-3">
+                <h4 class="info-title">Emergency Contacts</h4>
+            </div>
+            @if (Model.EmergencyContacts.Any())
+            {
+                foreach (var contact in Model.EmergencyContacts)
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 0.9rem;">
+                                <span>🛡️</span> 
+                                @contact.Name
+                            </div>
+                            <div class="text-muted" style="font-size: 0.8rem;">@contact.Department - @contact.Role</div>
+                        </div>
+                        <a href="tel:@contact.PhoneNumber" class="btn btn-sm btn-light border text-primary fw-bold" style="font-size: 0.75rem;">Call</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-muted text-center py-3">No emergency contacts available.</div>
+            }
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="info-card" style="padding: 24px;">
+            <div class="info-header mb-3">
+                <h4 class="info-title">Quick Help</h4>
+            </div>
+            <p class="text-muted mb-4" style="font-size: 0.9rem;">Learn how to report a concern, use SOS, understand report statuses and protect your privacy.</p>
+            <a href="/EmergencyContact" class="btn btn-light border fw-bold text-primary px-3 py-2" style="font-size: 0.85rem; text-decoration: none;">Open Help Center</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Relying on the global SOS script in _DashboardLayout.cshtml -->
+}

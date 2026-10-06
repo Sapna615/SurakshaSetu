@@ -1,0 +1,337 @@
+@model SurakshaSetu.ViewModels.SafetyReportDetailsViewModel
+@{
+    ViewData["Title"] = "Report Details - " + Model.Report.ReportId;
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+    
+    var report = Model.Report;
+    var history = Model.StatusHistory;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/safety-reports.css" />
+    <style>
+        .details-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .report-main-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .report-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .details-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .details-header h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .description-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #374151;
+            white-space: pre-wrap;
+        }
+
+        .btn-withdraw {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-withdraw:hover {
+            background: #fee2e2;
+        }
+
+        @@media (max-width: 768px) {
+            .details-container {
+                grid-template-columns: 1fr;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<div class="details-container">
+    
+    <!-- LEFT COLUMN: REPORT DETAILS -->
+    <div class="report-main-content">
+        <div class="details-header">
+            <div style="font-size: 12px; font-weight: 700; color: #6b7280; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px;">
+                SAFETY REPORT
+            </div>
+            <h1>
+                @report.ReportId
+                @{
+                    var statusClass = report.Status.ToLower().Replace(" ", "-");
+                }
+                <span class="badge badge-status-@statusClass" style="font-size: 14px; transform: translateY(-2px);">@report.Status</span>
+            </h1>
+        </div>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Incident Category</div>
+                <div class="info-value">@report.IncidentCategory</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Location</div>
+                <div class="info-value">@report.IncidentLocation</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Date</div>
+                <div class="info-value">@report.IncidentDate.ToString("dd MMMM yyyy")</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Time</div>
+                <div class="info-value">@report.IncidentTime</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Severity</div>
+                <div class="info-value">
+                    <span class="badge badge-severity-@report.Severity.ToLower()">@report.Severity.ToUpper()</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Privacy</div>
+                <div class="info-value">
+                    @if (report.IsAnonymous)
+                    {
+                        <span class="badge badge-private">🔒 Private Report</span>
+                    }
+                    else
+                    {
+                        <span>Normal Report</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <div class="info-label" style="margin-bottom: 10px;">Description</div>
+            <div class="description-box">@report.Description</div>
+        </div>
+        
+        @if (!string.IsNullOrEmpty(report.ResolutionNotes))
+        {
+            <div style="margin-bottom: 30px; border-left: 4px solid #3b82f6; padding-left: 15px;">
+                <div class="info-label" style="margin-bottom: 10px; color: #1e40af;">Resolution Notes</div>
+                <div style="background: #eff6ff; padding: 15px; border-radius: 8px; font-size: 14px; color: #1e3a8a;">
+                    @report.ResolutionNotes
+                </div>
+            </div>
+        }
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <a asp-action="MyReports" style="color: #4b5563; text-decoration: none; font-weight: 600;">← Back to My Reports</a>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: TIMELINE & ACTIONS -->
+    <div class="report-sidebar">
+        <div class="sidebar-box">
+            <h3 style="font-size: 16px; margin: 0 0 20px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">REPORT TIMELINE</h3>
+            
+            <div class="timeline">
+                @{
+                    bool hasPending = history.Any(h => h.NewStatus == "Pending");
+                    bool hasReview = history.Any(h => h.NewStatus == "Under Review");
+                    bool hasInv = history.Any(h => h.NewStatus == "Investigation");
+                    bool hasAction = history.Any(h => h.NewStatus == "Action Taken");
+                    bool hasResolved = history.Any(h => h.NewStatus == "Resolved");
+                    bool hasRejected = history.Any(h => h.NewStatus == "Rejected");
+                    bool hasWithdrawn = history.Any(h => h.NewStatus == "Withdrawn");
+
+                    // 1. Submitted
+                    var submittedItem = history.FirstOrDefault();
+                }
+
+                <div class="timeline-item @(submittedItem != null ? "completed" : "")">
+                    <div class="timeline-icon">✓</div>
+                    <div class="timeline-content">
+                        <div style="font-weight: 600; font-size: 14px;">Report Submitted</div>
+                        <div class="timeline-date">@(submittedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt") ?? "-")</div>
+                    </div>
+                </div>
+
+                @if (hasWithdrawn)
+                {
+                    var withdrawnItem = history.FirstOrDefault(h => h.NewStatus == "Withdrawn");
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon" style="background: #6b7280; border-color: #6b7280;">×</div>
+                        <div class="timeline-content" style="border-left: 3px solid #6b7280;">
+                            <div style="font-weight: 600; font-size: 14px; color: #4b5563;">Withdrawn</div>
+                            <div class="timeline-date">@(withdrawnItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt"))</div>
+                            <div style="font-size: 12px; margin-top: 5px; color: #6b7280;">Report withdrawn by student</div>
+                        </div>
+                    </div>
+                }
+                else if (hasRejected)
+                {
+                    var reviewItem = history.FirstOrDefault(h => h.NewStatus == "Under Review");
+                    if (reviewItem != null)
+                    {
+                        <div class="timeline-item completed">
+                            <div class="timeline-icon">✓</div>
+                            <div class="timeline-content">
+                                <div style="font-weight: 600; font-size: 14px;">Under Review</div>
+                                <div class="timeline-date">@reviewItem.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div>
+                            </div>
+                        </div>
+                    }
+
+                    var rejectedItem = history.FirstOrDefault(h => h.NewStatus == "Rejected");
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon" style="background: #dc2626; border-color: #dc2626;">×</div>
+                        <div class="timeline-content" style="border-left: 3px solid #dc2626;">
+                            <div style="font-weight: 600; font-size: 14px; color: #b91c1c;">Rejected</div>
+                            <div class="timeline-date">@(rejectedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt"))</div>
+                            @if (!string.IsNullOrEmpty(rejectedItem?.Comment))
+                            {
+                                <div style="font-size: 12px; margin-top: 5px; color: #991b1b;">@rejectedItem.Comment</div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    // Normal Flow
+                    var reviewItem = history.FirstOrDefault(h => h.NewStatus == "Under Review");
+                    <div class="timeline-item @(hasReview ? "completed" : report.Status == "Pending" ? "active" : "")">
+                        <div class="timeline-icon">@(hasReview ? "✓" : (report.Status == "Pending" ? "●" : "○"))</div>
+                        <div class="timeline-content">
+                            <div style="font-weight: 600; font-size: 14px;">Under Review</div>
+                            @if (hasReview) { <div class="timeline-date">@reviewItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
+                        </div>
+                    </div>
+
+                    var invItem = history.FirstOrDefault(h => h.NewStatus == "Investigation");
+                    <div class="timeline-item @(hasInv ? "completed" : report.Status == "Under Review" ? "active" : "")">
+                        <div class="timeline-icon">@(hasInv ? "✓" : (report.Status == "Under Review" ? "●" : "○"))</div>
+                        <div class="timeline-content">
+                            <div style="font-weight: 600; font-size: 14px;">Investigation</div>
+                            @if (hasInv) { <div class="timeline-date">@invItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
+                        </div>
+                    </div>
+
+                    var actionItem = history.FirstOrDefault(h => h.NewStatus == "Action Taken");
+                    <div class="timeline-item @(hasAction ? "completed" : report.Status == "Investigation" ? "active" : "")">
+                        <div class="timeline-icon">@(hasAction ? "✓" : (report.Status == "Investigation" ? "●" : "○"))</div>
+                        <div class="timeline-content">
+                            <div style="font-weight: 600; font-size: 14px;">Action Taken</div>
+                            @if (hasAction) { <div class="timeline-date">@actionItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
+                        </div>
+                    </div>
+
+                    var resolvedItem = history.FirstOrDefault(h => h.NewStatus == "Resolved");
+                    <div class="timeline-item @(hasResolved ? "completed" : report.Status == "Action Taken" ? "active" : "")" style="margin-bottom: 0;">
+                        <div class="timeline-icon" style="@(hasResolved ? "background: #16a34a; border-color: #16a34a;" : "")">
+                            @(hasResolved ? "✓" : (report.Status == "Action Taken" ? "●" : "○"))
+                        </div>
+                        <div class="timeline-content" style="@(hasResolved ? "border-left: 3px solid #16a34a;" : "")">
+                            <div style="font-weight: 600; font-size: 14px; @(hasResolved ? "color: #15803d;" : "")">Resolved</div>
+                            @if (hasResolved) { <div class="timeline-date">@resolvedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (report.Status == "Pending")
+        {
+            <div class="sidebar-box">
+                <h3 style="font-size: 16px; margin: 0 0 15px 0;">Actions</h3>
+                <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">
+                    You can withdraw this report because it is still in Pending status.
+                </p>
+                <form asp-action="Withdraw" method="post" onsubmit="return confirm('Are you sure you want to withdraw this report? This action cannot be undone.');">
+                    <input type="hidden" name="id" value="@report.ReportId" />
+                    <button type="submit" class="btn-withdraw">Withdraw Report</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="sidebar-box">
+                <p style="font-size: 13px; color: #6b7280; margin: 0;">
+                    This report can no longer be withdrawn as it has moved past the Pending stage.
+                </p>
+            </div>
+        }
+    </div>
+
+</div>

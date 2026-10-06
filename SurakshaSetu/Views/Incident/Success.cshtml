@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Report Submitted";
+    Layout = "_DashboardLayout";
+    
+    // We pass the generated Report Number securely from the controller via TempData
+    var reportNumber = TempData["ReportNumber"] as string ?? "SS-XXXX-XXXXX";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm text-center" style="border-radius: 12px; padding: 50px;">
+            <div class="mb-4">
+                <span style="font-size: 4rem; color: #16a34a;">✅</span>
+            </div>
+            <h2 class="fw-bold mb-3">Report Submitted Successfully</h2>
+            <p class="text-muted mb-4">
+                Your safety concern has been securely received. It will be reviewed by authorized personnel according to campus safety protocols.
+            </p>
+            
+            <div class="card bg-light border-0 mb-4 mx-auto" style="max-width: 400px; border-radius: 8px;">
+                <div class="card-body py-4">
+                    <div class="mb-3">
+                        <small class="text-muted text-uppercase fw-bold" style="letter-spacing: 1px;">Report Number</small>
+                        <h4 class="fw-bold text-primary mb-0 mt-1">@reportNumber</h4>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-6 border-end">
+                            <small class="text-muted text-uppercase fw-bold">Status</small>
+                            <div class="fw-bold mt-1 text-secondary">Submitted</div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted text-uppercase fw-bold">Date</small>
+                            <div class="fw-bold mt-1 text-secondary">@DateTime.Now.ToString("dd MMM yyyy")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <a href="/Student/Dashboard" class="btn btn-outline-secondary me-2 fw-bold">Back to Dashboard</a>
+                <a href="@Url.Action("MyReports", "IncidentReport")" class="btn btn-primary fw-bold" style="background-color: #1a365d; border: none;">View My Reports</a>
+            </div>
+        </div>
+    </div>
+</div>

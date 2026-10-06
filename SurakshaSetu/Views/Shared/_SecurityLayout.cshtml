@@ -1,0 +1,454 @@
+@using Microsoft.AspNetCore.Identity
+@using SurakshaSetu.Models
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SurakshaSetu</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+        body {
+            background-color: #f9fafb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 260px;
+            background-color: #ffffff;
+            border-right: 1px solid #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            z-index: 100;
+        }
+        .sidebar-header {
+            padding: 25px 20px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-label {
+            padding: 0 20px;
+            margin-bottom: 15px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .sidebar-menu li {
+            padding: 4px 15px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        .sidebar-menu a.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fafafa;
+            min-height: 100vh;
+        }
+        .top-header {
+            height: 64px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        .breadcrumb-title {
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .breadcrumb-title span {
+            font-weight: 700;
+            color: #111827;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        .content-area {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-header" style="padding-bottom: 5px;">
+                <div class="d-flex align-items-center gap-2">
+                    <span style="color: #dc2626; font-size: 1.5rem;">🛡️</span> 
+                    <div style="line-height: 1;">
+                        <div style="font-size: 1.1rem; font-weight: 800; color: #111827;">SurakshaSetu</div>
+                        <div style="font-size: 0.6rem; font-weight: 700; color: #9ca3af; letter-spacing: 1px; margin-top: 3px;">CAMPUS SAFETY</div>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="sidebar-menu" style="margin-top: 20px;">
+                <li><a href="/Security/Dashboard" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span style="color:#3b82f6;">🏠</span> Dashboard</a></li>
+                <li><a href="/Security/IncidentQueue" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "IncidentQueue" ? "active" : "")"><span>📋</span> Incident Queue</a></li>
+                <li><a href="/Security/MyCases" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "MyCases" ? "active" : "")"><span>🛡️</span> My Assigned Cases</a></li>
+                <li><a href="/Security/ActiveSOS" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "ActiveSOS" ? "active" : "")"><span class="text-danger font-weight-bold">🚨</span> <span class="text-danger font-weight-bold">Active SOS</span></a></li>
+                <li><a href="/Safety/Map"><span>✛</span> Safety Map</a></li>
+                <li><a href="/Security/Infrastructure" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Infrastructure" ? "active" : "")"><span>🚧</span> Infrastructure Issues</a></li>
+                <li><a href="/Security/EmergencyRequests" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "EmergencyRequests" ? "active" : "")"><span>📞</span> Emergency Requests</a></li>
+                <li style="margin-top: 15px;">
+                    <a href="/Security/Profile" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "active" : "")"><span>👤</span> My Profile</a>
+                </li>
+            </ul>
+
+            <div style="padding: 20px; margin-top: auto;">
+                <div style="background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 15px;">
+                    <div style="font-weight: 800; font-size: 0.85rem; color: #111827; margin-bottom: 8px;">Need immediate help?</div>
+                    <div class="font-size: 0.75rem; color: #6b7280; margin-bottom: 15px; line-height: 1.4;">Use Emergency SOS for urgent campus assistance.</div>
+                    <button class="btn btn-sm w-100 fw-bold btn-sos-trigger" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; user-select: none;">🚨 Emergency SOS</button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#quickHelpModal" style="color: #6b7280; text-decoration: none; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                        <span>❓</span> Quick Help
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb-title">Security Operations / <span>@ViewData["Title"]</span></div>
+                <div class="user-profile">
+                    <div class="dropdown" style="display:inline-block; margin-right: 15px;">
+                        <span id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color:#f59e0b; cursor:pointer; font-size: 1.2rem; position: relative;">
+                            🔔
+                            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;">
+                                0
+                            </span>
+                        </span>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown" style="width: 300px; padding: 0;">
+                            <li class="dropdown-header fw-bold" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 10px 15px;">Active SOS Alerts</li>
+                            <div id="notificationList" style="max-height: 300px; overflow-y: auto;">
+                                <li class="p-3 text-center text-muted" id="noNotificationsMsg"><small>No active emergency alerts.</small></li>
+                            </div>
+                            <li><a class="dropdown-item text-center fw-bold text-primary py-2" style="border-top: 1px solid #e9ecef; font-size: 0.85rem;" href="/Security/ActiveSOS">View All Active SOS</a></li>
+                        </ul>
+                    </div>
+                    <span>
+                        @{
+                            var user = await UserManager.GetUserAsync(User);
+                            var displayName = ViewData["UserName"] ?? user?.FullName ?? User.Identity?.Name;
+                        }
+                        @displayName - Security
+                    </span>
+                    <form class="form-inline m-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="btn btn-link text-dark p-0 text-decoration-none" style="font-size: 0.85rem; font-weight:600;">Logout</button>
+                    </form>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    
+    <!-- SOS Activation Modal -->
+    <div class="modal fade" id="sosModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: 2px solid #dc2626; border-radius: 12px; overflow: hidden;">
+                <div class="modal-header text-white" style="background-color: #dc2626;">
+                    <h5 class="modal-title fw-bold">🚨 Emergency SOS Activated</h5>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <p class="text-dark fw-bold mb-3">Your emergency request has been created in this demonstration interface.</p>
+                    
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Status:</small><br><span id="sosStatusTxt" class="fw-bold text-danger">Emergency Request Created</span></div>
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Location:</small><br><span id="sosLocationTxt" class="fw-bold">Locating...</span></div>
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Request ID:</small><br><span id="sosRequestIdTxt" class="font-monospace">SOS-...</span></div>
+                            <div><small class="text-muted text-uppercase fw-bold">Created:</small><br><span id="sosTimeTxt"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a href="tel:+919876543210" class="btn btn-dark fw-bold py-2">Call Security</a>
+                        <button type="button" class="btn btn-outline-danger py-2 fw-bold" onclick="cancelSOS()">Cancel SOS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS Cancel Confirmation Modal -->
+    <div class="modal fade" id="cancelSosModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-danger">Cancel Emergency Request?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel this SOS request?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary fw-bold" onclick="keepSosActive()">Keep SOS Active</button>
+                    <button type="button" class="btn btn-danger fw-bold" onclick="confirmCancelSOS()">Cancel SOS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSosRequestId = null;
+        let sosModal = null;
+        let cancelSosModal = null;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            sosModal = new bootstrap.Modal(document.getElementById('sosModal'));
+            cancelSosModal = new bootstrap.Modal(document.getElementById('cancelSosModal'));
+            
+            // Wire up all SOS buttons (sidebar and any page buttons)
+            document.querySelectorAll('.btn-sos-trigger').forEach(btn => {
+                
+                // Implement hold-to-activate (3 seconds)
+                let pressTimer;
+                let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                const startPress = (e) => {
+                    if (e.type === 'mousedown' && e.button !== 0) return; // Only left click
+                    btn.classList.add('active-press');
+                    btn.innerHTML = '🚨 HOLD 3 SECONDS...';
+                    pressTimer = window.setTimeout(activateSOS, 3000);
+                };
+                
+                const cancelPress = () => {
+                    clearTimeout(pressTimer);
+                    btn.classList.remove('active-press');
+                    btn.innerHTML = '🚨 Emergency SOS';
+                };
+                
+                btn.addEventListener('mousedown', startPress);
+                btn.addEventListener('mouseup', cancelPress);
+                btn.addEventListener('mouseleave', cancelPress);
+                
+                btn.addEventListener('touchstart', startPress, {passive: true});
+                btn.addEventListener('touchend', cancelPress);
+                btn.addEventListener('touchcancel', cancelPress);
+            });
+
+            // Check if there's an active SOS on page load
+            checkActiveSOS();
+        });
+
+        function checkActiveSOS() {
+            fetch('/api/sos/status')
+                .then(r => r.json())
+                .then(data => {
+                    if(data.active) {
+                        showSOSPopup(data.sos);
+                    }
+                }).catch(e => console.error("SOS Status Error", e));
+        }
+
+        function activateSOS() {
+            // Instantly show modal to acknowledge activation
+            sosModal.show();
+            document.getElementById('sosLocationTxt').innerText = 'Requesting location...';
+            document.getElementById('sosTimeTxt').innerText = new Date().toLocaleString();
+            
+            // Try to get location
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        sendSOSRequest(pos.coords.latitude, pos.coords.longitude, `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`);
+                    },
+                    err => {
+                        sendSOSRequest(null, null, "Location unavailable (Permission denied or failed)");
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            } else {
+                sendSOSRequest(null, null, "Location not supported by browser");
+            }
+        }
+
+        function sendSOSRequest(lat, lng, desc) {
+            document.getElementById('sosLocationTxt').innerText = desc;
+            
+            fetch('/api/sos/activate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Latitude: lat, Longitude: lng, LocationDescription: desc })
+            })
+            .then(async r => {
+                const data = await r.json();
+                if(data.success) {
+                    showSOSPopup(data.sos);
+                } else {
+                    alert("Error: " + (data.message || "We couldn't create the emergency request.") + (data.inner ? "\n" + data.inner : ""));
+                }
+            })
+            .catch(e => {
+                alert("We couldn't create the emergency request. Please try again or call security immediately.");
+            });
+        }
+
+        function showSOSPopup(sos) {
+            currentSosRequestId = sos.requestId;
+            document.getElementById('sosRequestIdTxt').innerText = sos.requestId;
+            document.getElementById('sosStatusTxt').innerText = sos.status === 'Created' ? 'Emergency Request Created' : sos.status;
+            document.getElementById('sosLocationTxt').innerText = sos.locationDescription || 'Location unavailable';
+            document.getElementById('sosTimeTxt').innerText = new Date(sos.createdAt).toLocaleString();
+            sosModal.show();
+        }
+
+        function cancelSOS() {
+            sosModal.hide();
+            cancelSosModal.show();
+        }
+
+        function keepSosActive() {
+            cancelSosModal.hide();
+            sosModal.show();
+        }
+
+        function confirmCancelSOS() {
+            if(!currentSosRequestId) return;
+            
+            fetch(`/api/sos/cancel/${currentSosRequestId}`, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    cancelSosModal.hide();
+                    alert("SOS request cancelled.\nStatus: Cancelled");
+                }
+            });
+        }
+    </script>
+    <style>
+        .active-press {
+            background-color: #991b1b !important;
+            color: white !important;
+            transform: scale(0.95);
+            transition: all 3s linear;
+        }
+        .notification-item { border-bottom: 1px solid #f3f4f6; padding: 10px 15px; }
+        .notification-item:hover { background-color: #fef2f2; }
+        .pulse-animation { animation: pulse-red 2s infinite; }
+        @@keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
+    </style>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Start polling for active SOS alerts every 5 seconds
+            pollActiveSOS();
+            setInterval(pollActiveSOS, 5000);
+        });
+
+        let previousAlertCount = 0;
+        
+        function pollActiveSOS() {
+            fetch('/api/sos/active')
+                .then(r => r.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationBadge');
+                    const list = document.getElementById('notificationList');
+                    const noMsg = document.getElementById('noNotificationsMsg');
+                    const bell = document.getElementById('notificationDropdown');
+                    
+                    if(data.count > 0) {
+                        badge.innerText = data.count;
+                        badge.style.display = 'block';
+                        bell.classList.add('pulse-animation');
+                        
+                        // If new alert came in, play a sound or show a toast (simple alert for demo)
+                        if(data.count > previousAlertCount) {
+                            // Optional: play sound here
+                            console.log("New SOS Alert Received!");
+                        }
+                        
+                        list.innerHTML = '';
+                        data.alerts.forEach(alert => {
+                            const time = new Date(alert.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            list.innerHTML += `
+                                <a href="/Security/IncidentDetails/${alert.id}" class="text-decoration-none text-dark d-block notification-item">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="fw-bold text-danger">🚨 SOS Alert</span>
+                                        <small class="text-muted">${time}</small>
+                                    </div>
+                                    <div style="font-size: 0.8rem; line-height: 1.2;">
+                                        <strong>Location:</strong> ${alert.location}<br>
+                                        <strong>ID:</strong> ${alert.reportId}
+                                    </div>
+                                </a>
+                            `;
+                        });
+                    } else {
+                        badge.style.display = 'none';
+                        bell.classList.remove('pulse-animation');
+                        list.innerHTML = '<li class="p-3 text-center text-muted" id="noNotificationsMsg"><small>No active emergency alerts.</small></li>';
+                    }
+                    
+                    previousAlertCount = data.count;
+                })
+                .catch(e => console.error("Error polling SOS:", e));
+        }
+    </script>
+    <partial name="_QuickHelpModal" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

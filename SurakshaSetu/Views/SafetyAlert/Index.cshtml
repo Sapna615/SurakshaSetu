@@ -1,0 +1,591 @@
+@{
+    ViewData["Title"] = "Safety Alerts";
+    Layout = "_DashboardLayout";
+}
+
+<div class="safety-alert-page">
+
+    <!-- PAGE HEADER -->
+    <div class="sa-page-header">
+
+        <div>
+            <span class="sa-eyebrow">
+                CAMPUS SAFETY NOTIFICATIONS
+            </span>
+
+            <h1>
+                Safety Alerts & Campus Updates
+            </h1>
+
+            <p>
+                Stay informed about security notices, temporary closures,
+                maintenance work, safety drills, transport changes and
+                other important campus updates.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ALERT OVERVIEW -->
+    <div class="sa-overview">
+
+        <div class="sa-overview-card">
+            <div class="sa-overview-icon blue">
+                🔔
+            </div>
+
+            <div>
+                <strong id="totalAlerts">
+                    0
+                </strong>
+
+                <span>
+                    Active Notices
+                </span>
+            </div>
+        </div>
+
+
+        <div class="sa-overview-card">
+            <div class="sa-overview-icon red">
+                🚨
+            </div>
+
+            <div>
+                <strong id="highAlerts">
+                    0
+                </strong>
+
+                <span>
+                    High Priority
+                </span>
+            </div>
+        </div>
+
+
+        <div class="sa-overview-card">
+            <div class="sa-overview-icon orange">
+                ⚠
+            </div>
+
+            <div>
+                <strong id="mediumAlerts">
+                    0
+                </strong>
+
+                <span>
+                    Medium Priority
+                </span>
+            </div>
+        </div>
+
+
+        <div class="sa-overview-card">
+            <div class="sa-overview-icon green">
+                🛡
+            </div>
+
+            <div>
+                <strong>
+                    24×7
+                </strong>
+
+                <span>
+                    Safety Support
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="sa-filter-section">
+
+        <button
+            type="button"
+            class="sa-filter active"
+            data-priority="all">
+
+            🔔 All Alerts
+
+        </button>
+
+
+        <button
+            type="button"
+            class="sa-filter"
+            data-priority="High">
+
+            🚨 High Priority
+
+        </button>
+
+
+        <button
+            type="button"
+            class="sa-filter"
+            data-priority="Medium">
+
+            ⚠ Medium Priority
+
+        </button>
+
+
+        <button
+            type="button"
+            class="sa-filter"
+            data-priority="Low">
+
+            ℹ Information
+
+        </button>
+
+    </div>
+
+
+    <!-- ALERT LIST -->
+    <section>
+
+        <div
+            id="alertContainer"
+            class="sa-alert-container">
+        </div>
+
+    </section>
+
+
+    <!-- WHAT SHOULD I DO -->
+    <section class="sa-guidance">
+
+        <h2>
+            What should I do when I receive an alert?
+        </h2>
+
+        <div class="sa-guidance-grid">
+
+            <div class="sa-guidance-card">
+
+                <div class="sa-guidance-icon">
+                    🚨
+                </div>
+
+                <h3>
+                    Emergency Alert
+                </h3>
+
+                <p>
+                    Read the instructions immediately. Move away from
+                    the affected area when advised and use Emergency SOS
+                    or contact campus security if urgent assistance is required.
+                </p>
+
+            </div>
+
+
+            <div class="sa-guidance-card">
+
+                <div class="sa-guidance-icon">
+                    🚧
+                </div>
+
+                <h3>
+                    Access / Closure Notice
+                </h3>
+
+                <p>
+                    Use the suggested alternate route and avoid
+                    restricted areas until the notice is cleared.
+                </p>
+
+            </div>
+
+
+            <div class="sa-guidance-card">
+
+                <div class="sa-guidance-icon">
+                    🛠
+                </div>
+
+                <h3>
+                    Maintenance / Infrastructure
+                </h3>
+
+                <p>
+                    Follow temporary route changes and report any
+                    additional unsafe condition through Report Unsafe Area.
+                </p>
+
+            </div>
+
+
+            <div class="sa-guidance-card">
+
+                <div class="sa-guidance-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Related Incident
+                </h3>
+
+                <p>
+                    If an alert affects you directly, submit a safety
+                    report so the safety team has a record for follow-up.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ALERT CATEGORIES -->
+    <section class="sa-information-grid">
+
+        <div class="sa-info-box">
+
+            <h2>
+                Alert Categories
+            </h2>
+
+            <p>
+                <strong>Security:</strong>
+                Security drills, access changes, suspicious-activity
+                precautions and restricted zones.
+            </p>
+
+            <p>
+                <strong>Infrastructure:</strong>
+                Lighting, CCTV, construction, maintenance and
+                pathway conditions.
+            </p>
+
+            <p>
+                <strong>Transport:</strong>
+                Gate closures, shuttle changes and temporary
+                pickup-point changes.
+            </p>
+
+            <p>
+                <strong>Emergency:</strong>
+                Urgent instructions requiring immediate attention.
+            </p>
+
+            <p>
+                <strong>Hostel:</strong>
+                Residential access, hostel security and student
+                accommodation notices.
+            </p>
+
+            <p>
+                <strong>Weather:</strong>
+                Weather-related campus safety instructions.
+            </p>
+
+        </div>
+
+
+        <!-- PRIORITY EXPLANATION -->
+        <div class="sa-info-box">
+
+            <h2>
+                How alerts are prioritized
+            </h2>
+
+            <div class="sa-priority-description">
+
+                <div>
+                    <span class="sa-priority-badge high">
+                        High
+                    </span>
+
+                    <p>
+                        Immediate or time-sensitive safety information
+                        that may require prompt action.
+                    </p>
+                </div>
+
+
+                <div>
+                    <span class="sa-priority-badge medium">
+                        Medium
+                    </span>
+
+                    <p>
+                        Important campus information that may affect
+                        routes, access or daily activities.
+                    </p>
+                </div>
+
+
+                <div>
+                    <span class="sa-priority-badge low">
+                        Information
+                    </span>
+
+                    <p>
+                        General safety information, reminders and
+                        non-urgent campus updates.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESPONSE ACTIONS -->
+    <section class="sa-response-section">
+
+        <h2>
+            Safety Response Actions
+        </h2>
+
+        <div class="sa-response-grid">
+
+            <button
+                type="button"
+                onclick="activateEmergencySOS()">
+
+                <span>🚨</span>
+
+                <div>
+                    <strong>
+                        Emergency SOS
+                    </strong>
+
+                    <small>
+                        Request urgent campus assistance
+                    </small>
+                </div>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="openSafetyMap()">
+
+                <span>📍</span>
+
+                <div>
+                    <strong>
+                        Safety Map
+                    </strong>
+
+                    <small>
+                        Find nearby safety resources
+                    </small>
+                </div>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="reportRelatedConcern()">
+
+                <span>📝</span>
+
+                <div>
+                    <strong>
+                        Report a Concern
+                    </strong>
+
+                    <small>
+                        Submit a related safety report
+                    </small>
+                </div>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="openEmergencyContacts()">
+
+                <span>☎</span>
+
+                <div>
+                    <strong>
+                        Emergency Contacts
+                    </strong>
+
+                    <small>
+                        Contact campus support
+                    </small>
+                </div>
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRIVACY -->
+    <div class="sa-privacy">
+
+        <strong>
+            🔒 Safety & Privacy
+        </strong>
+
+        <p>
+            Safety alerts provide campus-level information.
+            Individual incident reports remain separate and are
+            accessible according to the application's authorization
+            rules. Individual incident locations should not be exposed
+            through public alerts or the safety map.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ALERT DETAILS MODAL -->
+
+<div
+    id="alertModal"
+    class="sa-modal">
+
+    <div class="sa-modal-content">
+
+        <div class="sa-modal-header">
+
+            <div>
+                <span
+                    id="modalPriority"
+                    class="sa-priority-badge">
+                </span>
+
+                <h2 id="modalTitle">
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                class="sa-modal-close"
+                onclick="closeAlertModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="sa-modal-meta">
+
+            <div>
+                <strong>
+                    Alert ID
+                </strong>
+
+                <span id="modalId">
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Category
+                </strong>
+
+                <span id="modalCategory">
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Location
+                </strong>
+
+                <span id="modalLocation">
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Published
+                </strong>
+
+                <span id="modalTime">
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Published By
+                </strong>
+
+                <span id="modalPublisher">
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="sa-modal-message">
+
+            <h3>
+                Alert Details
+            </h3>
+
+            <p id="modalMessage">
+            </p>
+
+        </div>
+
+
+        <div class="sa-modal-action">
+
+            <h3>
+                Recommended Action
+            </h3>
+
+            <p id="modalAction">
+            </p>
+
+        </div>
+
+
+        <div class="sa-modal-footer">
+
+            <button
+                type="button"
+                onclick="reportRelatedConcern()">
+
+                📝 Report Related Concern
+
+            </button>
+
+            <button
+                type="button"
+                class="secondary"
+                onclick="closeAlertModal()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/safety-alerts.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/safety-alerts.js" asp-append-version="true"></script>
+}

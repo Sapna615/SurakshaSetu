@@ -1,0 +1,416 @@
+@{
+    ViewData["Title"] = "Campus Safety Map";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+<!-- Leaflet CSS & JS - Free Open Source Mapping library -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    .map-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 150px);
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .map-header {
+        padding: 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9fafb;
+    }
+    
+    .map-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+    
+    .map-sidebar {
+        width: 300px;
+        padding: 20px;
+        border-right: 1px solid #e5e7eb;
+        overflow-y: auto;
+        background: #ffffff;
+        position: relative;
+        z-index: 10;
+    }
+    
+    #map {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* Filters */
+    .filter-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .filter-item:hover {
+        background-color: #f3f4f6;
+    }
+    .filter-item.active {
+        background-color: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e40af;
+        font-weight: 600;
+    }
+
+    /* Custom Leaflet Popups */
+    .leaflet-popup-content-wrapper {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .popup-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #111827;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #f3f4f6;
+        padding-bottom: 5px;
+    }
+    .popup-type {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+    }
+    .popup-alert {
+        background-color: #fef2f2;
+        color: #b91c1c;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        border-left: 3px solid #ef4444;
+    }
+    .popup-stat {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+    .popup-action {
+        display: block;
+        text-align: center;
+        background-color: #1a365d;
+        color: white !important;
+        font-weight: 700;
+        padding: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-top: 15px;
+        font-size: 0.85rem;
+    }
+    .popup-action:hover {
+        background-color: #1e3a8a;
+    }
+    .popup-directions {
+        display: block;
+        text-align: center;
+        background-color: #f3f4f6;
+        color: #374151 !important;
+        font-weight: 600;
+        padding: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        border: 1px solid #d1d5db;
+    }
+    .popup-directions:hover {
+        background-color: #e5e7eb;
+    }
+
+    /* Map custom marker icons */
+    .custom-marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: white;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        font-size: 1.1rem;
+    }
+    .marker-security { border-color: #3b82f6; background-color: #eff6ff; }
+    .marker-medical { border-color: #22c55e; background-color: #f0fdf4; }
+    .marker-emergency { border-color: #ef4444; background-color: #fef2f2; }
+    .marker-building { border-color: #6b7280; background-color: #f9fafb; }
+    .marker-alert { border-color: #eab308; background-color: #fefce8; border-width: 3px; }
+    
+    @@media (max-width: 768px) {
+        .map-body { flex-direction: column-reverse; }
+        .map-sidebar { width: 100%; height: 200px; border-right: none; border-top: 1px solid #e5e7eb; }
+    }
+</style>
+
+<div class="mb-4 d-flex justify-content-between align-items-end">
+    <div>
+        <h2 class="fw-bold" style="color: #111827;">Campus Safety Map</h2>
+        <p class="text-muted mb-0">Find security points, medical facilities, and active campus safety alerts.</p>
+    </div>
+</div>
+
+<div class="map-container">
+    <div class="map-header">
+        <div class="input-group" style="max-width: 300px;">
+            <span class="input-group-text bg-white">🔍</span>
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search campus location...">
+        </div>
+        <button id="btnMyLocation" class="btn btn-outline-primary fw-bold">
+            📍 My Location
+        </button>
+    </div>
+    
+    <div class="map-body">
+        <div class="map-sidebar">
+            <h6 class="fw-bold text-muted mb-3 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Map Filters</h6>
+            
+            <div class="filter-item active" data-filter="All">
+                <span aria-hidden="true">📍</span> <span>All Locations</span>
+            </div>
+            <div class="filter-item" data-filter="Gate">
+                <span aria-hidden="true">🛡️</span> <span>Gates / Security</span>
+            </div>
+            <div class="filter-item" data-filter="EmergencyPoint">
+                <span aria-hidden="true">🚨</span> <span>Emergency Points</span>
+            </div>
+            <div class="filter-item" data-filter="MedicalCenter">
+                <span aria-hidden="true">🏥</span> <span>Medical Facilities</span>
+            </div>
+            <div class="filter-item" data-filter="CampusBuilding">
+                <span aria-hidden="true">🏫</span> <span>Campus Buildings</span>
+            </div>
+            <div class="filter-item" data-filter="Cafeteria">
+                <span aria-hidden="true">☕</span> <span>Cafeterias</span>
+            </div>
+            <div class="filter-item" data-filter="Hostel">
+                <span aria-hidden="true">🏢</span> <span>Hostels</span>
+            </div>
+            
+
+        </div>
+        
+        <!-- The actual Leaflet map container -->
+        <div id="map" aria-label="Interactive Campus Map"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Define globals cleanly
+        let map;
+        let markerGroup;
+        let allMarkers = [];
+        let currentLocationMarker = null;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const filterItems = document.querySelectorAll('.filter-item');
+            
+            filterItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Visual toggle
+                    filterItems.forEach(el => el.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (allMarkers.length === 0) {
+                        alert("There are no campus locations on the map yet!");
+                        return;
+                    }
+
+                    const filterType = this.getAttribute('data-filter');
+                    
+                    // CLEAR all markers from the map first for a clean state
+                    if (markerGroup) {
+                        markerGroup.clearLayers();
+                    }
+                    
+                    let bounds = L.latLngBounds();
+                    let matchCount = 0;
+
+                    allMarkers.forEach(marker => {
+                        const data = marker.options.customData;
+                        let show = false;
+                        
+                        const locType = (data.locationType || '').trim().toLowerCase();
+                        const filter = filterType.trim().toLowerCase();
+
+                        if (filterType === 'All') show = true;
+                        else if (locType === filter) show = true;
+
+                        if (show) {
+                            markerGroup.addLayer(marker);
+                            bounds.extend(marker.getLatLng());
+                            matchCount++;
+                        }
+                    });
+                    
+                    if (matchCount === 0) {
+                        alert("No locations found for this category.");
+                    } else if (matchCount > 0 && filterType !== 'All') {
+                        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 17 });
+                    }
+                });
+            });
+
+            // INITIALIZE MAP
+            try {
+                if (typeof L === 'undefined') {
+                    console.error("Leaflet library did not load.");
+                    alert("Error: The map library failed to load.");
+                    return;
+                }
+
+                map = L.map('map').setView([31.255992, 75.705263], 15);
+                markerGroup = L.layerGroup().addTo(map);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                function getIconForLocation(type, hasAlerts) {
+                    let emoji = '🏫';
+                    let cssClass = 'marker-building';
+
+                    if (type === 'Gate' || type === 'SecurityPost') { emoji = '🛡️'; cssClass = 'marker-security'; }
+                    if (type === 'EmergencyPoint') { emoji = '🚨'; cssClass = 'marker-emergency'; }
+                    if (type === 'MedicalCenter') { emoji = '🏥'; cssClass = 'marker-medical'; }
+                    if (type === 'Cafeteria') { emoji = '☕'; cssClass = 'marker-building'; }
+                    if (type === 'Hostel') { emoji = '🏢'; cssClass = 'marker-building'; }
+
+                    if (hasAlerts > 0) {
+                        cssClass = 'marker-alert';
+                    }
+
+                    return L.divIcon({
+                        className: 'custom-div-icon',
+                        html: `<div class="custom-marker ${cssClass}">${emoji}</div>`,
+                        iconSize: [36, 36],
+                        iconAnchor: [18, 18],
+                        popupAnchor: [0, -18]
+                    });
+                }
+
+                // Fetch map data
+                fetch('/Safety/api/mapdata')
+                    .then(response => response.json())
+                    .then(locations => {
+                        if(locations.length > 0) {
+                            map.setView([locations[0].latitude, locations[0].longitude], 16);
+                        }
+
+                        locations.forEach(loc => {
+                            const icon = getIconForLocation(loc.locationType, loc.activeAlertsCount);
+                            // Add marker directly to the markerGroup, NOT the map
+                            const marker = L.marker([loc.latitude, loc.longitude], { icon: icon, customData: loc }).addTo(markerGroup);
+                            
+                            let popupHtml = `<div style="min-width: 220px;">
+                                                <div class="popup-title">${loc.name}</div>
+                                                <div class="popup-type">${(loc.locationType||'').replace(/([A-Z])/g, ' $1').trim()}</div>`;
+                            
+                            if (loc.description) popupHtml += `<div style="font-size: 0.85rem; color:#4b5563; margin-bottom: 10px;">${loc.description}</div>`;
+                            if (loc.activeAlertsCount > 0) popupHtml += `<div class="popup-alert">⚠️ ${loc.activeAlertsCount} Active Safety Alert(s)</div>`;
+                            if (loc.recentIncidentsCount > 0) popupHtml += `<div class="popup-stat"><strong>Recent Concerns:</strong> <span class="badge bg-warning text-dark rounded-pill">${loc.recentIncidentsCount}</span></div>`;
+                            if (loc.infrastructureIssuesCount > 0) popupHtml += `<div class="popup-stat"><strong>Infrastructure Issues:</strong> <span class="badge bg-secondary rounded-pill">${loc.infrastructureIssuesCount}</span></div>`;
+
+                            popupHtml += `<a href="/IncidentReport/Create?LocationId=${loc.locationId}" class="popup-action">Report a Safety Concern Here</a>`;
+                            popupHtml += `<a href="https://www.google.com/maps/dir/?api=1&destination=${loc.latitude},${loc.longitude}" target="_blank" class="popup-directions">Get Directions</a>`;
+                            popupHtml += `</div>`;
+
+                            marker.bindPopup(popupHtml);
+                            allMarkers.push(marker);
+                        });
+
+                        // Check URL for search parameter after map is loaded
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const queryParam = urlParams.get('q');
+                        if (queryParam) {
+                            const searchInput = document.getElementById('searchInput');
+                            searchInput.value = queryParam;
+                            // Trigger the input event to perform search
+                            searchInput.dispatchEvent(new Event('input'));
+                        }
+                    })
+                    .catch(err => console.error("API Error:", err));
+
+                // Search Control
+                document.getElementById('searchInput').addEventListener('input', function(e) {
+                    const term = e.target.value.toLowerCase();
+                    if (term.length === 0) {
+                        allMarkers.forEach(marker => marker.closePopup());
+                        return;
+                    }
+                    allMarkers.forEach(marker => {
+                        if (marker.options.customData.name.toLowerCase().includes(term)) {
+                            marker.openPopup();
+                            map.setView(marker.getLatLng(), 17);
+                        }
+                    });
+                });
+
+                // Geolocation
+                document.getElementById('btnMyLocation').addEventListener('click', function() {
+                    if ("geolocation" in navigator) {
+                        const btn = this;
+                        btn.innerText = "Locating...";
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                const lat = position.coords.latitude;
+                                const lng = position.coords.longitude;
+                                btn.innerText = "📍 My Location";
+
+                                if (currentLocationMarker) map.removeLayer(currentLocationMarker);
+
+                                const userIcon = L.divIcon({
+                                    className: 'custom-div-icon',
+                                    html: `<div style="width:16px;height:16px;background-color:#2563eb;border-radius:50%;border:3px solid white;box-shadow:0 0 5px rgba(0,0,0,0.5);"></div>`,
+                                    iconSize: [16, 16],
+                                    iconAnchor: [8, 8]
+                                });
+
+                                currentLocationMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+                                currentLocationMarker.bindPopup("<strong>You are here</strong>").openPopup();
+                                map.setView([lat, lng], 17);
+                            },
+                            function(error) {
+                                btn.innerText = "📍 My Location";
+                                alert("Location permission denied.");
+                            },
+                            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                        );
+                    } else {
+                        alert("Geolocation is not supported.");
+                    }
+                });
+
+            } catch (error) {
+                console.error("Map Initialization Error:", error);
+            }
+        });
+    </script>
+}

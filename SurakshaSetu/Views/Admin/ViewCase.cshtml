@@ -1,0 +1,236 @@
+@model SurakshaSetu.ViewModels.AdminCaseDetailViewModel
+@{
+    ViewData["Title"] = "View Case";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <a href="/Admin/Cases" class="btn btn-light rounded-circle shadow-sm me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <span>⬅️</span>
+            </a>
+            <div>
+                <h2 class="fw-bold mb-1">Case @Model.Report.ReportId</h2>
+                <p class="text-muted mb-0">System oversight view. Operational control belongs to Security.</p>
+            </div>
+        </div>
+        <div>
+            @if(Model.Report.ImmediateDanger)
+            {
+                <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill me-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> SOS Request</span>
+            }
+            <span class="badge bg-secondary fs-6 px-3 py-2 rounded-pill">@Model.Report.Status</span>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                <h5 class="fw-bold text-primary mb-0">Incident Details</h5>
+            </div>
+            <div class="card-body p-4 pt-2">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="text-muted small fw-bold text-uppercase mb-1">Category</div>
+                        <div class="fw-bold fs-5">@Model.Report.IncidentCategory</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small fw-bold text-uppercase mb-1">Severity</div>
+                        <div>
+                            @if(Model.Report.Severity == "Critical") { <span class="badge bg-danger fs-6">Critical</span> }
+                            else if(Model.Report.Severity == "High") { <span class="badge bg-warning text-dark fs-6">High</span> }
+                            else if(Model.Report.Severity == "Medium") { <span class="badge bg-primary fs-6">Medium</span> }
+                            else { <span class="badge bg-info text-dark fs-6">Low</span> }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small fw-bold text-uppercase mb-1">Date & Time</div>
+                        <div class="fw-bold">@Model.Report.IncidentDate.ToString("MMMM dd, yyyy") at @Model.Report.IncidentTime</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-muted small fw-bold text-uppercase mb-1">Location</div>
+                        <div class="fw-bold">@Model.Report.IncidentLocation</div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="text-muted small fw-bold text-uppercase mb-2">Description</div>
+                    <div class="p-4 bg-light rounded-4 border" style="white-space: pre-wrap;">@Model.Report.Description</div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded-3 border">
+                            <div class="me-3 fs-4">🚑</div>
+                            <div>
+                                <div class="fw-bold small">Medical Assistance</div>
+                                <div class="@(Model.Report.MedicalAssistanceRequired ? "text-danger fw-bold" : "text-muted")">
+                                    @(Model.Report.MedicalAssistanceRequired ? "Required" : "Not Required")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded-3 border">
+                            <div class="me-3 fs-4">👮</div>
+                            <div>
+                                <div class="fw-bold small">Security Assistance</div>
+                                <div class="@(Model.Report.SecurityAssistanceRequired ? "text-danger fw-bold" : "text-muted")">
+                                    @(Model.Report.SecurityAssistanceRequired ? "Required" : "Not Required")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Report.ResolutionNotes))
+        {
+            <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+                <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                    <h5 class="fw-bold text-success mb-0">Resolution Information</h5>
+                </div>
+                <div class="card-body p-4 pt-2">
+                    <div class="text-muted small fw-bold text-uppercase mb-2">Notes</div>
+                    <div class="p-4 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-4" style="white-space: pre-wrap;">@Model.Report.ResolutionNotes</div>
+                    
+                    @if(Model.Report.ResolvedAt.HasValue)
+                    {
+                        <div class="text-muted small mt-3">
+                            <strong>Resolved Date:</strong> @Model.Report.ResolvedAt.Value.ToString("MMMM dd, yyyy HH:mm")
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <div class="col-lg-4">
+        
+        <!-- Assignment Card -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                <h6 class="fw-bold text-primary mb-0">Case Assignment</h6>
+            </div>
+            <div class="card-body p-4 pt-2">
+                <div class="mb-4">
+                    <div class="text-muted small mb-1">Currently Assigned To:</div>
+                    @if(string.IsNullOrEmpty(Model.Report.AssignedTo))
+                    {
+                        <div class="fw-bold fs-5 text-warning">Unassigned</div>
+                    }
+                    else
+                    {
+                        <div class="fw-bold fs-5 text-dark">@Model.Report.AssignedTo</div>
+                    }
+                </div>
+
+                <form method="post" action="/Admin/ReassignCase" class="mt-3 p-3 bg-light rounded-3 border">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="reportId" value="@Model.Report.SafetyReportId" />
+                    
+                    <label class="form-label fw-bold text-muted small">Reassign Case (Admin Override)</label>
+                    <select name="newAssignee" class="form-select mb-3">
+                        <option value="">-- Unassign --</option>
+                        @foreach(var staff in Model.SecurityStaff)
+                        {
+                            if (Model.Report.AssignedTo == staff.Value)
+                            {
+                                <option value="@staff.Value" selected>@staff.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@staff.Value">@staff.Text</option>
+                            }
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Update Assignment</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reporter Info -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                <h6 class="fw-bold mb-0">Reporter Information</h6>
+            </div>
+            <div class="card-body p-4 pt-2">
+                @if(Model.Report.IsAnonymous)
+                {
+                    <div class="d-flex align-items-center">
+                        <div class="bg-dark rounded-circle text-white d-flex justify-content-center align-items-center me-3" style="width: 48px; height: 48px;">
+                            <span class="fs-4">🕵️</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark fs-5">Anonymous</div>
+                            <div class="text-muted small">Identity protected</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle text-primary border border-primary border-opacity-25 d-flex justify-content-center align-items-center me-3" style="width: 48px; height: 48px;">
+                            <span class="fs-4">👤</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark fs-5">Identified User</div>
+                            <div class="text-muted small">User ID: @Model.Report.UserId</div>
+                        </div>
+                    </div>
+                }
+                
+                <hr class="my-3">
+                <div class="small">
+                    <span class="text-muted">Submitted on:</span>
+                    <br>
+                    <span class="fw-bold">@Model.Report.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
+            <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                <h6 class="fw-bold mb-0">Status Timeline</h6>
+            </div>
+            <div class="card-body p-4 pt-2">
+                @if(Model.Timeline.Any())
+                {
+                    <div class="position-relative ms-2">
+                        <div class="position-absolute h-100 border-start border-2" style="left: 6px; top: 10px;"></div>
+                        
+                        @foreach(var item in Model.Timeline)
+                        {
+                            <div class="position-relative mb-4 ps-4">
+                                <div class="position-absolute bg-primary rounded-circle" style="width: 14px; height: 14px; left: 0; top: 4px;"></div>
+                                <div class="fw-bold text-dark">Changed to <span class="text-primary">@item.NewStatus</span></div>
+                                <div class="text-muted small">By: @item.ChangedBy</div>
+                                <div class="text-muted small" style="font-size: 0.7rem;">@item.ChangedAt.ToString("MMM dd, HH:mm")</div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-muted small text-center py-3">No status changes recorded yet.</div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

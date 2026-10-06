@@ -1,0 +1,195 @@
+@model SurakshaSetu.ViewModels.SafetyReportCreateViewModel
+@{
+    ViewData["Title"] = "Report a Safety Concern";
+    Layout = User.IsInRole("SuperAdmin") ? "_SuperAdminLayout" : User.IsInRole("Admin") ? "_AdminLayout" : User.IsInRole("SecurityOfficer") ? "_SecurityLayout" : "_DashboardLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/safety-reports.css" />
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .form-control:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
+        }
+        .privacy-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .btn-submit {
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            background: #1d4ed8;
+        }
+    </style>
+}
+
+<div class="form-container">
+    <div class="report-header" style="border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 25px;">
+        <h1 style="margin-bottom: 5px;">📝 Report a Safety Concern</h1>
+        <p style="margin: 0;">Submit a report to campus safety. If you are in immediate danger, use the SOS button.</p>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <input type="hidden" asp-for="Source" />
+
+        <div class="privacy-box">
+            <strong>🔒 Privacy Information</strong>
+            <p style="margin-top: 5px; font-size: 13px; color: #64748b;">
+                Your report will be accessible only to authorized personnel responsible for campus safety and response. 
+                You can choose to submit this report anonymously below.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="IncidentCategory">Incident Category *</label>
+            <select class="form-control" asp-for="IncidentCategory" id="categorySelect" onchange="toggleOtherCategory()">
+                <option value="">Select Category</option>
+                <option value="Harassment">Harassment</option>
+                <option value="Stalking">Stalking</option>
+                <option value="Sexual Harassment">Sexual Harassment</option>
+                <option value="Unsafe Area">Unsafe Area</option>
+                <option value="Suspicious Activity">Suspicious Activity</option>
+                <option value="Ragging">Ragging</option>
+                <option value="Hostel Safety">Hostel Safety</option>
+                <option value="Women's Safety">Women's Safety</option>
+                <option value="Transport Safety">Transport Safety</option>
+                <option value="Cyber Harassment">Cyber Harassment</option>
+                <option value="Lighting Problem">Lighting Problem</option>
+                <option value="Infrastructure Issue">Infrastructure Issue</option>
+                <option value="Emergency Request">Emergency Request</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" id="otherCategoryInput" name="OtherCategory" class="form-control mt-2" placeholder="Please specify the category..." style="display: none;" />
+            <span asp-validation-for="IncidentCategory" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="IncidentLocation">Incident Location *</label>
+            <input class="form-control" asp-for="IncidentLocation" placeholder="e.g. Library Block, Main Gate" />
+            <span asp-validation-for="IncidentLocation" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
+        </div>
+
+        <div class="row">
+            <div class="col form-group">
+                <label class="form-label" asp-for="IncidentDate">Incident Date *</label>
+                <input class="form-control" type="date" asp-for="IncidentDate" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="IncidentDate" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
+            </div>
+            <div class="col form-group">
+                <label class="form-label" asp-for="IncidentTime">Incident Time *</label>
+                <input class="form-control" type="time" asp-for="IncidentTime" />
+                <span asp-validation-for="IncidentTime" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col form-group">
+                <label class="form-label" asp-for="Severity">Severity *</label>
+                <select class="form-control" asp-for="Severity">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="Description">What happened? *</label>
+            <textarea class="form-control" asp-for="Description" rows="6" placeholder="Please describe what happened, where it happened, and any information that may help the safety team." oninput="updateCounter(this)"></textarea>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <span asp-validation-for="Description" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
+                <span id="charCount" style="color: #6b7280; font-size: 13px;">0 / 5000</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: flex-start; gap: 10px; background: #eff6ff; padding: 15px; border-radius: 8px; border: 1px solid #bfdbfe; cursor: pointer;">
+                <input type="checkbox" asp-for="IsAnonymous" style="margin-top: 4px;" />
+                <div>
+                    <strong style="color: #1e40af; display: block;">Submit this report anonymously</strong>
+                    <span style="font-size: 13px; color: #3b82f6;">Your student identity will not be attached to this report. The report will still receive a tracking ID.</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="form-group" style="margin-top: 30px;">
+            <button type="submit" class="btn-submit">Submit Report</button>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="javascript:history.back()" style="color: #6b7280; text-decoration: none; font-size: 14px;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function updateCounter(textarea) {
+            document.getElementById('charCount').innerText = textarea.value.length + ' / 5000';
+        }
+        
+        function toggleOtherCategory() {
+            var select = document.getElementById('categorySelect');
+            var input = document.getElementById('otherCategoryInput');
+            if (select && select.value === 'Other') {
+                input.style.display = 'block';
+                input.required = true;
+            } else if (input) {
+                input.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+        
+        // Initialize counter and category toggle
+        var descElem = document.getElementById('Description');
+        if(descElem) updateCounter(descElem);
+        
+        toggleOtherCategory();
+    </script>
+}

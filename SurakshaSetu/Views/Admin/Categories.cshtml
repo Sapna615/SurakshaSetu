@@ -1,0 +1,108 @@
+@model SurakshaSetu.ViewModels.AdminCategoriesPageViewModel
+@{
+    ViewData["Title"] = "Incident Categories";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">Incident Categories</h2>
+            <p class="text-muted mb-0">Configure classifications for safety reports and cases</p>
+        </div>
+        <a href="/Admin/CreateCategory" class="btn btn-primary fw-bold px-4 rounded-3 shadow-sm">
+            <span class="me-2">➕</span> Add Category
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+    <div class="card-body p-4">
+        <form method="get" action="/Admin/Categories" class="row g-3">
+            <div class="col-md-9">
+                <label class="form-label fw-bold text-muted small">Search Categories</label>
+                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Search by name or description..." value="@Model.SearchQuery">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-dark w-100 fw-bold">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Category Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th class="pe-4 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Categories.Any())
+                    {
+                        foreach (var cat in Model.Categories)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <div class="fw-bold text-dark">@cat.Name</div>
+                                </td>
+                                <td>
+                                    <div class="text-muted small" style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        @(string.IsNullOrEmpty(cat.Description) ? "No description" : cat.Description)
+                                    </div>
+                                </td>
+                                <td>
+                                    @if(cat.IsActive)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">Inactive</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <a href="/Admin/EditCategory/@cat.IncidentCategoryId" class="btn btn-sm btn-outline-primary fw-bold me-2">Edit</a>
+                                    
+                                    <form method="post" action="/Admin/ToggleCategory/@cat.IncidentCategoryId" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        @if(cat.IsActive)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">Disable</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-success fw-bold">Enable</button>
+                                        }
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <div><span class="fs-1">📑</span></div>
+                                <div class="mt-2 fw-bold">No categories found.</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

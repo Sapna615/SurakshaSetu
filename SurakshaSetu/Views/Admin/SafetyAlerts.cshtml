@@ -1,0 +1,161 @@
+@model SurakshaSetu.ViewModels.AdminSafetyAlertsPageViewModel
+@{
+    ViewData["Title"] = "Safety Alerts";
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">Safety Alerts</h2>
+            <p class="text-muted mb-0">Broadcast and manage campus-wide safety notifications</p>
+        </div>
+        <a href="/Admin/CreateSafetyAlert" class="btn btn-warning text-dark fw-bold px-4 rounded-3 shadow-sm">
+            <span class="me-2">⚠️</span> New Safety Alert
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-4" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+    <div class="card-body p-4">
+        <form method="get" action="/Admin/SafetyAlerts" class="row g-3">
+            <div class="col-md-5">
+                <label class="form-label fw-bold text-muted small">Search Alerts</label>
+                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Search titles or messages..." value="@Model.SearchQuery">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold text-muted small">Category</label>
+                <select name="categoryFilter" class="form-select bg-light">
+                    <option value="">All Categories</option>
+                    @foreach(var cat in Model.AvailableCategories)
+                    {
+                        if (Model.CategoryFilter == cat.Value)
+                        {
+                            <option value="@cat.Value" selected>@cat.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.Value">@cat.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold text-muted small">Status</label>
+                <select name="statusFilter" class="form-select bg-light">
+                    <option value="">All</option>
+                    <!option value="Active" @(Model.StatusFilter == "Active" ? "selected" : "")>Active Only</!option>
+                    <!option value="Inactive" @(Model.StatusFilter == "Inactive" ? "selected" : "")>Inactive/Expired</!option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-dark w-100 fw-bold">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Alert Title</th>
+                        <th>Category & Priority</th>
+                        <th>Published On</th>
+                        <th>Expires</th>
+                        <th>Status</th>
+                        <th class="pe-4 text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Alerts.Any())
+                    {
+                        foreach (var alert in Model.Alerts)
+                        {
+                            bool isExpired = alert.ExpiresAt.HasValue && alert.ExpiresAt.Value <= DateTime.UtcNow;
+                            bool isActuallyActive = alert.IsActive && !isExpired;
+
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <div class="fw-bold @(isActuallyActive ? "text-dark" : "text-muted")" style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@alert.Title</div>
+                                    <div class="small @(isActuallyActive ? "text-secondary" : "text-muted")" style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@alert.Message</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold small">@alert.Category</div>
+                                    <div>
+                                        @if(alert.Priority == "Critical") { <span class="badge bg-danger">Critical</span> }
+                                        else if(alert.Priority == "High") { <span class="badge bg-warning text-dark">High</span> }
+                                        else if(alert.Priority == "Medium") { <span class="badge bg-primary">Medium</span> }
+                                        else { <span class="badge bg-info text-dark">Low</span> }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold small">@alert.PublishedAt.ToString("MMM dd, yyyy")</div>
+                                    <div class="text-muted small">@alert.PublishedAt.ToString("HH:mm")</div>
+                                </td>
+                                <td>
+                                    @if(alert.ExpiresAt.HasValue)
+                                    {
+                                        <div class="small @(isExpired ? "text-danger fw-bold" : "text-muted")">@alert.ExpiresAt.Value.ToString("MMM dd, yyyy")</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted small fst-italic">Never</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if(isActuallyActive)
+                                    {
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25"><i class="bi bi-broadcast"></i> Active</span>
+                                    }
+                                    else if(isExpired)
+                                    {
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">Expired</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">Inactive</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <a href="/Admin/EditSafetyAlert/@alert.SafetyAlertId" class="btn btn-sm btn-outline-primary fw-bold me-2">Edit</a>
+                                    
+                                    <form method="post" action="/Admin/ToggleSafetyAlert/@alert.SafetyAlertId" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        @if(alert.IsActive)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold" onclick="return confirm('Are you sure you want to deactivate this alert? It will no longer be visible to users.');">Deactivate</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-success fw-bold">Activate</button>
+                                        }
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <div><span class="fs-1">⚠️</span></div>
+                                <div class="mt-2 fw-bold">No safety alerts found.</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
