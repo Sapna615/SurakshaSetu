@@ -1,21 +1,23 @@
 @{
     Layout = null;
-    ViewData["Title"] = "Welcome to SurakshaSetu";
+    ViewData["Title"] = "SurakshaSetu | Campus Safety Platform";
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Campus Safety</title>
+    <title>@ViewData["Title"]</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap CSS for grid structure -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
         :root {
@@ -28,12 +30,74 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--light);
-            color: var(--secondary);
+            background-color: #0b1120;
+            color: #f8fafc;
             overflow-x: hidden;
+        }
+
+        /* Ambient Glow & Mesh Background */
+        .ambient-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(37,99,235,0) 70%);
+            top: -200px;
+            right: -100px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .ambient-glow-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(225,29,72,0.15) 0%, rgba(225,29,72,0) 70%);
+            bottom: 5%;
+            left: -150px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glass Navbar */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.25rem 3.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 17, 32, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        .brand-shield {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         }
 
         /* Hero Section */
@@ -42,99 +106,46 @@
             display: flex;
             align-items: center;
             position: relative;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, rgba(37,99,235,0) 70%);
-            z-index: 0;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, rgba(245,158,11,0) 70%);
-            z-index: 0;
-        }
-
-        .navbar-custom {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 2rem 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--secondary);
-            text-decoration: none;
-        }
-        
-        .brand-icon {
-            font-size: 2rem;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            padding: 0 4rem;
+            padding-top: 130px;
+            padding-bottom: 80px;
+            background: radial-gradient(circle at top left, #1e293b 0%, #0b1120 60%);
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
+            padding: 8px 18px;
+            background: rgba(37, 99, 235, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.25);
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.85rem;
             margin-bottom: 24px;
             backdrop-filter: blur(10px);
         }
 
         .hero-title {
-            font-size: 4.5rem;
-            font-weight: 800;
+            font-size: 4.2rem;
+            font-weight: 900;
             line-height: 1.1;
             margin-bottom: 24px;
-            letter-spacing: -1px;
-            color: var(--secondary);
+            letter-spacing: -1.5px;
+            color: white;
         }
 
-        .hero-title span {
-            background: linear-gradient(to right, var(--primary), #8b5cf6);
+        .hero-title .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: #475569;
+            font-size: 1.2rem;
+            color: #94a3b8;
             margin-bottom: 40px;
-            max-width: 600px;
+            max-width: 580px;
             line-height: 1.6;
         }
 
@@ -142,287 +153,227 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 16px 32px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            gap: 10px;
+            padding: 14px 28px;
+            font-size: 1.05rem;
+            font-weight: 700;
             border-radius: 12px;
             text-decoration: none;
-            transition: all 0.3s ease;
-            border: none;
+            transition: all 0.25s ease;
             cursor: pointer;
         }
 
-        .btn-primary-custom {
-            background-color: var(--primary);
+        .btn-primary-glow {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.5);
         }
-
-        .btn-primary-custom:hover {
-            background-color: var(--primary-dark);
+        .btn-primary-glow:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
             transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.7);
             color: white;
-            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
         }
-        
-        .btn-outline-custom {
-            background-color: white;
-            color: var(--secondary);
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
         }
-        
-        .btn-outline-custom:hover {
-            border-color: #cbd5e1;
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px);
-            color: var(--secondary);
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        /* Features Section */
-        .features-grid {
-            position: relative;
-            z-index: 1;
-        }
-
+        /* Glass Feature Cards */
         .feature-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
             height: 100%;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
+            border-color: rgba(96, 165, 250, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 24px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
         }
-        
-        .icon-blue { background: #eff6ff; color: #3b82f6; }
-        .icon-red { background: #fef2f2; color: #ef4444; }
-        .icon-purple { background: #faf5ff; color: #a855f7; }
-        .icon-amber { background: #fffbeb; color: #f59e0b; }
+        .icon-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+        .icon-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
+        .icon-blue { background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.25); }
+        .icon-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
 
         .feature-title {
             font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--secondary);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
         }
-
         .feature-desc {
-            color: #64748b;
-            font-size: 1rem;
+            color: #94a3b8;
+            font-size: 0.95rem;
             line-height: 1.6;
             margin: 0;
         }
 
-        /* Floating UI Elements (Decorative) */
-        .floating-card {
-            position: absolute;
-            background: white;
-            padding: 20px;
+        /* Floating Trust Stats */
+        .trust-stat-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
-            animation: float 6s ease-in-out infinite;
-            z-index: 2;
-        }
-
-        .fc-1 {
-            top: 25%;
-            right: 5%;
-            width: 280px;
-        }
-
-        .fc-2 {
-            bottom: 15%;
-            right: 15%;
-            width: 320px;
-            animation-delay: -3s;
-        }
-
-        @@keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .stat-row {
+            padding: 20px 24px;
+            backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 16px;
         }
-        
-        .stat-row:last-child { margin-bottom: 0; }
-        
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #eff6ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
+        .trust-stat-num {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
         }
-        
-        .stat-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .stat-val { font-weight: 700; color: var(--secondary); }
-        .stat-lbl { font-size: 0.75rem; color: #64748b; }
-
-        .alert-toast {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #fef2f2;
-            border: 1px solid #fee2e2;
-            padding: 12px 16px;
-            border-radius: 12px;
-        }
-        
-        .alert-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--danger);
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
-            animation: pulse 2s infinite;
+        .trust-stat-lbl {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
         }
 
-        @@keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-
-        /* Mobile Adjustments */
         @@media (max-width: 991px) {
-            .hero-title { font-size: 3rem; }
-            .floating-card { display: none; }
-            .navbar-custom { padding: 1.5rem 2rem; }
-            .hero-content { padding: 0 2rem; margin-top: 80px; }
-            .action-buttons { flex-direction: column; align-items: stretch; }
+            .hero-title { font-size: 2.8rem; }
+            .navbar-custom { padding: 1rem 1.5rem; }
+            .hero { padding-top: 100px; }
         }
     </style>
 </head>
 <body>
 
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar-custom">
+        <a href="/" class="brand-logo">
+            <div class="brand-shield">
+                <i class="bi bi-shield-fill-check"></i>
+            </div>
+            <span>SurakshaSetu</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a href="/Identity/Account/Register" class="btn-custom btn-glass py-2 px-3" style="font-size: 0.9rem;">
+                <i class="bi bi-person-plus-fill"></i> Register
+            </a>
+            <a href="/Identity/Account/Login" class="btn-custom btn-primary-glow py-2 px-4" style="font-size: 0.9rem;">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
     <section class="hero">
-        <nav class="navbar-custom">
-            <a href="#" class="brand-logo">
-                <span class="brand-icon">🛡️</span>
-                SurakshaSetu
-            </a>
-            <a href="/Identity/Account/Login" class="btn-custom btn-outline-custom py-2 px-4">
-                Sign In
-            </a>
-        </nav>
-
-        <!-- Decorative Floating Cards -->
-        <div class="floating-card fc-1">
-            <div class="fw-bold mb-3" style="font-size: 0.9rem;">Campus Safety Status</div>
-            <div class="stat-row">
-                <div class="stat-icon">✓</div>
-                <div class="stat-text">
-                    <span class="stat-val">12</span>
-                    <span class="stat-lbl">Active Patrols</span>
-                </div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-icon" style="background:#fef2f2; color:#ef4444;">⏱</div>
-                <div class="stat-text">
-                    <span class="stat-val">2.4 mins</span>
-                    <span class="stat-lbl">Avg Response Time</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="floating-card fc-2">
-            <div class="alert-toast">
-                <div class="alert-dot"></div>
-                <div>
-                    <div style="font-weight: 600; font-size: 0.85rem; color: #991b1b;">Campus Alert System</div>
-                    <div style="font-size: 0.75rem; color: #b91c1c;">Instantly broadcasts critical warnings to all students.</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid hero-content">
-            <div class="row align-items-center">
+        <div class="container-fluid px-lg-5">
+            <div class="row align-items-center g-5">
                 <div class="col-lg-6">
                     <div class="hero-badge">
-                        <span>✨</span> Next-Gen Campus Safety Platform
+                        <i class="bi bi-patch-check-fill text-primary"></i> Enterprise University Safety Platform
                     </div>
                     <h1 class="hero-title">
-                        Empowering a <span>Safer</span> Campus Environment.
+                        Empowering a <span class="text-gradient">Safer Campus</span> Community.
                     </h1>
                     <p class="hero-subtitle">
-                        SurakshaSetu is an integrated security and reporting platform designed to protect students, streamline incident response, and provide immediate support exactly when it's needed.
+                        An integrated, confidential safety ecosystem connecting students, campus security, counseling centers, and hostel wardens with 24/7 emergency dispatch.
                     </p>
                     
-                    <div class="action-buttons">
-                        <a href="/Identity/Account/Login" class="btn-custom btn-primary-custom">
-                            Access Portal
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    <div class="d-flex flex-wrap gap-3 mb-5">
+                        <a href="/Identity/Account/Login" class="btn-custom btn-primary-glow">
+                            <i class="bi bi-shield-lock-fill"></i> Access Safety Portal
                         </a>
-                        <a href="#features" class="btn-custom btn-outline-custom">
-                            Explore Features
+                        <a href="/Identity/Account/Login" class="btn-custom btn-glass">
+                            <i class="bi bi-lightning-charge-fill text-danger"></i> Emergency SOS
                         </a>
                     </div>
+
+                    <!-- Live Trust Indicators -->
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <div class="trust-stat-box">
+                                <div class="trust-stat-num text-primary">24/7</div>
+                                <div class="trust-stat-lbl">Patrol Command</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="trust-stat-box">
+                                <div class="trust-stat-num text-success">&lt;3m</div>
+                                <div class="trust-stat-lbl">Emergency Response</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="trust-stat-box">
+                                <div class="trust-stat-num text-warning">100%</div>
+                                <div class="trust-stat-lbl">Encrypted Reports</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="col-lg-6 mt-5 mt-lg-0 features-grid">
+
+                <div class="col-lg-6">
                     <div class="row g-4">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <div class="feature-card">
-                                <div class="feature-icon icon-red">🚨</div>
+                                <div class="feature-icon icon-red">
+                                    <i class="bi bi-broadcast"></i>
+                                </div>
                                 <h3 class="feature-title">Emergency SOS</h3>
-                                <p class="feature-desc">Instantly dispatch security personnel to your exact GPS location with a single tap.</p>
+                                <p class="feature-desc">Single-tap emergency beacon with GPS coordinates dispatched straight to campus quick-response vehicles.</p>
                             </div>
                         </div>
-                        <div class="col-md-6" style="margin-top: 40px;">
+                        <div class="col-sm-6 mt-sm-5">
                             <div class="feature-card">
-                                <div class="feature-icon icon-purple">🕵️</div>
-                                <h3 class="feature-title">Anonymous Reports</h3>
-                                <p class="feature-desc">Safely report incidents without revealing your identity, protecting you from retaliation.</p>
+                                <div class="feature-icon icon-purple">
+                                    <i class="bi bi-incognito"></i>
+                                </div>
+                                <h3 class="feature-title">Anonymous Reporting</h3>
+                                <p class="feature-desc">Report ragging, harassment, or misconduct with complete confidentiality and end-to-end identity masking.</p>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <div class="feature-card">
-                                <div class="feature-icon icon-blue">🧠</div>
-                                <h3 class="feature-title">Counseling Center</h3>
-                                <p class="feature-desc">Directly connect with mental health professionals and grievance officers for support.</p>
+                                <div class="feature-icon icon-blue">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                                <h3 class="feature-title">Live Safety Map</h3>
+                                <p class="feature-desc">Interactive campus radar highlighting emergency phone poles, security gates, and illuminated walkways.</p>
                             </div>
                         </div>
-                        <div class="col-md-6" style="margin-top: 40px;">
+                        <div class="col-sm-6 mt-sm-5">
                             <div class="feature-card">
-                                <div class="feature-icon icon-amber">⚠️</div>
-                                <h3 class="feature-title">Safety Alerts</h3>
-                                <p class="feature-desc">Receive real-time notifications about campus threats, weather events, or road closures.</p>
+                                <div class="feature-icon icon-amber">
+                                    <i class="bi bi-heart-pulse-fill"></i>
+                                </div>
+                                <h3 class="feature-title">Counseling & Welfare</h3>
+                                <p class="feature-desc">Direct private consultation pathways with psychological counselors and designated student welfare officers.</p>
                             </div>
                         </div>
                     </div>
@@ -431,18 +382,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer style="background-color: var(--secondary); color: rgba(255,255,255,0.7); padding: 40px 0; text-align: center;">
+    <!-- FOOTER -->
+    <footer style="background-color: #080d1a; border-top: 1px solid rgba(255,255,255,0.06); padding: 40px 0; text-align: center;">
         <div class="container">
-            <div class="brand-logo justify-content-center mb-3" style="color: white;">
-                <span class="brand-icon">🛡️</span>
-                SurakshaSetu
+            <div class="brand-logo justify-content-center mb-3">
+                <div class="brand-shield" style="width: 32px; height: 32px; font-size: 1rem;">
+                    <i class="bi bi-shield-fill-check"></i>
+                </div>
+                <span>SurakshaSetu</span>
             </div>
-            <p style="font-size: 0.9rem; max-width: 500px; margin: 0 auto 20px auto;">
-                A comprehensive digital safety net for educational institutions. Designed for students, security personnel, and administrators.
+            <p style="font-size: 0.9rem; color: #64748b; max-width: 500px; margin: 0 auto 20px auto;">
+                Smart campus safety infrastructure for students, faculty, and security administration.
             </p>
-            <div style="font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                &copy; 2026 SurakshaSetu Platform. All rights reserved.
+            <div style="font-size: 0.8rem; color: #475569;">
+                &copy; 2026 SurakshaSetu Platform. All institutional rights reserved.
             </div>
         </div>
     </footer>

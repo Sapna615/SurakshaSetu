@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SurakshaSetu</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
     <style>
@@ -142,15 +143,15 @@
                 var controller = ViewContext.RouteData.Values["controller"]?.ToString();
             }
             <ul class="sidebar-menu" style="margin-top: 20px;">
-                <li><a href="/Student/Dashboard" class="@(controller == "Student" ? "active" : "")" style="@(controller == "Student" ? "background-color: #eff6ff; color: #2563eb; font-weight: 700;" : "")"><span style="@(controller == "Student" ? "color:#3b82f6;" : "")">🏠</span> Dashboard</a></li>
-                <li><a href="@Url.Action("MyReports", "IncidentReport")"><span>📋</span> My Reports</a></li>
-                <li><a href="/Safety/Map" class="@(controller == "SafetyMap" ? "active" : "")" style="@(controller == "SafetyMap" ? "background-color: #eff6ff; color: #2563eb; font-weight: 700;" : "")"><span style="@(controller == "SafetyMap" ? "color:#3b82f6;" : "")">✛</span> Safety Map</a></li>
+                <li><a href="/Student/Dashboard" class="@(controller == "Student" ? "active" : "")" style="@(controller == "Student" ? "background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; font-weight: 700; box-shadow: 0 2px 4px rgba(37,99,235,0.08);" : "")"><i class="bi bi-grid-1x2-fill me-2" style="@(controller == "Student" ? "color:#2563eb;" : "color:#6b7280;")"></i> Dashboard</a></li>
+                <li><a href="@Url.Action("MyReports", "IncidentReport")"><i class="bi bi-clipboard2-check me-2" style="color:#6b7280;"></i> My Reports</a></li>
+                <li><a href="/Safety/Map" class="@(controller == "SafetyMap" ? "active" : "")" style="@(controller == "SafetyMap" ? "background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; font-weight: 700;" : "")"><i class="bi bi-geo-alt-fill me-2" style="@(controller == "SafetyMap" ? "color:#2563eb;" : "color:#6b7280;")"></i> Safety Map</a></li>
                 <li style="position: relative;">
-                    <a href="/SafetyAlert" class="@(controller == "SafetyAlert" ? "active" : "")" style="@(controller == "SafetyAlert" ? "background-color: #eff6ff; color: #2563eb; font-weight: 700;" : "")"><span style="@(controller == "SafetyAlert" ? "color:#3b82f6;" : "")">⚠️</span> Safety Alerts</a>
+                    <a href="/SafetyAlert" class="@(controller == "SafetyAlert" ? "active" : "")" style="@(controller == "SafetyAlert" ? "background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; font-weight: 700;" : "")"><i class="bi bi-bell-fill me-2" style="@(controller == "SafetyAlert" ? "color:#2563eb;" : "color:#6b7280;")"></i> Safety Alerts</a>
                 </li>
-                <li><a href="/EmergencyContact" class="@(controller == "EmergencyContact" ? "active" : "")" style="@(controller == "EmergencyContact" ? "background-color: #eff6ff; color: #2563eb; font-weight: 700;" : "")"><span style="@(controller == "EmergencyContact" ? "color:#3b82f6;" : "")">📞</span> Emergency Contacts</a></li>
+                <li><a href="/EmergencyContact" class="@(controller == "EmergencyContact" ? "active" : "")" style="@(controller == "EmergencyContact" ? "background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; font-weight: 700;" : "")"><i class="bi bi-telephone-fill me-2" style="@(controller == "EmergencyContact" ? "color:#2563eb;" : "color:#6b7280;")"></i> Emergency Contacts</a></li>
                 <br/>
-                <li><a href="/Student/Profile"><span>👤</span> My Profile</a></li>
+                <li><a href="/Student/Profile"><i class="bi bi-person-circle me-2" style="color:#6b7280;"></i> My Profile</a></li>
             </ul>
 
             <div style="padding: 20px; margin-top: auto;">
