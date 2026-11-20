@@ -194,6 +194,53 @@ namespace SurakshaSetu.Data
                 );
                 await context.SaveChangesAsync();
             }
+
+            // 7. Seed Active Safety Alerts
+            if (!context.SafetyAlerts.Any())
+            {
+                context.SafetyAlerts.AddRange(
+                    new SafetyAlert
+                    {
+                        Title = "Evening Patrols Increased Around Law Gate & GH",
+                        Message = "Campus security has deployed additional foot patrols and mobile units around Law Gate and Girls Hostels from 7:00 PM to 6:00 AM.",
+                        Priority = "High",
+                        Category = "Security Notice",
+                        Location = "Gate 2 (Law Gate) & Hostels",
+                        PublishedBy = "Campus Security Command",
+                        RecommendedAction = "Please carry your University Student ID after 9:00 PM and use well-lit primary paths.",
+                        PublishedAt = DateTime.UtcNow.AddHours(-3),
+                        IsActive = true,
+                        ExpiresAt = DateTime.UtcNow.AddDays(7)
+                    },
+                    new SafetyAlert
+                    {
+                        Title = "Routine Maintenance: Streetlights in Block 32-34 Walkway",
+                        Message = "Electrical repairs are underway on pedestrian walkways between Block 32 and Block 34. Alternate illuminated pathway is available via Unipolis.",
+                        Priority = "Medium",
+                        Category = "Infrastructure Safety",
+                        Location = "Academic Block 32-34",
+                        PublishedBy = "Campus Infrastructure Dept",
+                        RecommendedAction = "Take the Unipolis covered corridor when walking after sunset.",
+                        PublishedAt = DateTime.UtcNow.AddHours(-8),
+                        IsActive = true,
+                        ExpiresAt = DateTime.UtcNow.AddDays(3)
+                    },
+                    new SafetyAlert
+                    {
+                        Title = "Free Campus Night Transit Shuttle Operational",
+                        Message = "Electric shuttle transit operates every 15 minutes connecting Hostels, Academic Blocks, and Uni Hospital until 11:30 PM.",
+                        Priority = "Info",
+                        Category = "Transit & Safety",
+                        Location = "Campus Wide",
+                        PublishedBy = "Transport & Student Welfare",
+                        RecommendedAction = "Board at any designated blue transit shelter across campus.",
+                        PublishedAt = DateTime.UtcNow.AddDays(-1),
+                        IsActive = true,
+                        ExpiresAt = DateTime.UtcNow.AddDays(14)
+                    }
+                );
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task CreateTestUserAsync(UserManager<ApplicationUser> userManager, string email, string fullName, string role, string permissionClaim = null)
