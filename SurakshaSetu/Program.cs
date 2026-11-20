@@ -20,8 +20,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=SurakshaSetu.db";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (defaultConn.Contains(".db", StringComparison.OrdinalIgnoreCase) || 
+        defaultConn.Contains("Data Source=", StringComparison.OrdinalIgnoreCase) && !defaultConn.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseSqlite(defaultConn);
+    }
+    else
+    {
+        options.UseSqlServer(defaultConn);
+    }
+});
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
@@ -78,8 +90,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
-        // Automatically create/migrate database tables if running in cloud
-        await dbContext.Database.MigrateAsync();
+        // Ensure database schema is created and all tables exist
+        await dbContext.Database.EnsureCreatedAsync();
 
         await DbSeeder.SeedRolesAndAdminAsync(services);
     }
