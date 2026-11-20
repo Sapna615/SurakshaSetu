@@ -11,4 +11,4 @@ services:
       - key: ASPNETCORE_HTTP_PORTS
         value: 8080
       - key: ConnectionStrings__DefaultConnection
-        value: Data Source=SurakshaSetu.db
+        sync: false

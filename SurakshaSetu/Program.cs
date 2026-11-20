@@ -20,18 +20,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=SurakshaSetu.db";
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    if (defaultConn.Contains(".db", StringComparison.OrdinalIgnoreCase) || 
-        defaultConn.Contains("Data Source=", StringComparison.OrdinalIgnoreCase) && !defaultConn.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+    if (conn.Contains(".db") || conn.Contains("Data Source") && !conn.Contains("Server="))
     {
-        options.UseSqlite(defaultConn);
+        options.UseSqlite(conn);
     }
     else
     {
-        options.UseSqlServer(defaultConn);
+        options.UseSqlServer(conn);
     }
 });
 
@@ -90,8 +88,15 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
-        // Ensure database schema is created and all tables exist
-        await dbContext.Database.EnsureCreatedAsync();
+        // Ensure database schema is created and all tables exist (works across both SQLite and SQL Server)
+        if (dbContext.Database.IsSqlite())
+        {
+            await dbContext.Database.EnsureCreatedAsync();
+        }
+        else
+        {
+            await dbContext.Database.MigrateAsync();
+        }
 
         await DbSeeder.SeedRolesAndAdminAsync(services);
     }
