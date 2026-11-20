@@ -71,6 +71,7 @@ namespace SurakshaSetu.Data
 
             // Seed Test Security Officer
             await CreateTestUserAsync(userManager, "security@surakshasetu.edu", "Officer Singh", "SecurityOfficer");
+            await CreateTestUserAsync(userManager, "security-new@surakshasetu.edu", "Security Officer New", "SecurityOfficer");
             
             // Force upgrade if they manually registered earlier as Student
             var secUser = await userManager.FindByEmailAsync("security@surakshasetu.edu");
@@ -78,6 +79,12 @@ namespace SurakshaSetu.Data
             {
                 await userManager.RemoveFromRoleAsync(secUser, "Student");
                 await userManager.AddToRoleAsync(secUser, "SecurityOfficer");
+            }
+            var secNewUser = await userManager.FindByEmailAsync("security-new@surakshasetu.edu");
+            if (secNewUser != null && !await userManager.IsInRoleAsync(secNewUser, "SecurityOfficer"))
+            {
+                await userManager.RemoveFromRoleAsync(secNewUser, "Student");
+                await userManager.AddToRoleAsync(secNewUser, "SecurityOfficer");
             }
 
             // Seed Test Admin
