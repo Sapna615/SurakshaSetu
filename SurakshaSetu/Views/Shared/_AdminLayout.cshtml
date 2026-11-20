@@ -142,7 +142,22 @@
                 @using Microsoft.AspNetCore.Authorization
                 @inject IAuthorizationService AuthorizationService
                 
-                @if (User.IsInRole("Admin"))
+                @if (User.HasClaim("Permission", "ManageHostel"))
+                {
+                    <li><a href="/Warden/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Warden" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>🏢</span> Hostel Overview</a></li>
+                    <li><a href="/Warden/Incidents" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Incidents" ? "active" : "")"><span>📋</span> Hostel Incidents</a></li>
+                }
+                else if (User.HasClaim("Permission", "ManageCounseling"))
+                {
+                    <li><a href="/Counselor/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Counselor" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>🧠</span> Counseling Center</a></li>
+                    <li><a href="/Counselor/Cases" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Cases" ? "active" : "")"><span>🫂</span> Sensitive Cases</a></li>
+                }
+                else if (User.HasClaim("Permission", "ReadOnlyAnalytics"))
+                {
+                    <li><a href="/Management/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Management" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>📈</span> Executive Summary</a></li>
+                    <li><a href="/Management/Reports" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")"><span>📊</span> Analytics Reports</a></li>
+                }
+                else if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
                 {
                     <li><a href="/Admin/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>🏠</span> Dashboard</a></li>
                     <li><a href="/Admin/Users" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")"><span>🛡️</span> User Management</a></li>
@@ -154,21 +169,6 @@
                     <li><a href="/Admin/Analytics" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Analytics" ? "active" : "")"><span>📈</span> Analytics & Reports</a></li>
                     <li><a href="/Admin/Categories" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" ? "active" : "")"><span>⚙️</span> Categories & Config</a></li>
                     <li><a href="/Admin/AuditLogs" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "AuditLogs" ? "active" : "")"><span>📝</span> Audit Logs</a></li>
-                }
-                else if ((await AuthorizationService.AuthorizeAsync(User, "ManageCounseling")).Succeeded)
-                {
-                    <li><a href="/Counselor/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Counselor" ? "active" : "")"><span>🧠</span> Counseling Center</a></li>
-                    <li><a href="/Counselor/Cases"><span>🫂</span> Sensitive Cases</a></li>
-                }
-                else if ((await AuthorizationService.AuthorizeAsync(User, "ManageHostel")).Succeeded)
-                {
-                    <li><a href="/Warden/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Warden" ? "active" : "")"><span>🏢</span> Hostel Overview</a></li>
-                    <li><a href="/Warden/Incidents"><span>📋</span> Hostel Incidents</a></li>
-                }
-                else if ((await AuthorizationService.AuthorizeAsync(User, "ReadOnlyAnalytics")).Succeeded)
-                {
-                    <li><a href="/Management/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Management" ? "active" : "")"><span>📈</span> Executive Summary</a></li>
-                    <li><a href="/Management/Reports"><span>📊</span> Analytics Reports</a></li>
                 }
                 
                 <br/>
@@ -192,17 +192,17 @@
         <div class="main-content">
             <header class="top-header">
                 <div class="breadcrumb-title">
-                    @if ((await AuthorizationService.AuthorizeAsync(User, "ManageCounseling")).Succeeded)
+                    @if (User.HasClaim("Permission", "ManageHostel"))
+                    {
+                        @:Hostel Warden Portal /
+                    }
+                    else if (User.HasClaim("Permission", "ManageCounseling"))
                     {
                         @:Counseling Center /
                     }
-                    else if ((await AuthorizationService.AuthorizeAsync(User, "ManageHostel")).Succeeded)
+                    else if (User.HasClaim("Permission", "ReadOnlyAnalytics"))
                     {
-                        @:Warden Portal /
-                    }
-                    else if ((await AuthorizationService.AuthorizeAsync(User, "ReadOnlyAnalytics")).Succeeded)
-                    {
-                        @:Management Dashboard /
+                        @:Executive Analytics /
                     }
                     else
                     {

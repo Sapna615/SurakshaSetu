@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# ASP.NET Core local runtime files
+**/.aspnet/
+**/.local/

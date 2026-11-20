@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SurakshaSetu.Controllers
 {
-    [Authorize(Roles = "SecurityOfficer,Admin")]
+    [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
     public class SecurityController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +22,7 @@ namespace SurakshaSetu.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> Dashboard()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -51,7 +51,7 @@ namespace SurakshaSetu.Controllers
             
             return View(viewModel);
         }
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> IncidentQueue(string? search, string? category, string? severity, string? status, string? sortBy)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -111,7 +111,7 @@ namespace SurakshaSetu.Controllers
 
             return View("IncidentQueue", viewModel);
         }
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> MyCases()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -132,21 +132,21 @@ namespace SurakshaSetu.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> Infrastructure(string? search, string? severity, string? status, string? sortBy)
         {
             ViewData["Title"] = "Infrastructure Issues";
             return await IncidentQueue(search, "Infrastructure Issue", severity, status, sortBy);
         }
 
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> EmergencyRequests(string? search, string? severity, string? status, string? sortBy)
         {
             ViewData["Title"] = "Emergency Requests";
             return await IncidentQueue(search, "Emergency Request", severity, status, sortBy);
         }
 
-        [Authorize(Roles = "SecurityOfficer")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> ActiveSOS()
         {
             var user = await _userManager.GetUserAsync(User);

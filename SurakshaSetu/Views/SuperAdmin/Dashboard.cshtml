@@ -13,36 +13,44 @@
 
 <div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white">
-            <div class="card-body p-4 text-center">
-                <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">TOTAL STUDENTS</div>
-                <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalStudents</div>
+        <a href="/Admin/Users?roleFilter=Student" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white card-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">TOTAL STUDENTS</div>
+                    <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalStudents</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white">
-            <div class="card-body p-4 text-center">
-                <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">SECURITY STAFF</div>
-                <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalSecurityOfficers</div>
+        <a href="/Admin/Users?roleFilter=SecurityOfficer" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white card-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">SECURITY STAFF</div>
+                    <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalSecurityOfficers</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white">
-            <div class="card-body p-4 text-center">
-                <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">ADMINS</div>
-                <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalAdmins</div>
+        <a href="/Admin/Users?roleFilter=Admin" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white card-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">ADMINS</div>
+                    <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalAdmins</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white">
-            <div class="card-body p-4 text-center">
-                <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">SUPER ADMINS</div>
-                <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalSuperAdmins</div>
+        <a href="/Admin/Users?roleFilter=SuperAdmin" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-dark text-white card-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="text-uppercase fw-bold mb-2 text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">SUPER ADMINS</div>
+                    <div class="fw-bold" style="font-size: 2.5rem;">@Model.TotalSuperAdmins</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 

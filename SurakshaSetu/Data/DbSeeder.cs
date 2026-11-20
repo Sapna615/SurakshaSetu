@@ -41,9 +41,17 @@ namespace SurakshaSetu.Data
                 var result = await userManager.CreateAsync(adminUser, "Admin@2026!");
                 if (result.Succeeded)
                 {
-                    // Assign the SuperAdmin role to this user
+                    // Assign roles to this user
                     await userManager.AddToRoleAsync(adminUser, "SuperAdmin");
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
+            }
+            else
+            {
+                if (!await userManager.IsInRoleAsync(adminUser, "SuperAdmin"))
+                    await userManager.AddToRoleAsync(adminUser, "SuperAdmin");
+                if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
             }
 
             // 3. Seed Incident Categories

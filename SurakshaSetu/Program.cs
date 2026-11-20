@@ -1,10 +1,17 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SurakshaSetu.Data;
 using SurakshaSetu.Models;
+using SurakshaSetu.Services;
 
 if (args.Contains("db_check")) {
     SurakshaSetu.DbCheck.Run(args);
+    return;
+}
+
+if (args.Contains("export_db")) {
+    SurakshaSetu.DatabaseViewerExporter.GenerateHtmlViewer();
     return;
 }
 
@@ -25,14 +32,17 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
 // Identity UI requires Razor Pages
 builder.Services.AddRazorPages();
 
+// Register dev email sender (logs reset links to console)
+builder.Services.AddSingleton<IEmailSender, DevEmailSender>();
+
 // Add Policy-Based Authorization for Specialist Roles
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ManageWomensSafety", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageWomensSafety") || c.User.IsInRole("Admin")));
-    options.AddPolicy("ManageCounseling", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageCounseling") || c.User.IsInRole("Admin")));
-    options.AddPolicy("ManageHostel", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageHostel") || c.User.IsInRole("Admin")));
-    options.AddPolicy("ManageGrievance", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageGrievance") || c.User.IsInRole("Admin")));
-    options.AddPolicy("ReadOnlyAnalytics", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ReadOnlyAnalytics") || c.User.IsInRole("Admin")));
+    options.AddPolicy("ManageWomensSafety", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageWomensSafety") || c.User.IsInRole("Admin") || c.User.IsInRole("SuperAdmin")));
+    options.AddPolicy("ManageCounseling", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageCounseling") || c.User.IsInRole("Admin") || c.User.IsInRole("SuperAdmin")));
+    options.AddPolicy("ManageHostel", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageHostel") || c.User.IsInRole("Admin") || c.User.IsInRole("SuperAdmin")));
+    options.AddPolicy("ManageGrievance", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ManageGrievance") || c.User.IsInRole("Admin") || c.User.IsInRole("SuperAdmin")));
+    options.AddPolicy("ReadOnlyAnalytics", policy => policy.RequireAssertion(c => c.User.HasClaim("Permission", "ReadOnlyAnalytics") || c.User.IsInRole("Admin") || c.User.IsInRole("SuperAdmin")));
 });
 
 var app = builder.Build();

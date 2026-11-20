@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SurakshaSetu.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -1149,17 +1149,47 @@ namespace SurakshaSetu.Controllers
         }
 
         [HttpGet]
-        public IActionResult SensitiveCases()
+        public async Task<IActionResult> SensitiveCases()
         {
-            // Requirement: Sensitive Cases as an authorized filtered view over existing SafetyReport system
-            return RedirectToAction("Cases", "Counselor");
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+            ViewData["UserName"] = user.FullName ?? user.UserName ?? "Admin";
+            ViewData["Title"] = "Sensitive Cases";
+
+            var incidents = await _context.SafetyReports
+                .AsNoTracking()
+                .Where(r => r.IncidentCategory == "Harassment" || r.IncidentCategory == "Sexual Harassment" || r.IncidentCategory == "Bullying")
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            var viewModel = new SecurityIncidentQueueViewModel
+            {
+                Incidents = incidents
+            };
+
+            return View("~/Views/Counselor/Cases.cshtml", viewModel);
         }
 
         [HttpGet]
-        public IActionResult Analytics()
+        public async Task<IActionResult> Analytics()
         {
-            // Requirement: Integrate existing Analytics functionality
-            return RedirectToAction("Dashboard", "Management");
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+            ViewData["UserName"] = user.FullName ?? user.UserName ?? "Admin";
+            ViewData["Title"] = "Executive Summary";
+
+            var reports = await _context.SafetyReports.AsNoTracking().ToListAsync();
+
+            var viewModel = new AdminDashboardViewModel
+            {
+                TotalReports = reports.Count,
+                ActiveSOS = reports.Count(r => r.ImmediateDanger && r.Status != "Resolved" && r.Status != "Cancelled"),
+                OpenCases = reports.Count(r => r.Status != "Resolved" && r.Status != "Cancelled"),
+                ResolvedCases = reports.Count(r => r.Status == "Resolved"),
+                RecentReports = reports.OrderByDescending(r => r.CreatedAt).Take(5).ToList()
+            };
+
+            return View("~/Views/Management/Dashboard.cshtml", viewModel);
         }
     }
 }

@@ -1,0 +1,17 @@
+{
+  "mssql.connections": [
+    {
+      "server": "localhost,1433",
+      "database": "SurakshaSetuDb",
+      "authenticationType": "SqlLogin",
+      "user": "sa",
+      "password": "",
+      "emptyPasswordInput": false,
+      "savePassword": true,
+      "profileName": "SurakshaSetu Database",
+      "trustServerCertificate": true,
+      "groupId": "ROOT",
+      "id": "d33d81e2-b8ae-4386-bf46-374a670d80c8"
+    }
+  ]
+}

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>SurakshaSetu Database Visual Explorer</title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
+    <style>
+        body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 30px; }
+        .card { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .card-header { background: #1e293b; color: #fff; font-weight: bold; font-size: 1.1rem; border-radius: 12px 12px 0 0 !important; }
+        .table { margin-bottom: 0; }
+        .badge { font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class='container-fluid'>
+        <div class='d-flex justify-content-between align-items-center mb-4'>
+            <div>
+                <h2 class='fw-bold text-dark'>🗄️ SurakshaSetu Database Visualizer</h2>
+                <p class='text-muted'>Live Database View from <code>SurakshaSetuDb</code> on SQL Server (port 1433)</p>
+            </div>
+            <span class='badge bg-success p-2 fs-6'>Connected: localhost,1433</span>
+        </div>
+
+        <!-- 1. USERS TABLE -->
+        <div class='card'>
+            <div class='card-header d-flex justify-content-between'>
+                <span>👥 Table: AspNetUsers (Registered Accounts)</span>
+                <span class='badge bg-primary'>11 Total</span>
+            </div>
+            <div class='table-responsive'>
+                <table class='table table-hover table-striped align-middle'>
+                    <thead class='table-light'>
+                        <tr>
+                            <th>Id</th>
+                            <th>Full Name</th>
+                            <th>Email / UserName</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Email Confirmed</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr>
+                    <td><small class='text-muted'>1287fc93-84ee-4c3b-93f8-6d2094f26193</small></td>
+                    <td><strong>Dr. Anil Kumar</strong></td>
+                    <td>counselor@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>328dc536-8097-4460-8fc7-a5b8b64965d7</small></td>
+                    <td><strong>Meera Sharma</strong></td>
+                    <td>womensafety@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>3936d933-dee6-47a1-91a7-cd28f5c59892</small></td>
+                    <td><strong>Dean Office</strong></td>
+                    <td>management@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>49e4c1d3-db49-42d7-ba48-46e0645122b1</small></td>
+                    <td><strong>security</strong></td>
+                    <td>security@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>SecurityOfficer</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-warning'>No</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>5824b1fa-d58a-4020-b4d8-e5163ef2fa1e</small></td>
+                    <td><strong>Geeta Verma</strong></td>
+                    <td>warden@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>59d69ae7-3d30-46f0-92c9-5099ccf4292a</small></td>
+                    <td><strong>Sapna</strong></td>
+                    <td>student@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Student</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>6635ad71-df29-47ad-9e5e-36f77bcd96ca</small></td>
+                    <td><strong>Admin Coordinator</strong></td>
+                    <td>admin.test@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>a6db4d7f-fb11-4b74-877d-c165c1134e10</small></td>
+                    <td><strong>System Administrator</strong></td>
+                    <td>admin@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>Admin</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>bd7ca103-2b73-4588-814a-0d1cec848333</small></td>
+                    <td><strong>Sapna </strong></td>
+                    <td>sapnarai2005@gmail.com</td>
+                    <td><span class='badge bg-info text-dark'>Student</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-success'>Yes</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>c174ca80-5300-4d68-98da-8b704640f51e</small></td>
+                    <td><strong>Admin</strong></td>
+                    <td>admin123@gmail.com</td>
+                    <td><span class='badge bg-info text-dark'>Student</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-warning'>No</span></td>
+                </tr><tr>
+                    <td><small class='text-muted'>e596cd96-c051-4f69-a513-8041211a8b16</small></td>
+                    <td><strong>security-new</strong></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td><span class='badge bg-info text-dark'>SecurityOfficer</span></td>
+                    <td>N/A</td>
+                    <td><span class='badge bg-warning'>No</span></td>
+                </tr></tbody></table></div></div><div class='card'>
+            <div class='card-header d-flex justify-content-between bg-danger'>
+                <span>🚨 Table: SafetyReports (Incidents & SOS Alerts)</span>
+                <span class='badge bg-light text-dark'>27 Total</span>
+            </div>
+            <div class='table-responsive'>
+                <table class='table table-hover table-striped align-middle'>
+                    <thead class='table-light'>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Severity</th>
+                            <th>Status</th>
+                            <th>Immediate Danger</th>
+                            <th>Assigned To</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr>
+                    <td><strong>SS-261120-9581</strong></td>
+                    <td><span class='badge bg-secondary'>Suspicious Activity</span></td>
+                    <td>21</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-11-20 06:22:18</td>
+                </tr><tr>
+                    <td><strong>SOS-2611-7179</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Location unavailable (Permission denied or failed)</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-11-20 06:21:34</td>
+                </tr><tr>
+                    <td><strong>SS-261119-4953</strong></td>
+                    <td><span class='badge bg-secondary'>Sexual Harassment</span></td>
+                    <td>32</td>
+                    <td><span class='badge bg-warning text-dark'>High</span></td>
+                    <td><span class='badge bg-warning text-dark'>Assigned</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-11-19 17:08:55</td>
+                </tr><tr>
+                    <td><strong>SOS-2611-7616</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6962</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-11-12 14:10:31</td>
+                </tr><tr>
+                    <td><strong>SOS-2611-3671</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6962</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-11-12 13:36:48</td>
+                </tr><tr>
+                    <td><strong>SS-261112-6881</strong></td>
+                    <td><span class='badge bg-secondary'>Stalking</span></td>
+                    <td>library</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-11-12 13:36:10</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-5695</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6961</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td>security-new</td>
+                    <td>2026-10-06 16:00:11</td>
+                </tr><tr>
+                    <td><strong>SS-261006-4745</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency Request</span></td>
+                    <td>20</td>
+                    <td><span class='badge bg-warning text-dark'>Medium</span></td>
+                    <td><span class='badge bg-warning text-dark'>In Progress</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-10-06 16:00:01</td>
+                </tr><tr>
+                    <td><strong>SS-261006-1089</strong></td>
+                    <td><span class='badge bg-secondary'>Infrastructure Issue</span></td>
+                    <td>Agriculture Block</td>
+                    <td><span class='badge bg-warning text-dark'>High</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-06 15:54:12</td>
+                </tr><tr>
+                    <td><strong>SS-261006-3203</strong></td>
+                    <td><span class='badge bg-secondary'>Infrastructure Safety</span></td>
+                    <td>Upper Roof</td>
+                    <td><span class='badge bg-warning text-dark'>Low</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-06 15:25:14</td>
+                </tr><tr>
+                    <td><strong>SS-261006-1749</strong></td>
+                    <td><span class='badge bg-secondary'>Women's Safety</span></td>
+                    <td>Girls Hostel</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-06 15:23:11</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-5185</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6961</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-02 17:39:09</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-8747</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6961</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-02 14:30:35</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-5661</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6961</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-02 14:10:57</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-8128</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Location unavailable (Permission denied or failed)</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-02 14:02:51</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-1001</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Main Library</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-10-02 13:58:07</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-1005</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Parking Lot</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-warning text-dark'>Assigned</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-10-02 13:08:07</td>
+                </tr><tr>
+                    <td><strong>INC-2610-1002</strong></td>
+                    <td><span class='badge bg-secondary'>Harassment</span></td>
+                    <td>North Gate</td>
+                    <td><span class='badge bg-warning text-dark'>High</span></td>
+                    <td><span class='badge bg-warning text-dark'>Assigned</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-10-02 12:08:07</td>
+                </tr><tr>
+                    <td><strong>INC-2610-1004</strong></td>
+                    <td><span class='badge bg-secondary'>Medical Emergency</span></td>
+                    <td>Medical Center</td>
+                    <td><span class='badge bg-warning text-dark'>High</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-10-02 10:08:07</td>
+                </tr><tr>
+                    <td><strong>SS-261002-4239</strong></td>
+                    <td><span class='badge bg-secondary'>Stalking</span></td>
+                    <td>20</td>
+                    <td><span class='badge bg-warning text-dark'>Medium</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new</td>
+                    <td>2026-10-02 07:21:02</td>
+                </tr><tr>
+                    <td><strong>SOS-2610-7835</strong></td>
+                    <td><span class='badge bg-secondary'>Emergency SOS</span></td>
+                    <td>Lat: 31.2553, Lng: 75.6961</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Cancelled</span></td>
+                    <td><span class='badge bg-danger'>YES (SOS)</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-01 20:02:58</td>
+                </tr><tr>
+                    <td><strong>INC-2610-1003</strong></td>
+                    <td><span class='badge bg-secondary'>Infrastructure Issue</span></td>
+                    <td>Girls Hostel A</td>
+                    <td><span class='badge bg-warning text-dark'>Medium</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-10-01 14:08:07</td>
+                </tr><tr>
+                    <td><strong>SS-261001-9217</strong></td>
+                    <td><span class='badge bg-secondary'>Sexual Harassment</span></td>
+                    <td>32</td>
+                    <td><span class='badge bg-warning text-dark'>Medium</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-09-30 20:19:33</td>
+                </tr><tr>
+                    <td><strong>SS-261001-4648</strong></td>
+                    <td><span class='badge bg-secondary'>Harassment</span></td>
+                    <td>21</td>
+                    <td><span class='badge bg-warning text-dark'>Low</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-09-30 20:16:30</td>
+                </tr><tr>
+                    <td><strong>SS-261001-4556</strong></td>
+                    <td><span class='badge bg-secondary'>Sexual Harassment</span></td>
+                    <td>21</td>
+                    <td><span class='badge bg-warning text-dark'>Medium</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-09-30 20:13:15</td>
+                </tr><tr>
+                    <td><strong>SS-261001-3989</strong></td>
+                    <td><span class='badge bg-secondary'>Harassment</span></td>
+                    <td>32</td>
+                    <td><span class='badge bg-danger'>Critical</span></td>
+                    <td><span class='badge bg-success'>Resolved</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td>security-new@surakshasetu.edu</td>
+                    <td>2026-09-30 20:11:21</td>
+                </tr><tr>
+                    <td><strong>SS-261001-3647</strong></td>
+                    <td><span class='badge bg-secondary'>Harassment</span></td>
+                    <td>32</td>
+                    <td><span class='badge bg-warning text-dark'>High</span></td>
+                    <td><span class='badge bg-danger'>Pending</span></td>
+                    <td><span class='badge bg-light text-muted border'>No</span></td>
+                    <td><span class='text-muted'>Unassigned</span></td>
+                    <td>2026-09-30 20:09:54</td>
+                </tr></tbody></table></div></div><div class='card'>
+            <div class='card-header d-flex justify-content-between bg-primary'>
+                <span>📍 Table: CampusLocations (Safety Map Coordinates)</span>
+                <span class='badge bg-light text-dark'>25 Total</span>
+            </div>
+            <div class='table-responsive'>
+                <table class='table table-hover table-striped align-middle'>
+                    <thead class='table-light'>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr>
+                    <td>3130</td>
+                    <td><strong>LPU Main Gate</strong></td>
+                    <td><span class='badge bg-info text-dark'>Gate</span></td>
+                    <td><code>31.256</code></td>
+                    <td><code>75.7052</code></td>
+                    <td>Main entrance gate of Lovely Professional University</td>
+                </tr><tr>
+                    <td>3131</td>
+                    <td><strong>Gate 2 (Law Gate)</strong></td>
+                    <td><span class='badge bg-info text-dark'>Gate</span></td>
+                    <td><code>31.2548</code></td>
+                    <td><code>75.7021</code></td>
+                    <td>Entrance near Law School</td>
+                </tr><tr>
+                    <td>3132</td>
+                    <td><strong>Gate 3</strong></td>
+                    <td><span class='badge bg-info text-dark'>Gate</span></td>
+                    <td><code>31.2575</code></td>
+                    <td><code>75.7085</code></td>
+                    <td>Student exit gate</td>
+                </tr><tr>
+                    <td>3133</td>
+                    <td><strong>Uni Hospital</strong></td>
+                    <td><span class='badge bg-info text-dark'>MedicalCenter</span></td>
+                    <td><code>31.254</code></td>
+                    <td><code>75.7035</code></td>
+                    <td>LPU University Hospital and Medical Center</td>
+                </tr><tr>
+                    <td>3134</td>
+                    <td><strong>First Aid Clinic - BH</strong></td>
+                    <td><span class='badge bg-info text-dark'>MedicalCenter</span></td>
+                    <td><code>31.2585</code></td>
+                    <td><code>75.7075</code></td>
+                    <td>Clinic near Boys Hostels</td>
+                </tr><tr>
+                    <td>3135</td>
+                    <td><strong>Girls Hostel 1</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.253</code></td>
+                    <td><code>75.702</code></td>
+                    <td>Primary girls accommodation</td>
+                </tr><tr>
+                    <td>3136</td>
+                    <td><strong>Girls Hostel 2</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.2525</code></td>
+                    <td><code>75.7015</code></td>
+                    <td>GH2 Accommodation</td>
+                </tr><tr>
+                    <td>3137</td>
+                    <td><strong>Girls Hostel 3</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.252</code></td>
+                    <td><code>75.701</code></td>
+                    <td>GH3 Accommodation</td>
+                </tr><tr>
+                    <td>3138</td>
+                    <td><strong>Boys Hostel 1</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.257</code></td>
+                    <td><code>75.707</code></td>
+                    <td>BH1 Accommodation</td>
+                </tr><tr>
+                    <td>3139</td>
+                    <td><strong>Boys Hostel 2</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.2575</code></td>
+                    <td><code>75.7075</code></td>
+                    <td>BH2 Accommodation</td>
+                </tr><tr>
+                    <td>3140</td>
+                    <td><strong>Boys Hostel 3</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.258</code></td>
+                    <td><code>75.708</code></td>
+                    <td>BH3 Accommodation</td>
+                </tr><tr>
+                    <td>3141</td>
+                    <td><strong>Boys Hostel 4</strong></td>
+                    <td><span class='badge bg-info text-dark'>Hostel</span></td>
+                    <td><code>31.2585</code></td>
+                    <td><code>75.7085</code></td>
+                    <td>BH4 Accommodation</td>
+                </tr><tr>
+                    <td>3142</td>
+                    <td><strong>Block 14</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.2545</code></td>
+                    <td><code>75.706</code></td>
+                    <td>School of Computer Application</td>
+                </tr><tr>
+                    <td>3143</td>
+                    <td><strong>Block 25</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.255</code></td>
+                    <td><code>75.7065</code></td>
+                    <td>School of Business</td>
+                </tr><tr>
+                    <td>3144</td>
+                    <td><strong>Block 32</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.2555</code></td>
+                    <td><code>75.7055</code></td>
+                    <td>Academic block</td>
+                </tr><tr>
+                    <td>3145</td>
+                    <td><strong>Block 33</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.256</code></td>
+                    <td><code>75.705</code></td>
+                    <td>Computer Science and Engineering</td>
+                </tr><tr>
+                    <td>3146</td>
+                    <td><strong>Block 34</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.2565</code></td>
+                    <td><code>75.7045</code></td>
+                    <td>Engineering Labs</td>
+                </tr><tr>
+                    <td>3147</td>
+                    <td><strong>Block 38</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.257</code></td>
+                    <td><code>75.704</code></td>
+                    <td>Auditorium block</td>
+                </tr><tr>
+                    <td>3148</td>
+                    <td><strong>Baldev Raj Mittal Unipolis</strong></td>
+                    <td><span class='badge bg-info text-dark'>CampusBuilding</span></td>
+                    <td><code>31.2558</code></td>
+                    <td><code>75.7058</code></td>
+                    <td>Main event arena</td>
+                </tr><tr>
+                    <td>3149</td>
+                    <td><strong>Emergency SOS Point Alpha</strong></td>
+                    <td><span class='badge bg-info text-dark'>EmergencyPoint</span></td>
+                    <td><code>31.2545</code></td>
+                    <td><code>75.7045</code></td>
+                    <td>Blue light phone - Central</td>
+                </tr><tr>
+                    <td>3150</td>
+                    <td><strong>Emergency SOS Point Beta</strong></td>
+                    <td><span class='badge bg-info text-dark'>EmergencyPoint</span></td>
+                    <td><code>31.2582</code></td>
+                    <td><code>75.7082</code></td>
+                    <td>Blue light phone - Near BH</td>
+                </tr><tr>
+                    <td>3151</td>
+                    <td><strong>Emergency SOS Point Gamma</strong></td>
+                    <td><span class='badge bg-info text-dark'>EmergencyPoint</span></td>
+                    <td><code>31.2528</code></td>
+                    <td><code>75.7018</code></td>
+                    <td>Blue light phone - Near GH</td>
+                </tr><tr>
+                    <td>3152</td>
+                    <td><strong>Student Center Cafeteria</strong></td>
+                    <td><span class='badge bg-info text-dark'>Cafeteria</span></td>
+                    <td><code>31.2565</code></td>
+                    <td><code>75.7065</code></td>
+                    <td>Main food court</td>
+                </tr><tr>
+                    <td>3153</td>
+                    <td><strong>Block 14 Food Court</strong></td>
+                    <td><span class='badge bg-info text-dark'>Cafeteria</span></td>
+                    <td><code>31.2546</code></td>
+                    <td><code>75.7061</code></td>
+                    <td>Cafe inside Block 14</td>
+                </tr><tr>
+                    <td>3154</td>
+                    <td><strong>Block 32 Cafe</strong></td>
+                    <td><span class='badge bg-info text-dark'>Cafeteria</span></td>
+                    <td><code>31.2556</code></td>
+                    <td><code>75.7056</code></td>
+                    <td>Cafe near Block 32</td>
+                </tr></tbody></table></div></div><div class='card'>
+            <div class='card-header d-flex justify-content-between bg-success'>
+                <span>📞 Table: EmergencyContacts (Directory)</span>
+                <span class='badge bg-light text-dark'>11 Total</span>
+            </div>
+            <div class='table-responsive'>
+                <table class='table table-hover table-striped align-middle'>
+                    <thead class='table-light'>
+                        <tr>
+                            <th>Order</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>24x7</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr>
+                    <td>1</td>
+                    <td><strong>Campus Security</strong></td>
+                    <td>Security (Command Center)</td>
+                    <td><code>+91 9876543210</code></td>
+                    <td></td>
+                    <td><span class='badge bg-success'>24x7</span></td>
+                </tr><tr>
+                    <td>2</td>
+                    <td><strong>Women's Safety Officer</strong></td>
+                    <td>Student Welfare (Safety Officer)</td>
+                    <td><code>+91 7654321098</code></td>
+                    <td>womensafety@surakshasetu.edu</td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>3</td>
+                    <td><strong>Medical Center</strong></td>
+                    <td>Health (Medical Staff)</td>
+                    <td><code>+91 8765432109</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>4</td>
+                    <td><strong>Emergency Medical Support</strong></td>
+                    <td>Health (Ambulance)</td>
+                    <td><code>108</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>5</td>
+                    <td><strong>Hostel Warden</strong></td>
+                    <td>Housing (Warden)</td>
+                    <td><code>+91 6543210987</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>6</td>
+                    <td><strong>Campus Counselor</strong></td>
+                    <td>Counseling (Counselor)</td>
+                    <td><code>+91 5432109876</code></td>
+                    <td>counseling@surakshasetu.edu</td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>7</td>
+                    <td><strong>Anti-Ragging Committee</strong></td>
+                    <td>Student Affairs (Committee)</td>
+                    <td><code>+91 1234567890</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>8</td>
+                    <td><strong>Grievance Officer</strong></td>
+                    <td>Admin (Grievance Officer)</td>
+                    <td><code></code></td>
+                    <td>grievance@surakshasetu.edu</td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>9</td>
+                    <td><strong>Cyber Safety / IT Support</strong></td>
+                    <td>IT (IT Security)</td>
+                    <td><code>+91 4321098765</code></td>
+                    <td>itsecurity@surakshasetu.edu</td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>10</td>
+                    <td><strong>Student Welfare Office</strong></td>
+                    <td>Student Affairs (Welfare Officer)</td>
+                    <td><code>+91 2345678901</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr><tr>
+                    <td>11</td>
+                    <td><strong>Transport Security</strong></td>
+                    <td>Transport (Transport Officer)</td>
+                    <td><code>+91 3210987654</code></td>
+                    <td></td>
+                    <td>Standard</td>
+                </tr></tbody></table></div></div></div></body></html>
