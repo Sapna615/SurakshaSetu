@@ -196,7 +196,15 @@ namespace SurakshaSetu.Data
             }
 
             // 7. Seed Active Safety Alerts
-            if (!context.SafetyAlerts.Any())
+            // Clear expired or dummy alerts so students see clean, active university safety alerts
+            var dummyOrExpiredAlerts = context.SafetyAlerts.Where(a => a.ExpiresAt != null && a.ExpiresAt < DateTime.UtcNow || a.Title.Contains("hdhdsdjsjhs")).ToList();
+            if (dummyOrExpiredAlerts.Any())
+            {
+                context.SafetyAlerts.RemoveRange(dummyOrExpiredAlerts);
+                await context.SaveChangesAsync();
+            }
+
+            if (!context.SafetyAlerts.Any(a => a.IsActive && (a.ExpiresAt == null || a.ExpiresAt > DateTime.UtcNow)))
             {
                 context.SafetyAlerts.AddRange(
                     new SafetyAlert
