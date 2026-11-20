@@ -219,6 +219,16 @@ namespace SurakshaSetu.Data
                     }
                 }
             }
+            else
+            {
+                // Ensure password is reset to SurakshaSetu@2026! in case it was different
+                var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                await userManager.ResetPasswordAsync(user, token, "SurakshaSetu@2026!");
+                if (!await userManager.IsInRoleAsync(user, role))
+                {
+                    await userManager.AddToRoleAsync(user, role);
+                }
+            }
         }
     }
 }
