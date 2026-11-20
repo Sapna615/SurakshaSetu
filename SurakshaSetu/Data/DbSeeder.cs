@@ -68,6 +68,7 @@ namespace SurakshaSetu.Data
 
             // Seed Test Student
             await CreateTestUserAsync(userManager, "student@surakshasetu.edu", "Sapna Student", "Student");
+            await CreateTestUserAsync(userManager, "sapnarai2005@gmail.com", "Sapna Rai", "Student");
 
             // Seed Test Security Officer
             await CreateTestUserAsync(userManager, "security@surakshasetu.edu", "Officer Singh", "SecurityOfficer");
