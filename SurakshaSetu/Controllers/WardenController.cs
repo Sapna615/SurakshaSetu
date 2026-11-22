@@ -29,8 +29,14 @@ namespace SurakshaSetu.Controllers
             ViewData["UserName"] = user.FullName ?? user.UserName ?? "Warden";
             ViewData["Title"] = "Hostel Overview";
 
+            var userEmail = user.Email ?? "";
+            var userName = user.FullName ?? "";
+
+            // Show reports located in Hostel OR assigned to this Warden (by email or full name) OR category is Hostel Issue
             var reports = await _context.SafetyReports
-                .Where(r => r.IncidentLocation.Contains("Hostel"))
+                .Where(r => r.IncidentLocation.Contains("Hostel") || 
+                            r.IncidentCategory.Contains("Hostel") ||
+                            (r.AssignedTo != null && (r.AssignedTo == userEmail || r.AssignedTo == userName || r.AssignedTo.Contains("warden") || r.AssignedTo.Contains("Verma"))))
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -38,7 +44,7 @@ namespace SurakshaSetu.Controllers
             {
                 OfficerName = user.FullName ?? "Warden",
                 NewReports = reports.Count(r => r.Status == "Pending" || r.Status == "Submitted"),
-                InProgress = reports.Count(r => r.Status == "In Progress" || r.Status == "Under Investigation"),
+                InProgress = reports.Count(r => r.Status == "In Progress" || r.Status == "Under Investigation" || r.Status == "Assigned"),
                 
                 IncidentQueue = reports.Where(r => r.Status != "Resolved" && r.Status != "Cancelled")
                                        .OrderByDescending(r => r.CreatedAt)
@@ -55,9 +61,14 @@ namespace SurakshaSetu.Controllers
             ViewData["UserName"] = user.FullName ?? user.UserName ?? "Warden";
             ViewData["Title"] = "Hostel Incidents";
 
+            var userEmail = user.Email ?? "";
+            var userName = user.FullName ?? "";
+
             var incidents = await _context.SafetyReports
                 .AsNoTracking()
-                .Where(r => r.IncidentLocation.Contains("Hostel"))
+                .Where(r => r.IncidentLocation.Contains("Hostel") || 
+                            r.IncidentCategory.Contains("Hostel") ||
+                            (r.AssignedTo != null && (r.AssignedTo == userEmail || r.AssignedTo == userName || r.AssignedTo.Contains("warden") || r.AssignedTo.Contains("Verma"))))
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 

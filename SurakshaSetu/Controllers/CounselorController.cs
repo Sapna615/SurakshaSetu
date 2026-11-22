@@ -29,8 +29,14 @@ namespace SurakshaSetu.Controllers
             ViewData["UserName"] = user.FullName ?? user.UserName ?? "Counselor";
             ViewData["Title"] = "Dashboard";
 
+            var userEmail = user.Email ?? "";
+            var userName = user.FullName ?? "";
+
             var reports = await _context.SafetyReports
-                .Where(r => r.IncidentCategory == "Harassment" || r.IncidentCategory == "Sexual Harassment" || r.IncidentCategory == "Bullying")
+                .Where(r => r.IncidentCategory == "Harassment" || 
+                            r.IncidentCategory == "Sexual Harassment" || 
+                            r.IncidentCategory == "Bullying" ||
+                            (r.AssignedTo != null && (r.AssignedTo == userEmail || r.AssignedTo == userName || r.AssignedTo.Contains("counselor") || r.AssignedTo.Contains("Kumar"))))
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -38,7 +44,7 @@ namespace SurakshaSetu.Controllers
             {
                 OfficerName = user.FullName ?? "Counselor",
                 NewReports = reports.Count(r => r.Status == "Pending" || r.Status == "Submitted"),
-                InProgress = reports.Count(r => r.Status == "In Progress" || r.Status == "Under Investigation"),
+                InProgress = reports.Count(r => r.Status == "In Progress" || r.Status == "Under Investigation" || r.Status == "Assigned"),
                 
                 IncidentQueue = reports.Where(r => r.Status != "Resolved" && r.Status != "Cancelled")
                                        .OrderByDescending(r => r.CreatedAt)
@@ -55,9 +61,15 @@ namespace SurakshaSetu.Controllers
             ViewData["UserName"] = user.FullName ?? user.UserName ?? "Counselor";
             ViewData["Title"] = "Sensitive Cases";
 
+            var userEmail = user.Email ?? "";
+            var userName = user.FullName ?? "";
+
             var incidents = await _context.SafetyReports
                 .AsNoTracking()
-                .Where(r => r.IncidentCategory == "Harassment" || r.IncidentCategory == "Sexual Harassment" || r.IncidentCategory == "Bullying")
+                .Where(r => r.IncidentCategory == "Harassment" || 
+                            r.IncidentCategory == "Sexual Harassment" || 
+                            r.IncidentCategory == "Bullying" ||
+                            (r.AssignedTo != null && (r.AssignedTo == userEmail || r.AssignedTo == userName || r.AssignedTo.Contains("counselor") || r.AssignedTo.Contains("Kumar"))))
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 
