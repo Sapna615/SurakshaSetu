@@ -188,11 +188,138 @@
         
         @if (!string.IsNullOrEmpty(report.ResolutionNotes))
         {
-            <div style="margin-bottom: 30px; border-left: 4px solid #3b82f6; padding-left: 15px;">
-                <div class="info-label" style="margin-bottom: 10px; color: #1e40af;">Resolution Notes</div>
-                <div style="background: #eff6ff; padding: 15px; border-radius: 8px; font-size: 14px; color: #1e3a8a;">
+            <div style="margin-bottom: 30px; border-left: 4px solid #16a34a; padding-left: 15px;">
+                <div class="info-label" style="margin-bottom: 10px; color: #15803d;"><i class="bi bi-check-circle-fill me-1"></i> Resolution Notes</div>
+                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; font-size: 14px; color: #166534; border: 1px solid #bbf7d0;">
                     @report.ResolutionNotes
                 </div>
+            </div>
+        }
+
+        <!-- CASE RESOLUTION FEEDBACK SECTION -->
+        @if (Model.Feedback != null)
+        {
+            <div style="margin-bottom: 30px; border-radius: 12px; background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border: 1px solid #dbeafe; padding: 24px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #1e3a8a;">
+                        <i class="bi bi-star-fill text-warning me-2"></i> Case Resolution Feedback
+                    </div>
+                    <span class="badge bg-success-subtle text-success border border-success px-3 py-1">
+                        <i class="bi bi-check2-all me-1"></i> Submitted
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">STUDENT RATING:</span>
+                    <div class="mt-1" style="color: #f59e0b; font-size: 1.25rem;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Model.Feedback.Rating)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-star text-muted" style="opacity: 0.4;"></i>
+                            }
+                        }
+                        <span class="text-dark fw-bold ms-2" style="font-size: 0.95rem;">@Model.Feedback.Rating / 5</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">WAS RESOLVED SATISFACTORILY:</span>
+                    <div class="mt-1">
+                        @if (Model.Feedback.WasResolvedSatisfactorily)
+                        {
+                            <span class="badge bg-success text-white px-2 py-1"><i class="bi bi-hand-thumbs-up-fill me-1"></i> Yes, Satisfactorily Resolved</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger text-white px-2 py-1"><i class="bi bi-hand-thumbs-down-fill me-1"></i> Needs Further Attention</span>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Feedback.Comments))
+                {
+                    <div>
+                        <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">COMMENTS:</span>
+                        <div class="mt-1 p-3 rounded" style="background: white; border: 1px solid #e2e8f0; font-size: 0.9rem; color: #334155;">
+                            "@Model.Feedback.Comments"
+                        </div>
+                    </div>
+                }
+
+                <div class="text-muted mt-3" style="font-size: 0.78rem;">
+                    Feedback submitted on @Model.Feedback.SubmittedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                </div>
+            </div>
+        }
+        else if (Model.CanSubmitFeedback)
+        {
+            <div style="margin-bottom: 30px; border-radius: 12px; background: #ffffff; border: 2px solid #2563eb; padding: 24px; box-shadow: 0 4px 20px rgba(37,99,235,0.08);">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="bi bi-chat-square-heart-fill"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Case Resolved! How was our response?</h4>
+                        <div class="text-muted" style="font-size: 0.85rem;">Your feedback helps security & campus authorities improve student safety.</div>
+                    </div>
+                </div>
+
+                <form asp-action="SubmitFeedback" method="post" class="mt-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="reportId" value="@report.ReportId" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 0.9rem;">Rate our campus response:</label>
+                        <div class="d-flex gap-3 align-items-center">
+                            @for (int s = 5; s >= 1; s--)
+                            {
+                                <div class="form-check form-check-inline m-0">
+                                    <input class="form-check-input" type="radio" name="rating" id="star_@s" value="@s" @(s == 5 ? "checked" : "") />
+                                    <label class="form-check-label fw-bold" for="star_@s" style="cursor: pointer;">
+                                        @s <i class="bi bi-star-fill text-warning"></i>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 0.9rem;">Was this incident resolved to your satisfaction?</label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="wasResolvedSatisfactorily" id="sat_yes" value="true" checked />
+                                <label class="form-check-label" for="sat_yes" style="cursor: pointer;">
+                                    <i class="bi bi-hand-thumbs-up text-success me-1"></i> Yes, fully satisfied
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="wasResolvedSatisfactorily" id="sat_no" value="false" />
+                                <label class="form-check-label" for="sat_no" style="cursor: pointer;">
+                                    <i class="bi bi-hand-thumbs-down text-danger me-1"></i> No, requires follow-up
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 0.9rem;">Additional Comments / Feedback (Optional):</label>
+                        <textarea name="comments" class="form-control" rows="3" placeholder="Share your experience with officer responsiveness, speed, and safety outcome..." maxlength="1000"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary fw-bold px-4 py-2" style="border-radius: 8px;">
+                        <i class="bi bi-send-fill me-1"></i> Submit Case Feedback
+                    </button>
+                </form>
+            </div>
+        }
+        else if (report.Status == "Resolved" || report.Status == "Action Taken")
+        {
+            <div style="margin-bottom: 30px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; font-size: 0.85rem; color: #64748b;">
+                <i class="bi bi-info-circle me-1"></i> Case is resolved. Only the reporting student can submit resolution feedback.
             </div>
         }
 

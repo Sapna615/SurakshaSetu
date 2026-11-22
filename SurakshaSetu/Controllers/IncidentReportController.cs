@@ -235,6 +235,7 @@ namespace SurakshaSetu.Controllers
 
             var report = await _context.SafetyReports
                 .Include(r => r.StatusHistory)
+                .Include(r => r.Feedback)
                 .FirstOrDefaultAsync(r => r.ReportId == id);
 
             if (report == null)
@@ -248,10 +249,15 @@ namespace SurakshaSetu.Controllers
                 return Unauthorized();
             }
 
+            bool isOwner = report.UserId == user.Id || (report.IsAnonymous && report.UserId == user.Id);
+            bool canSubmitFeedback = (report.Status == "Resolved" || report.Status == "Action Taken") && report.Feedback == null && isOwner;
+
             var viewModel = new SafetyReportDetailsViewModel
             {
                 Report = report,
-                StatusHistory = report.StatusHistory.OrderBy(h => h.ChangedAt).ToList()
+                StatusHistory = report.StatusHistory.OrderBy(h => h.ChangedAt).ToList(),
+                Feedback = report.Feedback,
+                CanSubmitFeedback = canSubmitFeedback
             };
 
             return View(viewModel);
@@ -306,6 +312,68 @@ namespace SurakshaSetu.Controllers
 
             TempData["SuccessMessage"] = "Report successfully withdrawn.";
             return RedirectToAction(nameof(MyReports));
+        }
+
+        // POST: /IncidentReport/SubmitFeedback
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitFeedback(string reportId, int rating, string? comments, bool wasResolvedSatisfactorily = true)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var report = await _context.SafetyReports
+                .Include(r => r.Feedback)
+                .FirstOrDefaultAsync(r => r.ReportId == reportId);
+
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            if (report.UserId != user.Id)
+            {
+                TempData["ErrorMessage"] = "You can only submit feedback for your own reports.";
+                return RedirectToAction(nameof(Details), new { id = reportId });
+            }
+
+            if (report.Status != "Resolved" && report.Status != "Action Taken")
+            {
+                TempData["ErrorMessage"] = "Feedback can only be provided once the case has been resolved.";
+                return RedirectToAction(nameof(Details), new { id = reportId });
+            }
+
+            if (report.Feedback != null)
+            {
+                TempData["ErrorMessage"] = "Feedback has already been submitted for this case.";
+                return RedirectToAction(nameof(Details), new { id = reportId });
+            }
+
+            if (rating < 1 || rating > 5)
+            {
+                rating = 5;
+            }
+
+            var feedback = new CaseFeedback
+            {
+                SafetyReportId = report.SafetyReportId,
+                ReportId = report.ReportId,
+                UserId = user.Id,
+                SubmitterName = user.FullName ?? user.UserName ?? "Student",
+                Rating = rating,
+                Comments = comments?.Trim(),
+                WasResolvedSatisfactorily = wasResolvedSatisfactorily,
+                SubmittedAt = DateTime.UtcNow
+            };
+
+            _context.CaseFeedbacks.Add(feedback);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Thank you! Your feedback on this resolved case has been successfully recorded.";
+            return RedirectToAction(nameof(Details), new { id = reportId });
         }
     }
 }

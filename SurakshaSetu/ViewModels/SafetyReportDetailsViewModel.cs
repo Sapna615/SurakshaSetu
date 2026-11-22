@@ -7,5 +7,7 @@ namespace SurakshaSetu.ViewModels
     {
         public SafetyReport Report { get; set; } = new SafetyReport();
         public List<SafetyReportStatusHistory> StatusHistory { get; set; } = new List<SafetyReportStatusHistory>();
+        public CaseFeedback? Feedback { get; set; }
+        public bool CanSubmitFeedback { get; set; }
     }
 }

@@ -63,5 +63,6 @@ namespace SurakshaSetu.Models
         public string Source { get; set; } = "Direct Report";
 
         public virtual ICollection<SafetyReportStatusHistory> StatusHistory { get; set; } = new List<SafetyReportStatusHistory>();
+        public virtual CaseFeedback? Feedback { get; set; }
     }
 }

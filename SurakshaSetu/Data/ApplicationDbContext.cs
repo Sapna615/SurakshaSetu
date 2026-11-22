@@ -19,6 +19,7 @@ namespace SurakshaSetu.Data
         public DbSet<SOSAlert> SOSAlerts { get; set; }
         public DbSet<SafetyReport> SafetyReports { get; set; }
         public DbSet<SafetyReportStatusHistory> SafetyReportStatusHistories { get; set; }
+        public DbSet<CaseFeedback> CaseFeedbacks { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

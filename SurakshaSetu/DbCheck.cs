@@ -15,12 +15,11 @@ namespace SurakshaSetu
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=SurakshaSetuDb;User Id=sa;Password=SurakshaSetu@2026!;TrustServerCertificate=True;");
             
             using var context = new ApplicationDbContext(optionsBuilder.Options);
-            var count = context.SafetyReports.Count();
-            Console.WriteLine($"Total Safety Reports: {count}");
-            
-            var incidents = context.SafetyReports.ToList();
-            foreach(var inc in incidents) {
-                Console.WriteLine($"- {inc.ReportId} ({inc.IncidentCategory}) Status: {inc.Status}");
+            var alertsCount = context.SafetyAlerts.Count();
+            Console.WriteLine($"Total SafetyAlerts in DB: {alertsCount}");
+            foreach (var a in context.SafetyAlerts.ToList())
+            {
+                Console.WriteLine($"- Alert: {a.Title}, IsActive: {a.IsActive}, ExpiresAt: {a.ExpiresAt}");
             }
         }
     }
