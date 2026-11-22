@@ -24,6 +24,8 @@ html, body, a, button, input, select, textarea, .btn {
 
 body {
   margin-bottom: 60px;
+  background: linear-gradient(180deg, #f0f4f9 0%, #e9eef5 100%);
+  min-height: 100vh;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
