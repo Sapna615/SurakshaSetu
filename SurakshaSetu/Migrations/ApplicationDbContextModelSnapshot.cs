@@ -309,6 +309,49 @@ namespace SurakshaSetu.Migrations
                     b.ToTable("CampusLocations");
                 });
 
+            modelBuilder.Entity("SurakshaSetu.Models.CaseFeedback", b =>
+                {
+                    b.Property<int>("CaseFeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseFeedbackId"));
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReportId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("SafetyReportId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SubmitterName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WasResolvedSatisfactorily")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CaseFeedbackId");
+
+                    b.HasIndex("SafetyReportId")
+                        .IsUnique();
+
+                    b.ToTable("CaseFeedbacks");
+                });
+
             modelBuilder.Entity("SurakshaSetu.Models.EmergencyContact", b =>
                 {
                     b.Property<int>("EmergencyContactId")
@@ -711,6 +754,17 @@ namespace SurakshaSetu.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SurakshaSetu.Models.CaseFeedback", b =>
+                {
+                    b.HasOne("SurakshaSetu.Models.SafetyReport", "SafetyReport")
+                        .WithOne("Feedback")
+                        .HasForeignKey("SurakshaSetu.Models.CaseFeedback", "SafetyReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SafetyReport");
+                });
+
             modelBuilder.Entity("SurakshaSetu.Models.SOSAlert", b =>
                 {
                     b.HasOne("SurakshaSetu.Models.ApplicationUser", "User")
@@ -735,6 +789,8 @@ namespace SurakshaSetu.Migrations
 
             modelBuilder.Entity("SurakshaSetu.Models.SafetyReport", b =>
                 {
+                    b.Navigation("Feedback");
+
                     b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
