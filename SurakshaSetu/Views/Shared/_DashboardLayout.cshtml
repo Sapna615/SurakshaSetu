@@ -252,33 +252,12 @@
             sosModal = new bootstrap.Modal(document.getElementById('sosModal'));
             cancelSosModal = new bootstrap.Modal(document.getElementById('cancelSosModal'));
             
-            // Wire up all SOS buttons (sidebar and any page buttons)
+            // Wire up all SOS buttons (instant activation on click for smooth emergency demo)
             document.querySelectorAll('.btn-sos-trigger').forEach(btn => {
-                
-                // Implement hold-to-activate (3 seconds)
-                let pressTimer;
-                let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                const startPress = (e) => {
-                    if (e.type === 'mousedown' && e.button !== 0) return; // Only left click
-                    btn.classList.add('active-press');
-                    btn.innerHTML = '🚨 HOLD 3 SECONDS...';
-                    pressTimer = window.setTimeout(activateSOS, 3000);
-                };
-                
-                const cancelPress = () => {
-                    clearTimeout(pressTimer);
-                    btn.classList.remove('active-press');
-                    btn.innerHTML = '🚨 Emergency SOS';
-                };
-                
-                btn.addEventListener('mousedown', startPress);
-                btn.addEventListener('mouseup', cancelPress);
-                btn.addEventListener('mouseleave', cancelPress);
-                
-                btn.addEventListener('touchstart', startPress, {passive: true});
-                btn.addEventListener('touchend', cancelPress);
-                btn.addEventListener('touchcancel', cancelPress);
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    activateSOS();
+                });
             });
 
             // Check if there's an active SOS on page load

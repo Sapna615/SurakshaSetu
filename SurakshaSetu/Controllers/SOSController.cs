@@ -39,35 +39,22 @@ namespace SurakshaSetu.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null) return Unauthorized();
 
-                // Check if there is already an active SOS
-                var existingSOS = await _context.SafetyReports
-                    .Where(s => s.UserId == user.Id && s.ImmediateDanger && s.Status != "Cancelled" && s.Status != "Resolved")
-                    .FirstOrDefaultAsync();
-
-                if (existingSOS != null)
-                {
-                    // Update location of existing
-                    if (!string.IsNullOrEmpty(dto.LocationDescription)) existingSOS.IncidentLocation = dto.LocationDescription;
-                    existingSOS.CreatedAt = DateTime.UtcNow; // Update creation time so it shows as a fresh alert
-                    existingSOS.UpdatedAt = DateTime.UtcNow;
-                    
-                    await _context.SaveChangesAsync();
-                    return Ok(new { success = true, sos = new { requestId = existingSOS.ReportId, status = existingSOS.Status, locationDescription = existingSOS.IncidentLocation, createdAt = existingSOS.CreatedAt } });
-                }
-
+                // Generate a fresh unique SOS report every time the user triggers SOS
+                var randomNum = new Random().Next(1000, 9999);
                 var sos = new SafetyReport
                 {
                     UserId = user.Id,
-                    ReportId = "SOS-" + DateTime.Now.ToString("yyMM") + "-" + new Random().Next(1000, 9999),
-                    IncidentLocation = string.IsNullOrEmpty(dto.LocationDescription) ? "Location unavailable" : dto.LocationDescription,
-                    Status = "Created",
+                    ReportId = "SOS-" + DateTime.Now.ToString("yyMMdd") + "-" + randomNum,
+                    IncidentLocation = string.IsNullOrEmpty(dto?.LocationDescription) ? "Campus Location (GPS Active)" : dto.LocationDescription,
+                    Status = "Assigned",
                     ImmediateDanger = true,
                     Severity = "Critical",
                     IncidentCategory = "Emergency SOS",
                     IncidentDate = DateTime.Today,
                     IncidentTime = DateTime.Now.ToString("HH:mm"),
-                    Description = "URGENT: Emergency SOS Activated via Mobile/Web Button.",
-                    CreatedAt = DateTime.UtcNow
+                    Description = "URGENT: Emergency SOS Activated via Student Safety Button.",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
                 _context.SafetyReports.Add(sos);

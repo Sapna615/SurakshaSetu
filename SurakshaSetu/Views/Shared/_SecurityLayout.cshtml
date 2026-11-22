@@ -396,17 +396,21 @@
     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Start polling for active SOS alerts every 5 seconds
+            // Start polling for active SOS alerts every 3 seconds for instant response
             pollActiveSOS();
-            setInterval(pollActiveSOS, 5000);
+            setInterval(pollActiveSOS, 3000);
         });
 
         let previousAlertCount = 0;
         
         function pollActiveSOS() {
             fetch('/api/sos/active')
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) return null;
+                    return r.json();
+                })
                 .then(data => {
+                    if (!data) return;
                     const badge = document.getElementById('notificationBadge');
                     const list = document.getElementById('notificationList');
                     const noMsg = document.getElementById('noNotificationsMsg');
@@ -416,12 +420,6 @@
                         badge.innerText = data.count;
                         badge.style.display = 'block';
                         bell.classList.add('pulse-animation');
-                        
-                        // If new alert came in, play a sound or show a toast (simple alert for demo)
-                        if(data.count > previousAlertCount) {
-                            // Optional: play sound here
-                            console.log("New SOS Alert Received!");
-                        }
                         
                         list.innerHTML = '';
                         data.alerts.forEach(alert => {
@@ -434,7 +432,7 @@
                                     </div>
                                     <div style="font-size: 0.8rem; line-height: 1.2;">
                                         <strong>Location:</strong> ${alert.location}<br>
-                                        <strong>ID:</strong> ${alert.reportId}
+                                        <strong>ID:</strong> <span class="badge bg-danger-subtle text-danger fw-bold">${alert.reportId}</span>
                                     </div>
                                 </a>
                             `;
