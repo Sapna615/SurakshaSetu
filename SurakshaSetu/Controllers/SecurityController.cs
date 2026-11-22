@@ -195,6 +195,7 @@ namespace SurakshaSetu.Controllers
 
             var incident = await _context.SafetyReports
                 .Include(r => r.StatusHistory)
+                .Include(r => r.Feedback)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.SafetyReportId == id);
 
@@ -215,7 +216,17 @@ namespace SurakshaSetu.Controllers
             var location = await _context.CampusLocations.AsNoTracking()
                 .FirstOrDefaultAsync(l => l.CampusLocationId.ToString() == incident.IncidentLocation || l.Name == incident.IncidentLocation);
 
+            // Fetch Security Officers, Hostel Wardens, and Counselors for assignment
             var securityOfficers = await _userManager.GetUsersInRoleAsync("SecurityOfficer");
+            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+            var specialistStaff = new List<ApplicationUser>(securityOfficers);
+            foreach (var staff in adminUsers)
+            {
+                if (!specialistStaff.Any(s => s.Id == staff.Id) && (staff.Email?.Contains("warden") == true || staff.Email?.Contains("counselor") == true || staff.Email?.Contains("womensafety") == true))
+                {
+                    specialistStaff.Add(staff);
+                }
+            }
 
             var viewModel = new SecurityIncidentDetailsViewModel
             {
@@ -223,7 +234,8 @@ namespace SurakshaSetu.Controllers
                 Reporter = reporter,
                 AssignedOfficer = assignedOfficer,
                 LocationName = location?.Name ?? incident.IncidentLocation,
-                AvailableOfficers = securityOfficers.ToList()
+                AvailableOfficers = specialistStaff,
+                Feedback = incident.Feedback
             };
 
             return View(viewModel);

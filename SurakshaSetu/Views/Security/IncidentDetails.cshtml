@@ -93,6 +93,60 @@
                 }
             </div>
         </div>
+
+        @if(Model.Feedback != null)
+        {
+            <div class="card shadow mb-4 border-left-success" style="border-left: 5px solid #10b981;">
+                <div class="card-header py-3 bg-light d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-success"><i class="bi bi-star-fill text-warning me-1"></i> Student Resolution Feedback</h6>
+                    <span class="badge bg-success">Received</span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="text-muted small fw-bold text-uppercase">Student Rating:</span>
+                        <div class="mt-1" style="color: #f59e0b; font-size: 1.25rem;">
+                            @for(int i = 1; i <= 5; i++)
+                            {
+                                if(i <= Model.Feedback.Rating)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star text-muted" style="opacity: 0.4;"></i>
+                                }
+                            }
+                            <span class="text-dark fw-bold ms-2" style="font-size: 1rem;">@Model.Feedback.Rating / 5</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-muted small fw-bold text-uppercase">Outcome:</span>
+                        <div class="mt-1">
+                            @if(Model.Feedback.WasResolvedSatisfactorily)
+                            {
+                                <span class="badge bg-success px-2 py-1"><i class="bi bi-hand-thumbs-up-fill me-1"></i> Satisfactorily Resolved</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger px-2 py-1"><i class="bi bi-hand-thumbs-down-fill me-1"></i> Student Requested Further Action</span>
+                            }
+                        </div>
+                    </div>
+                    @if(!string.IsNullOrEmpty(Model.Feedback.Comments))
+                    {
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase">Student Comments:</span>
+                            <div class="mt-1 p-3 rounded bg-light border text-dark">
+                                "@Model.Feedback.Comments"
+                            </div>
+                        </div>
+                    }
+                    <div class="text-muted small mt-3">
+                        Submitted on @Model.Feedback.SubmittedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                    </div>
+                </div>
+            </div>
+        }
     </div>
     
     <div class="col-lg-4">

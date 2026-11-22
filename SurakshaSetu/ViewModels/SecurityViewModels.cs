@@ -25,6 +25,7 @@ namespace SurakshaSetu.ViewModels
         public ApplicationUser? Reporter { get; set; }
         public ApplicationUser? AssignedOfficer { get; set; }
         public string LocationName { get; set; } = string.Empty;
+        public CaseFeedback? Feedback { get; set; }
         
         // Form properties for updates
         public string NewStatus { get; set; } = string.Empty;

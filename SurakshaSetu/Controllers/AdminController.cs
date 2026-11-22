@@ -376,7 +376,9 @@ namespace SurakshaSetu.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             ViewData["UserName"] = currentUser?.FullName ?? "Admin";
 
-            var report = await _context.SafetyReports.FirstOrDefaultAsync(r => r.SafetyReportId == id);
+            var report = await _context.SafetyReports
+                .Include(r => r.Feedback)
+                .FirstOrDefaultAsync(r => r.SafetyReportId == id);
             if (report == null) return NotFound();
 
             var timeline = await _context.SafetyReportStatusHistories
@@ -384,8 +386,9 @@ namespace SurakshaSetu.Controllers
                 .OrderByDescending(h => h.ChangedAt)
                 .ToListAsync();
 
-            // Get security staff for reassignment
+            // Get security staff, hostel wardens, and specialists for reassignment
             var securityRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == "SecurityOfficer");
+            var adminRole = await _roleManager.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
             List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> staffList = new();
             if (securityRole != null)
             {
@@ -393,11 +396,41 @@ namespace SurakshaSetu.Controllers
                 var userIds = securityUserRoles.Select(ur => ur.UserId).ToList();
                 var securityUsers = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
                 
-                staffList = securityUsers.Select(u => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                foreach(var u in securityUsers)
                 {
-                    Value = u.FullName,
-                    Text = $"{u.FullName} ({u.Department ?? "Security"})"
-                }).ToList();
+                    staffList.Add(new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                    {
+                        Value = u.FullName,
+                        Text = $"{u.FullName} (Security Officer)"
+                    });
+                }
+            }
+
+            if (adminRole != null)
+            {
+                var adminUserRoles = await _context.UserRoles.Where(ur => ur.RoleId == adminRole.Id).ToListAsync();
+                var adminIds = adminUserRoles.Select(ur => ur.UserId).ToList();
+                var adminUsers = await _context.Users.Where(u => adminIds.Contains(u.Id)).ToListAsync();
+                
+                foreach(var u in adminUsers)
+                {
+                    if (u.Email?.Contains("warden") == true)
+                    {
+                        staffList.Add(new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                        {
+                            Value = u.FullName,
+                            Text = $"{u.FullName} (Hostel Warden)"
+                        });
+                    }
+                    else if (u.Email?.Contains("counselor") == true)
+                    {
+                        staffList.Add(new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                        {
+                            Value = u.FullName,
+                            Text = $"{u.FullName} (Counselor)"
+                        });
+                    }
+                }
             }
 
             var viewModel = new AdminCaseDetailViewModel
