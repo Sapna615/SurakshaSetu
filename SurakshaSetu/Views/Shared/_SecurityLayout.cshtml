@@ -443,6 +443,11 @@
                         list.innerHTML = '<li class="p-3 text-center text-muted" id="noNotificationsMsg"><small>No active emergency alerts.</small></li>';
                     }
                     
+                    // If alert count decreased (e.g. student cancelled SOS or officer resolved it) while looking at dashboard, reload to update table
+                    if (previousAlertCount > 0 && data.count !== previousAlertCount && window.location.pathname.toLowerCase().includes('/security/dashboard')) {
+                        window.location.reload();
+                    }
+                    
                     previousAlertCount = data.count;
                 })
                 .catch(e => console.error("Error polling SOS:", e));
