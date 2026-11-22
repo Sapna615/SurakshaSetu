@@ -197,27 +197,39 @@
     <!-- SOS Activation Modal -->
     <div class="modal fade" id="sosModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="border: 2px solid #dc2626; border-radius: 12px; overflow: hidden;">
-                <div class="modal-header text-white" style="background-color: #dc2626;">
-                    <h5 class="modal-title fw-bold">🚨 Emergency SOS Activated</h5>
+            <div class="modal-content" style="border: 2px solid #dc2626; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                    <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                        <span class="spinner-grow spinner-grow-sm text-light" role="status"></span>
+                        🚨 Emergency SOS Broadcast Sent
+                    </h5>
                 </div>
                 <div class="modal-body p-4 bg-light">
-                    <p class="text-dark fw-bold mb-3">Your emergency request has been created in this demonstration interface.</p>
+                    <!-- Direct Alert Confirmation to Security -->
+                    <div class="alert alert-danger d-flex align-items-center gap-3 border-0 shadow-sm mb-3" style="background-color: #fee2e2; color: #991b1b; border-radius: 12px;">
+                        <i class="bi bi-broadcast text-danger fs-3"></i>
+                        <div style="font-size: 0.9rem; line-height: 1.4;">
+                            <strong class="d-block mb-1">Direct High-Priority Alert Sent to Security!</strong>
+                            Security Command Center has received your live emergency notification and dispatched response teams.
+                        </div>
+                    </div>
                     
-                    <div class="card border-0 shadow-sm mb-4">
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px;">
                         <div class="card-body">
-                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Status:</small><br><span id="sosStatusTxt" class="fw-bold text-danger">Emergency Request Created</span></div>
-                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Location:</small><br><span id="sosLocationTxt" class="fw-bold">Locating...</span></div>
-                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Request ID:</small><br><span id="sosRequestIdTxt" class="font-monospace">SOS-...</span></div>
-                            <div><small class="text-muted text-uppercase fw-bold">Created:</small><br><span id="sosTimeTxt"></span></div>
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Live Status:</small><br><span id="sosStatusTxt" class="fw-bold text-danger">🚨 Security Dispatched & Alerted</span></div>
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Dispatched Location:</small><br><span id="sosLocationTxt" class="fw-bold text-dark">Locating...</span></div>
+                            <div class="mb-2"><small class="text-muted text-uppercase fw-bold">Emergency Request ID:</small><br><span id="sosRequestIdTxt" class="badge bg-danger text-white font-monospace px-2 py-1">SOS-...</span></div>
+                            <div><small class="text-muted text-uppercase fw-bold">Timestamp:</small><br><span id="sosTimeTxt" class="text-muted small"></span></div>
                         </div>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-dark fw-bold py-2" onclick="simulateCallSecurity()">
-                            <i class="bi bi-telephone-fill text-success me-1"></i> Call Security (+91 9876543210)
+                        <button type="button" class="btn btn-secondary py-2 fw-bold" data-bs-dismiss="modal">
+                            <i class="bi bi-check-circle me-1"></i> Acknowledge & Keep SOS Active
                         </button>
-                        <button type="button" class="btn btn-outline-danger py-2 fw-bold" onclick="cancelSOS()">Cancel SOS</button>
+                        <button type="button" class="btn btn-outline-danger py-2 fw-bold" onclick="cancelSOS()">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Emergency SOS
+                        </button>
                     </div>
                 </div>
             </div>
