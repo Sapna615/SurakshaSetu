@@ -281,14 +281,14 @@
             </div>
             <span>SurakshaSetu</span>
         </a>
-        <!-- <div class="d-flex align-items-center gap-3">
-            <a href="/Identity/Account/Register" class="btn-custom btn-glass py-2 px-3" style="font-size: 0.9rem;">
-                <i class="bi bi-person-plus-fill"></i> Register
+        <div class="d-flex align-items-center gap-3">
+            <a href="#emergency-connect" class="btn-custom btn-glass py-2 px-3 d-none d-md-inline-flex" style="font-size: 0.88rem;">
+                <i class="bi bi-telephone-inbound-fill text-danger me-1"></i> Emergency Lines
             </a>
             <a href="/Identity/Account/Login" class="btn-custom btn-primary-glow py-2 px-4" style="font-size: 0.9rem;">
-                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In / Portal
             </a>
-        </div> -->
+        </div>
     </nav>
 
     <!-- HERO SECTION -->
@@ -310,9 +310,11 @@
                         <a href="/Identity/Account/Login" class="btn-custom btn-primary-glow">
                             <i class="bi bi-shield-lock-fill"></i> Access Safety Portal
                         </a>
-                        <!-- <a href="/Identity/Account/Login" class="btn-custom btn-glass"> -->
-                        <a href="http://localhost:5232/Identity/Account/Register?returnUrl=%2F" class="btn-custom btn-glass">
+                        <a href="/Identity/Account/Login" class="btn-custom btn-glass">
                             <i class="bi bi-lightning-charge-fill text-danger"></i> Emergency SOS
+                        </a>
+                        <a href="#emergency-connect" class="btn-custom btn-glass">
+                            <i class="bi bi-telephone-fill text-success"></i> Quick Helplines
                         </a>
                     </div>
 
@@ -377,6 +379,205 @@
                                 <p class="feature-desc">Direct private consultation pathways with psychological counselors and designated student welfare officers.</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIRECT EMERGENCY CONNECT SECTION -->
+    <section id="emergency-connect" style="background-color: #0c1427; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 90px 0;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">
+                    🚨 Immediate Campus Reach
+                </span>
+                <h2 class="display-6 fw-bold text-white mt-2 mb-3">Campus Emergency & Safety Directory</h2>
+                <p class="text-secondary mx-auto" style="max-width: 600px; font-size: 1.05rem;">
+                    Reach out directly to verified campus security units, medical emergency staff, warden desks, and student welfare officers.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                @{
+                    var contacts = ViewBag.EmergencyContacts as List<SurakshaSetu.Models.EmergencyContact>;
+                    if (contacts != null && contacts.Any())
+                    {
+                        foreach (var contact in contacts)
+                        {
+                            <div class="col-md-6 col-lg-4">
+                                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" style="font-size: 0.75rem;">
+                                                @(contact.Category ?? "Campus Helpline")
+                                            </span>
+                                            @if (contact.Is24x7)
+                                            {
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-clock-fill me-1"></i> 24x7 Active
+                                                </span>
+                                            }
+                                        </div>
+                                        <h5 class="fw-bold text-white mb-1">@contact.Name</h5>
+                                        <div class="text-secondary small mb-3">@contact.Department &bull; @contact.Role</div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between pt-3 border-top border-secondary border-opacity-25 mt-2">
+                                        <div class="fw-bold text-warning font-monospace fs-6">
+                                            📞 @contact.PhoneNumber
+                                        </div>
+                                        <a href="tel:@contact.PhoneNumber" class="btn btn-sm btn-outline-light px-3 py-1 fw-bold rounded-pill" style="font-size: 0.8rem;">
+                                            Call Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Static Fallback Campus Contacts -->
+                        <div class="col-md-4">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; height: 100%;">
+                                <div class="badge bg-danger-subtle text-danger px-2 py-1 mb-3">Security Command</div>
+                                <h5 class="fw-bold text-white mb-1">Campus Main Security</h5>
+                                <div class="text-secondary small mb-3">Central Command Control Room</div>
+                                <div class="fw-bold text-warning font-monospace fs-6">📞 +91 9876543210</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; height: 100%;">
+                                <div class="badge bg-info-subtle text-info px-2 py-1 mb-3">Medical Unit</div>
+                                <h5 class="fw-bold text-white mb-1">Uni Hospital Emergency</h5>
+                                <div class="text-secondary small mb-3">24/7 Ambulance & Trauma Ward</div>
+                                <div class="fw-bold text-warning font-monospace fs-6">📞 +91 8765432109</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; height: 100%;">
+                                <div class="badge bg-purple-subtle text-primary px-2 py-1 mb-3">Women's Safety</div>
+                                <h5 class="fw-bold text-white mb-1">Women Safety Cell</h5>
+                                <div class="text-secondary small mb-3">Confidential Assistance Desk</div>
+                                <div class="fw-bold text-warning font-monospace fs-6">📞 +91 7654321098</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Campus Locations & Reporting Categories Preview -->
+            <div class="mt-5 p-4 rounded-4" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.08);">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold text-white d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-geo-alt-fill text-primary"></i> Live Verified Safe Zones & Locations
+                        </h5>
+                        <p class="text-secondary small mb-3">
+                            Campus zones mapped with emergency SOS call points, CCTV security coverage, and medical assistance:
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            @{
+                                var locations = ViewBag.CampusLocations as List<SurakshaSetu.Models.CampusLocation>;
+                                if (locations != null && locations.Any())
+                                {
+                                    foreach (var loc in locations)
+                                    {
+                                        <span class="badge bg-dark text-light border border-secondary border-opacity-50 px-2 py-2" style="font-size: 0.75rem;">
+                                            🏫 @loc.Name
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-dark text-light border px-2 py-1">LPU Main Gate</span>
+                                    <span class="badge bg-dark text-light border px-2 py-1">Central Innovation Hub</span>
+                                    <span class="badge bg-dark text-light border px-2 py-1">Uni Hospital</span>
+                                    <span class="badge bg-dark text-light border px-2 py-1">Block 32 Cafe</span>
+                                    <span class="badge bg-dark text-light border px-2 py-1">Girls Hostel 1</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold text-white d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-tags-fill text-warning"></i> Safety Reporting Categories
+                        </h5>
+                        <p class="text-secondary small mb-3">
+                            Direct resolution pipelines assigned to designated campus welfare and security authorities:
+                        </p>
+                        <div class="d-flex flex-wrap gap-2">
+                            @{
+                                var cats = ViewBag.IncidentCategories as List<SurakshaSetu.Models.IncidentCategory>;
+                                if (cats != null && cats.Any())
+                                {
+                                    foreach (var cat in cats)
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-2" style="font-size: 0.75rem;">
+                                            🛡️ @cat.Name
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary-subtle text-primary border px-2 py-1">Harassment</span>
+                                    <span class="badge bg-primary-subtle text-primary border px-2 py-1">Theft</span>
+                                    <span class="badge bg-primary-subtle text-primary border px-2 py-1">Medical Emergency</span>
+                                    <span class="badge bg-primary-subtle text-primary border px-2 py-1">Infrastructure Issue</span>
+                                    <span class="badge bg-primary-subtle text-primary border px-2 py-1">Hostel Food Safety</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section style="padding: 90px 0; background-color: #0b1120;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">
+                    Step-by-Step Protocol
+                </span>
+                <h2 class="display-6 fw-bold text-white mt-2 mb-3">How SurakshaSetu Protects You</h2>
+                <p class="text-secondary mx-auto" style="max-width: 550px; font-size: 1rem;">
+                    From silent mobile SOS triggers to live quick-response dispatch, here is how our ecosystem works:
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 32px; text-align: center; height: 100%;">
+                        <div class="mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 1.8rem;">
+                            <i class="bi bi-broadcast"></i>
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">1. Instant SOS Trigger</h4>
+                        <p class="text-secondary" style="font-size: 0.92rem; line-height: 1.6;">
+                            Single tap on the mobile or desktop portal immediately packages your verified GPS coordinates and alerts Security Command without making an audible call.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 32px; text-align: center; height: 100%;">
+                        <div class="mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; border-radius: 50%; background: rgba(59, 130, 246, 0.15); color: #3b82f6; font-size: 1.8rem;">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">2. Live Officer Dispatch</h4>
+                        <p class="text-secondary" style="font-size: 0.92rem; line-height: 1.6;">
+                            Nearest patrolling security units, quick response teams, or medical first responders are routed directly to your building location in under 3 minutes.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 32px; text-align: center; height: 100%;">
+                        <div class="mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 1.8rem;">
+                            <i class="bi bi-lock-fill"></i>
+                        </div>
+                        <h4 class="fw-bold text-white mb-2">3. Zero-Trace Confidentiality</h4>
+                        <p class="text-secondary" style="font-size: 0.92rem; line-height: 1.6;">
+                            Anonymous reporting assigns a cryptographic Tracking PIN. Track investigations, talk with officers, and rate case resolution without revealing your name.
+                        </p>
                     </div>
                 </div>
             </div>
