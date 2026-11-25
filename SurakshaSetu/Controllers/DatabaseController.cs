@@ -26,6 +26,7 @@ namespace SurakshaSetu.Controllers
             var locations = await _context.CampusLocations.AsNoTracking().ToListAsync();
             var contacts = await _context.EmergencyContacts.AsNoTracking().OrderBy(c => c.DisplayOrder).ToListAsync();
             var feedbacks = await _context.CaseFeedbacks.AsNoTracking().OrderByDescending(f => f.SubmittedAt).ToListAsync();
+            var categories = await _context.IncidentCategories.AsNoTracking().OrderBy(c => c.Name).ToListAsync();
 
             var sb = new System.Text.StringBuilder();
             sb.Append(@"<!DOCTYPE html>
@@ -237,6 +238,70 @@ namespace SurakshaSetu.Controllers
                     <td><code>{c.PhoneNumber}</code></td>
                     <td>{(string.IsNullOrEmpty(c.Email) ? "—" : c.Email)}</td>
                     <td>{(c.Is24x7 ? "<span class='badge bg-success'>24x7 Active</span>" : "<span class='badge bg-secondary'>Standard Hours</span>")}</td>
+                </tr>");
+            }
+
+            sb.Append(@"</tbody></table></div></div>");
+
+            // 5. INCIDENT CATEGORIES TABLE
+            sb.Append(@"<div class='card'>
+                <div class='card-header d-flex justify-content-between align-items-center bg-primary'>
+                    <span><i class='bi bi-tags-fill me-2'></i> Table: IncidentCategories (Incident Classifications)</span>
+                    <span class='badge bg-white text-primary px-3 py-1'>" + categories.Count + @" Categories</span>
+                </div>
+                <div class='table-responsive'>
+                    <table class='table table-hover table-striped align-middle'>
+                        <thead class='table-light'>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category Name</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>");
+
+            foreach (var cat in categories)
+            {
+                sb.Append($@"<tr>
+                    <td>{cat.IncidentCategoryId}</td>
+                    <td><strong>{cat.Name}</strong></td>
+                    <td>{(cat.IsActive ? "<span class='badge bg-success'>Active</span>" : "<span class='badge bg-secondary'>Inactive</span>")}</td>
+                    <td>{cat.Description ?? "<span class='text-muted'>—</span>"}</td>
+                </tr>");
+            }
+
+            sb.Append(@"</tbody></table></div></div>");
+
+            // 6. CAMPUS LOCATIONS TABLE
+            sb.Append(@"<div class='card'>
+                <div class='card-header d-flex justify-content-between align-items-center bg-info text-dark'>
+                    <span class='fw-bold'><i class='bi bi-geo-alt-fill me-2 text-primary'></i> Table: CampusLocations (Campus Geo-Points)</span>
+                    <span class='badge bg-dark text-white px-3 py-1'>" + locations.Count + @" Locations</span>
+                </div>
+                <div class='table-responsive'>
+                    <table class='table table-hover table-striped align-middle'>
+                        <thead class='table-light'>
+                            <tr>
+                                <th>ID</th>
+                                <th>Location Name</th>
+                                <th>Type</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>");
+
+            foreach (var loc in locations)
+            {
+                sb.Append($@"<tr>
+                    <td>{loc.CampusLocationId}</td>
+                    <td><strong>{loc.Name}</strong></td>
+                    <td><span class='badge bg-light text-dark border'>{loc.LocationType}</span></td>
+                    <td>{(loc.Latitude.HasValue ? loc.Latitude.Value.ToString("F4") : "—")}</td>
+                    <td>{(loc.Longitude.HasValue ? loc.Longitude.Value.ToString("F4") : "—")}</td>
+                    <td>{(loc.IsActive ? "<span class='badge bg-success'>Active</span>" : "<span class='badge bg-secondary'>Inactive</span>")}</td>
                 </tr>");
             }
 

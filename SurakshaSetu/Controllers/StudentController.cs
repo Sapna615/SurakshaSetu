@@ -60,6 +60,17 @@ namespace SurakshaSetu.Controllers
                 .Take(6)
                 .ToListAsync();
 
+            var incidentCategories = await _context.IncidentCategories
+                .Where(c => c.IsActive)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            var campusLocations = await _context.CampusLocations
+                .Where(l => l.IsActive)
+                .OrderBy(l => l.Name)
+                .Take(8)
+                .ToListAsync();
+
             // 4. Pack the secure data into our ViewModel
             var viewModel = new StudentDashboardViewModel
             {
@@ -72,7 +83,9 @@ namespace SurakshaSetu.Controllers
                 UnreadNotificationsCount = 0,
                 ActiveAlertsCount = activeAlertsCount,
                 ActiveAlerts = activeAlerts,
-                EmergencyContacts = emergencyContacts
+                EmergencyContacts = emergencyContacts,
+                IncidentCategories = incidentCategories,
+                CampusLocations = campusLocations
             };
 
             ViewData["UserName"] = user.FullName;

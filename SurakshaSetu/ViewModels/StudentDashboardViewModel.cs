@@ -23,5 +23,7 @@ namespace SurakshaSetu.ViewModels
         public int ActiveAlertsCount { get; set; }
         public List<SafetyAlert> ActiveAlerts { get; set; } = new List<SafetyAlert>();
         public List<EmergencyContact> EmergencyContacts { get; set; } = new List<EmergencyContact>();
+        public List<IncidentCategory> IncidentCategories { get; set; } = new List<IncidentCategory>();
+        public List<CampusLocation> CampusLocations { get; set; } = new List<CampusLocation>();
     }
 }

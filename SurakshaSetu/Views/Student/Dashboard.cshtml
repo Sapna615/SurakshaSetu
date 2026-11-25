@@ -596,22 +596,51 @@
     </div>
     
     <div class="col-md-6">
-        <div class="info-card" style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
+        <!-- Live Admin Updates & Directory (Categories & Locations) -->
+        <div class="info-card">
             <div class="info-header">
                 <h4 class="info-title">
-                    <i class="bi bi-question-circle-fill text-primary"></i> Student Safety Guide
+                    <i class="bi bi-geo-alt-fill text-primary"></i> Campus Locations & Safe Zones
                 </h4>
+                <a href="/Safety/Map" class="view-all">Map View <i class="bi bi-arrow-right"></i></a>
             </div>
-            <p class="text-muted mb-4" style="font-size: 0.88rem; line-height: 1.6;">
-                Need guidance? Understand how to trigger silent SOS alarms, how the anonymous reporting system shields your identity, and student welfare support policies.
+            <p class="text-muted mb-3" style="font-size: 0.82rem;">
+                Official campus zones, buildings, and emergency points configured by Campus Administration:
             </p>
-            <div class="d-flex flex-wrap gap-2">
-                <a href="/EmergencyContact" class="btn btn-light border fw-bold text-primary px-3 py-2" style="font-size: 0.85rem; text-decoration: none; border-radius: 8px;">
-                    <i class="bi bi-book me-1"></i> Campus Help Center
-                </a>
-                <a href="/Safety/Map" class="btn btn-primary fw-bold px-3 py-2" style="font-size: 0.85rem; text-decoration: none; border-radius: 8px;">
-                    <i class="bi bi-compass me-1"></i> Find Safe Route
-                </a>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                @if (Model.CampusLocations != null && Model.CampusLocations.Any())
+                {
+                    foreach (var loc in Model.CampusLocations)
+                    {
+                        <span class="badge bg-light text-dark border p-2 d-flex align-items-center gap-1 shadow-sm" style="font-size: 0.78rem; border-radius: 8px;">
+                            <i class="bi bi-pin-map-fill text-primary"></i> @loc.Name
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted small">Locations syncing...</span>
+                }
+            </div>
+
+            <div class="pt-3 border-top">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark" style="font-size: 0.88rem;">
+                        <i class="bi bi-tags-fill text-warning me-1"></i> Incident Report Categories
+                    </span>
+                    <a href="@Url.Action("Create", "IncidentReport")" class="text-primary small fw-bold text-decoration-none">Report Issue &rarr;</a>
+                </div>
+                <div class="d-flex flex-wrap gap-1">
+                    @if (Model.IncidentCategories != null && Model.IncidentCategories.Any())
+                    {
+                        foreach (var cat in Model.IncidentCategories)
+                        {
+                            <a href="@Url.Action("Create", "IncidentReport")?category=@Uri.EscapeDataString(cat.Name)" class="badge bg-primary-subtle text-primary border border-primary-subtle text-decoration-none px-2 py-1" style="font-size: 0.75rem;">
+                                @cat.Name
+                            </a>
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>
