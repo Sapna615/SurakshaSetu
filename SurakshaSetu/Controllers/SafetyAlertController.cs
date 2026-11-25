@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace SurakshaSetu.Controllers
 {
-    [Authorize(Roles = "Student")]
+    [Authorize]
+    [Route("SafetyAlert")]
+    [Route("SafetyAlerts")]
     public class SafetyAlertController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,8 +21,11 @@ namespace SurakshaSetu.Controllers
             _context = context;
         }
 
-        // GET:
-        // /SafetyAlert
+        // GET: /SafetyAlert or /SafetyAlerts
+        [HttpGet("")]
+        [HttpGet("Index")]
+        [HttpHead("")]
+        [HttpHead("Index")]
         public async Task<IActionResult> Index()
         {
             var alerts = await _context.SafetyAlerts
@@ -37,8 +42,8 @@ namespace SurakshaSetu.Controllers
             return View(alerts);
         }
 
-        // GET:
-        // /SafetyAlert/Details/5
+        // GET: /SafetyAlert/Details/5 or /SafetyAlerts/Details/5
+        [HttpGet("Details/{id:int}")]
         public async Task<IActionResult> Details(
             int id)
         {
@@ -58,7 +63,7 @@ namespace SurakshaSetu.Controllers
             return Json(alert);
         }
 
-        [HttpGet]
+        [HttpGet("Filter")]
         public async Task<IActionResult> Filter(
             string? priority)
         {
