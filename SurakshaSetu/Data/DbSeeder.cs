@@ -97,14 +97,7 @@ namespace SurakshaSetu.Data
             await CreateTestUserAsync(userManager, "warden@surakshasetu.edu", "Geeta Verma", "Admin", "ManageHostel");
             await CreateTestUserAsync(userManager, "management@surakshasetu.edu", "Dean Office", "Admin", "ReadOnlyAnalytics");
 
-            // 4. Seed Campus Locations
-            var existingLocations = context.CampusLocations.ToList();
-            if (existingLocations.Any())
-            {
-                context.CampusLocations.RemoveRange(existingLocations);
-                await context.SaveChangesAsync();
-            }
-
+            // 4. Seed Campus Locations only if none exist (do not overwrite admin-added locations)
             if (!context.CampusLocations.Any())
             {
                 context.CampusLocations.AddRange(
@@ -149,15 +142,7 @@ namespace SurakshaSetu.Data
             }
 
 
-            // 5. Seed Emergency Contacts
-            // Unconditionally clear the old ones to ensure the exact matching ones are placed
-            var existingContacts = context.EmergencyContacts.ToList();
-            if (existingContacts.Any())
-            {
-                context.EmergencyContacts.RemoveRange(existingContacts);
-                await context.SaveChangesAsync();
-            }
-
+            // 5. Seed Emergency Contacts only if none exist (do not overwrite admin-added contacts)
             if (!context.EmergencyContacts.Any())
             {
                 context.EmergencyContacts.AddRange(

@@ -55,7 +55,9 @@ namespace SurakshaSetu.Controllers
 
             var emergencyContacts = await _context.EmergencyContacts
                 .Where(c => c.IsActive)
-                .Take(4)
+                .OrderBy(c => c.DisplayOrder)
+                .ThenByDescending(c => c.EmergencyContactId)
+                .Take(6)
                 .ToListAsync();
 
             // 4. Pack the secure data into our ViewModel

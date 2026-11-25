@@ -416,27 +416,54 @@
                     const noMsg = document.getElementById('noNotificationsMsg');
                     const bell = document.getElementById('notificationDropdown');
                     
-                    if(data.count > 0) {
-                        badge.innerText = data.count;
-                        badge.style.display = 'block';
-                        bell.classList.add('pulse-animation');
+                    if(data.count > 0 || (data.cancelled && data.cancelled.length > 0)) {
+                        const totalBadgeCount = data.count;
+                        if (totalBadgeCount > 0) {
+                            badge.innerText = totalBadgeCount;
+                            badge.style.display = 'block';
+                            bell.classList.add('pulse-animation');
+                        } else {
+                            badge.style.display = 'none';
+                            bell.classList.remove('pulse-animation');
+                        }
                         
                         list.innerHTML = '';
-                        data.alerts.forEach(alert => {
-                            const time = new Date(alert.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                            list.innerHTML += `
-                                <a href="/Security/IncidentDetails/${alert.id}" class="text-decoration-none text-dark d-block notification-item">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="fw-bold text-danger">🚨 SOS Alert</span>
-                                        <small class="text-muted">${time}</small>
-                                    </div>
-                                    <div style="font-size: 0.8rem; line-height: 1.2;">
-                                        <strong>Location:</strong> ${alert.location}<br>
-                                        <strong>ID:</strong> <span class="badge bg-danger-subtle text-danger fw-bold">${alert.reportId}</span>
-                                    </div>
-                                </a>
-                            `;
-                        });
+                        if (data.alerts && data.alerts.length > 0) {
+                            data.alerts.forEach(alert => {
+                                const time = new Date(alert.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                list.innerHTML += `
+                                    <a href="/Security/IncidentDetails/${alert.id}" class="text-decoration-none text-dark d-block notification-item bg-danger-subtle">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-bold text-danger">🚨 SOS Alert (Active)</span>
+                                            <small class="text-muted">${time}</small>
+                                        </div>
+                                        <div style="font-size: 0.8rem; line-height: 1.2;">
+                                            <strong>Location:</strong> ${alert.location}<br>
+                                            <strong>ID:</strong> <span class="badge bg-danger text-white fw-bold">${alert.reportId}</span>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        }
+
+                        if (data.cancelled && data.cancelled.length > 0) {
+                            data.cancelled.forEach(item => {
+                                const time = new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                list.innerHTML += `
+                                    <a href="/Security/IncidentDetails/${item.id}" class="text-decoration-none text-dark d-block notification-item" style="background-color: #f8fafc; opacity: 0.9;">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="fw-bold text-secondary">🚫 SOS Cancelled by User</span>
+                                            <small class="text-muted">${time}</small>
+                                        </div>
+                                        <div style="font-size: 0.8rem; line-height: 1.2;">
+                                            <strong>Location:</strong> ${item.location}<br>
+                                            <strong>ID:</strong> <span class="badge bg-secondary text-white fw-bold">${item.reportId}</span>
+                                            <span class="badge bg-warning text-dark ms-1">Cancelled</span>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        }
                     } else {
                         badge.style.display = 'none';
                         bell.classList.remove('pulse-animation');

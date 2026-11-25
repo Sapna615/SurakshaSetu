@@ -27,12 +27,26 @@ namespace SurakshaSetu.Controllers
 
         // GET: /IncidentReport/Create
         [HttpGet]
-        public IActionResult Create(string source = "Dashboard")
+        public async Task<IActionResult> Create(string source = "Dashboard")
         {
             var model = new SafetyReportCreateViewModel
             {
                 Source = source
             };
+
+            // Populate categories and campus locations dynamically from DB so admin-added items show up immediately
+            ViewBag.Categories = await _context.IncidentCategories
+                .Where(c => c.IsActive)
+                .OrderBy(c => c.Name)
+                .Select(c => c.Name)
+                .ToListAsync();
+
+            ViewBag.Locations = await _context.CampusLocations
+                .Where(l => l.IsActive)
+                .OrderBy(l => l.Name)
+                .Select(l => l.Name)
+                .ToListAsync();
+
             return View(model);
         }
 
@@ -43,6 +57,18 @@ namespace SurakshaSetu.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.Categories = await _context.IncidentCategories
+                    .Where(c => c.IsActive)
+                    .OrderBy(c => c.Name)
+                    .Select(c => c.Name)
+                    .ToListAsync();
+
+                ViewBag.Locations = await _context.CampusLocations
+                    .Where(l => l.IsActive)
+                    .OrderBy(l => l.Name)
+                    .Select(l => l.Name)
+                    .ToListAsync();
+
                 return View(model);
             }
 

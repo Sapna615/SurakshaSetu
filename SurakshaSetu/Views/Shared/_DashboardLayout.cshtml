@@ -338,14 +338,6 @@
             sosModal.show();
         }
 
-        function simulateCallSecurity() {
-            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                window.location.href = "tel:+919876543210";
-            } else {
-                alert("Simulating Emergency Call to Campus Security Control Room:\n📞 Dialing: +91 9876543210\n\nSecurity Dispatch is connected to your location coordinates.");
-            }
-        }
-
         function cancelSOS() {
             sosModal.hide();
             cancelSosModal.show();

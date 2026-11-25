@@ -88,20 +88,21 @@
             <label class="form-label" asp-for="IncidentCategory">Incident Category *</label>
             <select class="form-control" asp-for="IncidentCategory" id="categorySelect" onchange="toggleOtherCategory()">
                 <option value="">Select Category</option>
-                <option value="Harassment">Harassment</option>
-                <option value="Stalking">Stalking</option>
-                <option value="Sexual Harassment">Sexual Harassment</option>
-                <option value="Unsafe Area">Unsafe Area</option>
-                <option value="Suspicious Activity">Suspicious Activity</option>
-                <option value="Ragging">Ragging</option>
-                <option value="Hostel Safety">Hostel Safety</option>
-                <option value="Women's Safety">Women's Safety</option>
-                <option value="Transport Safety">Transport Safety</option>
-                <option value="Cyber Harassment">Cyber Harassment</option>
-                <option value="Lighting Problem">Lighting Problem</option>
-                <option value="Infrastructure Issue">Infrastructure Issue</option>
-                <option value="Emergency Request">Emergency Request</option>
-                <option value="Other">Other</option>
+                @{
+                    var dynamicCategories = ViewBag.Categories as List<string> ?? new List<string>();
+                    var defaultCategories = new List<string> {
+                        "Harassment", "Stalking", "Sexual Harassment", "Unsafe Area", 
+                        "Suspicious Activity", "Ragging", "Hostel Safety", "Women's Safety", 
+                        "Transport Safety", "Cyber Harassment", "Lighting Problem", 
+                        "Infrastructure Issue", "Emergency Request"
+                    };
+                    var allCategories = dynamicCategories.Union(defaultCategories).Distinct().OrderBy(c => c).ToList();
+                    foreach (var cat in allCategories)
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+                <option value="Other">Other (Please specify)</option>
             </select>
             <input type="text" id="otherCategoryInput" name="OtherCategory" class="form-control mt-2" placeholder="Please specify the category..." style="display: none;" />
             <span asp-validation-for="IncidentCategory" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
@@ -109,7 +110,16 @@
 
         <div class="form-group">
             <label class="form-label" asp-for="IncidentLocation">Incident Location *</label>
-            <input class="form-control" asp-for="IncidentLocation" placeholder="e.g. Library Block, Main Gate" />
+            <input class="form-control" asp-for="IncidentLocation" list="campusLocationsList" placeholder="e.g. Library Block, Main Gate, Block 33" />
+            <datalist id="campusLocationsList">
+                @{
+                    var dynamicLocations = ViewBag.Locations as List<string> ?? new List<string>();
+                    foreach (var loc in dynamicLocations)
+                    {
+                        <option value="@loc"></option>
+                    }
+                }
+            </datalist>
             <span asp-validation-for="IncidentLocation" class="text-danger" style="color: #dc2626; font-size: 13px;"></span>
         </div>
 

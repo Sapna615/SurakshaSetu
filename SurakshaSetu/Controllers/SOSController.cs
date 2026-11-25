@@ -101,7 +101,7 @@ namespace SurakshaSetu.Controllers
         }
 
         [HttpGet("active")]
-        [Authorize(Roles = "SecurityOfficer,Admin")]
+        [Authorize(Roles = "SecurityOfficer,Admin,SuperAdmin")]
         public async Task<IActionResult> GetActiveSOS()
         {
             var activeSOSList = await _context.SafetyReports
@@ -116,7 +116,22 @@ namespace SurakshaSetu.Controllers
                 })
                 .ToListAsync();
 
-            return Ok(new { count = activeSOSList.Count, alerts = activeSOSList });
+            // Also retrieve recent cancelled SOS requests from the last 2 hours so security is explicitly notified of cancellations
+            var cutoff = DateTime.UtcNow.AddHours(-2);
+            var recentCancelledList = await _context.SafetyReports
+                .Where(s => s.ImmediateDanger && s.Status == "Cancelled" && s.UpdatedAt >= cutoff)
+                .OrderByDescending(s => s.UpdatedAt)
+                .Take(5)
+                .Select(s => new {
+                    id = s.SafetyReportId,
+                    reportId = s.ReportId,
+                    location = s.IncidentLocation,
+                    time = (s.UpdatedAt ?? s.CreatedAt).ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                    status = "Cancelled"
+                })
+                .ToListAsync();
+
+            return Ok(new { count = activeSOSList.Count, alerts = activeSOSList, cancelled = recentCancelledList });
         }
     }
 }
