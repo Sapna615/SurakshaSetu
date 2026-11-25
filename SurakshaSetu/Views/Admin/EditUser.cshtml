@@ -18,7 +18,7 @@
 
 <div class="row">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
             <div class="card-body p-4 p-md-5">
                 
                 @if (!ViewData.ModelState.IsValid)
@@ -37,21 +37,21 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label asp-for="FullName" class="form-label fw-bold text-muted small"></label>
-                            <input asp-for="FullName" class="form-control bg-light" />
+                            <input asp-for="FullName" class="form-control bg-dark-subtle" />
                             <span asp-validation-for="FullName" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Email" class="form-label fw-bold text-muted small"></label>
-                            <input asp-for="Email" class="form-control bg-light" />
+                            <input asp-for="Email" class="form-control bg-dark-subtle" />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="StudentId" class="form-label fw-bold text-muted small"></label>
-                            <input asp-for="StudentId" class="form-control bg-light" placeholder="Optional" />
+                            <input asp-for="StudentId" class="form-control bg-dark-subtle" placeholder="Optional" />
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Department" class="form-label fw-bold text-muted small"></label>
-                            <input asp-for="Department" class="form-control bg-light" placeholder="Optional" />
+                            <input asp-for="Department" class="form-control bg-dark-subtle" placeholder="Optional" />
                         </div>
                     </div>
                     
@@ -63,7 +63,7 @@
                             @foreach(var role in Model.AvailableRoles)
                             {
                                 <div class="col-md-4">
-                                    <div class="form-check form-switch p-3 bg-light rounded-3 border">
+                                    <div class="form-check form-switch p-3 bg-dark-subtle rounded-3 border">
                                         <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" name="SelectedRoles" value="@role.Value" id="role_@role.Value" 
                                                @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "")>
                                         <label class="form-check-label fw-bold mt-1" for="role_@role.Value">@role.Text</label>
@@ -94,7 +94,7 @@
     </div>
     
     <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass mb-4">
             <div class="card-body p-4">
                 <h6 class="fw-bold mb-3"><span class="me-2">ℹ️</span> Account Information</h6>
                 <ul class="list-group list-group-flush small">
@@ -110,7 +110,7 @@
             </div>
         </div>
         
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
             <div class="card-body p-4" style="background-color: #fef2f2; border-radius: 1rem;">
                 <h6 class="fw-bold text-danger mb-3"><span class="me-2">⚠️</span> Administrative Warning</h6>
                 <p class="small text-danger mb-0" style="opacity: 0.8;">

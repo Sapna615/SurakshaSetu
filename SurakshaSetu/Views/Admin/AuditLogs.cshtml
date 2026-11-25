@@ -11,23 +11,23 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-dark-glass">
     <div class="card-body p-4">
         <form method="get" action="/Admin/AuditLogs" class="row g-3">
             <div class="col-md-5">
                 <label class="form-label fw-bold text-muted small">Search Logs</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
-                    <input type="text" name="searchQuery" class="form-control bg-light border-start-0 ps-0" placeholder="Search action, user, details..." value="@Model.SearchQuery">
+                    <span class="input-group-text bg-dark-subtle text-muted border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchQuery" class="form-control bg-dark-subtle border-start-0 ps-0" placeholder="Search action, user, details..." value="@Model.SearchQuery">
                 </div>
             </div>
             <div class="col-md-3">
                 <label class="form-label fw-bold text-muted small">Start Date</label>
-                <input type="date" name="startDate" class="form-control bg-light" value="@(Model.StartDate?.ToString("yyyy-MM-dd"))">
+                <input type="date" name="startDate" class="form-control bg-dark-subtle" value="@(Model.StartDate?.ToString("yyyy-MM-dd"))">
             </div>
             <div class="col-md-3">
                 <label class="form-label fw-bold text-muted small">End Date</label>
-                <input type="date" name="endDate" class="form-control bg-light" value="@(Model.EndDate?.ToString("yyyy-MM-dd"))">
+                <input type="date" name="endDate" class="form-control bg-dark-subtle" value="@(Model.EndDate?.ToString("yyyy-MM-dd"))">
             </div>
             <div class="col-md-1 d-flex align-items-end">
                 <button type="submit" class="btn btn-dark w-100 fw-bold">Filter</button>
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
@@ -99,7 +99,7 @@
     </div>
     @if (Model.Logs.Count == 500)
     {
-        <div class="card-footer bg-light border-0 text-center text-muted small py-3">
+        <div class="card-footer bg-dark-subtle border-0 text-center text-muted small py-3">
             <i class="bi bi-info-circle me-1"></i> Displaying the latest 500 records. Use filters to narrow down results.
         </div>
     }

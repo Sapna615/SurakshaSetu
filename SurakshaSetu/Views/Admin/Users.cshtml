@@ -32,16 +32,16 @@
     </div>
 }
 
-<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-dark-glass">
     <div class="card-body p-4">
         <form method="get" action="/Admin/Users" class="row g-3">
             <div class="col-md-4">
                 <label class="form-label fw-bold text-muted small">Search Users</label>
-                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Name, Email, or ID..." value="@Model.SearchQuery">
+                <input type="text" name="searchQuery" class="form-control bg-dark-subtle" placeholder="Name, Email, or ID..." value="@Model.SearchQuery">
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-bold text-muted small">Role</label>
-                <select name="roleFilter" class="form-select bg-light">
+                <select name="roleFilter" class="form-select bg-dark-subtle">
                     <option value="">All Roles</option>
                     @foreach(var role in Model.AvailableRoles)
                     {
@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-bold text-muted small">Department</label>
-                <select name="departmentFilter" class="form-select bg-light">
+                <select name="departmentFilter" class="form-select bg-dark-subtle">
                     <option value="">All Departments</option>
                     @foreach(var dept in Model.AvailableDepartments)
                     {
@@ -75,7 +75,7 @@
             </div>
             <div class="col-md-2">
                 <label class="form-label fw-bold text-muted small">Status</label>
-                <select name="statusFilter" class="form-select bg-light">
+                <select name="statusFilter" class="form-select bg-dark-subtle">
                     <option value="">All Statuses</option>
                     <!option value="Active" @(Model.StatusFilter == "Active" ? "selected" : "")>Active</!option>
                     <!option value="Inactive" @(Model.StatusFilter == "Inactive" ? "selected" : "")>Inactive</!option>
@@ -88,7 +88,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">

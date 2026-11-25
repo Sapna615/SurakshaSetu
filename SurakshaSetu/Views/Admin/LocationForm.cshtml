@@ -19,7 +19,7 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
             <div class="card-body p-4 p-md-5">
                 
                 @if (!ViewData.ModelState.IsValid)
@@ -41,19 +41,19 @@
                     <div class="row g-4 mb-4">
                         <div class="col-md-7">
                             <label asp-for="Name" class="form-label fw-bold text-muted small">Location Name <span class="text-danger">*</span></label>
-                            <input asp-for="Name" class="form-control bg-light fs-5 fw-bold" placeholder="e.g. Science Building A" />
+                            <input asp-for="Name" class="form-control bg-dark-subtle fs-5 fw-bold" placeholder="e.g. Science Building A" />
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
                         
                         <div class="col-md-5">
                             <label asp-for="LocationType" class="form-label fw-bold text-muted small">Type <span class="text-danger">*</span></label>
-                            <select asp-for="LocationType" asp-items="Model.AvailableTypes" class="form-select bg-light"></select>
+                            <select asp-for="LocationType" asp-items="Model.AvailableTypes" class="form-select bg-dark-subtle"></select>
                             <span asp-validation-for="LocationType" class="text-danger small"></span>
                         </div>
                         
                         <div class="col-12">
                             <label asp-for="Description" class="form-label fw-bold text-muted small">Description (Optional)</label>
-                            <textarea asp-for="Description" class="form-control bg-light" rows="3" placeholder="Additional details or navigation instructions..."></textarea>
+                            <textarea asp-for="Description" class="form-control bg-dark-subtle" rows="3" placeholder="Additional details or navigation instructions..."></textarea>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
                     </div>
@@ -65,16 +65,16 @@
                         <div class="col-md-6">
                             <label asp-for="Latitude" class="form-label fw-bold text-muted small"></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted">LAT</span>
-                                <input asp-for="Latitude" class="form-control bg-light font-monospace" type="number" step="any" placeholder="e.g. 40.7128" />
+                                <span class="input-group-text bg-dark-subtle text-muted">LAT</span>
+                                <input asp-for="Latitude" class="form-control bg-dark-subtle font-monospace" type="number" step="any" placeholder="e.g. 40.7128" />
                             </div>
                             <span asp-validation-for="Latitude" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Longitude" class="form-label fw-bold text-muted small"></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted">LNG</span>
-                                <input asp-for="Longitude" class="form-control bg-light font-monospace" type="number" step="any" placeholder="e.g. -74.0060" />
+                                <span class="input-group-text bg-dark-subtle text-muted">LNG</span>
+                                <input asp-for="Longitude" class="form-control bg-dark-subtle font-monospace" type="number" step="any" placeholder="e.g. -74.0060" />
                             </div>
                             <span asp-validation-for="Longitude" class="text-danger small"></span>
                         </div>

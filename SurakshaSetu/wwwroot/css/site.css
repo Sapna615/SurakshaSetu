@@ -68,7 +68,7 @@ p, span, div, td, th, label, small {
 }
 
 /* Dark Slate & Glass Cards & Components */
-.card, .info-card, .trust-stat-box, .stat-pill-box, .contact-item-row, .alert-card-item, .quick-card {
+.bg-dark-glass, .card, .info-card, .trust-stat-box, .stat-pill-box, .contact-item-row, .alert-card-item, .quick-card {
   background: rgba(30, 41, 59, 0.75) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
@@ -78,11 +78,16 @@ p, span, div, td, th, label, small {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
 }
 
+.bg-dark-subtle {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #ffffff !important;
+}
+
 .card:hover, .info-card:hover, .quick-card:hover {
   border-color: rgba(96, 165, 250, 0.35) !important;
 }
 
-.card-header {
+.card-header, .card-header.bg-dark-glass {
   background: rgba(15, 23, 42, 0.85) !important;
   color: #ffffff !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -164,6 +169,57 @@ p, span, div, td, th, label, small {
 
 .bg-light {
   background-color: rgba(30, 41, 59, 0.6) !important;
+}
+
+/* Global aggressive override to eliminate ALL white and light backgrounds across every page */
+.bg-white,
+[class*="bg-white"],
+.bg-light,
+.card.bg-white,
+.card-header.bg-white,
+.modal-content,
+.ec-page,
+.ec-who-card,
+.ec-action-card,
+.ec-info-box,
+.report-modal,
+.report-input,
+.report-success,
+.map-container,
+.map-sidebar,
+.incident-form,
+.details-container,
+.profile-card,
+.table-responsive,
+.list-group-item {
+  background-color: rgba(30, 41, 59, 0.78) !important;
+  background: rgba(30, 41, 59, 0.78) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Ensure no element ever defaults to blinding white or hides light text */
+div[style*="background: #fff"],
+div[style*="background:#fff"],
+div[style*="background: #ffffff"],
+div[style*="background:#ffffff"],
+div[style*="background: white"],
+div[style*="background:white"],
+div[style*="background-color: #fff"],
+div[style*="background-color:#fff"],
+div[style*="background-color: white"],
+div[style*="background-color:white"],
+div[style*="background: #f8fafc"],
+div[style*="background: #f9fafb"],
+div[style*="background: #f1f5f9"],
+div[style*="background-color: #f8fafc"],
+div[style*="background-color: #f9fafb"] {
+  background: rgba(30, 41, 59, 0.78) !important;
+  background-color: rgba(30, 41, 59, 0.78) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 /* Dropdown menus */

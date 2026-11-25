@@ -28,7 +28,7 @@
 <div class="row">
     <div class="col-lg-8">
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-light">
+            <div class="card-header py-3 bg-dark-subtle">
                 <h6 class="m-0 font-weight-bold text-primary">Incident Information</h6>
             </div>
             <div class="card-body">
@@ -62,7 +62,7 @@
                 <hr>
                 
                 <h6 class="font-weight-bold mt-4 mb-3">Description</h6>
-                <p class="text-dark bg-light p-3 rounded border">
+                <p class="text-dark bg-dark-subtle p-3 rounded border">
                     @Model.Incident.Description
                 </p>
                 
@@ -79,7 +79,7 @@
         </div>
         
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-light">
+            <div class="card-header py-3 bg-dark-subtle">
                 <h6 class="m-0 font-weight-bold text-primary">Resolution Notes</h6>
             </div>
             <div class="card-body">
@@ -89,7 +89,7 @@
                 }
                 else
                 {
-                    <pre class="bg-light p-3 rounded border text-wrap" style="font-family: inherit;">@Model.Incident.ResolutionNotes</pre>
+                    <pre class="bg-dark-subtle p-3 rounded border text-wrap" style="font-family: inherit;">@Model.Incident.ResolutionNotes</pre>
                 }
             </div>
         </div>
@@ -97,7 +97,7 @@
         @if(Model.Feedback != null)
         {
             <div class="card shadow mb-4 border-left-success" style="border-left: 5px solid #10b981;">
-                <div class="card-header py-3 bg-light d-flex justify-content-between align-items-center">
+                <div class="card-header py-3 bg-dark-subtle d-flex justify-content-between align-items-center">
                     <h6 class="m-0 font-weight-bold text-success"><i class="bi bi-star-fill text-warning me-1"></i> Student Resolution Feedback</h6>
                     <span class="badge bg-success">Received</span>
                 </div>
@@ -136,7 +136,7 @@
                     {
                         <div>
                             <span class="text-muted small fw-bold text-uppercase">Student Comments:</span>
-                            <div class="mt-1 p-3 rounded bg-light border text-dark">
+                            <div class="mt-1 p-3 rounded bg-dark-subtle border text-dark">
                                 "@Model.Feedback.Comments"
                             </div>
                         </div>
@@ -152,7 +152,7 @@
     <div class="col-lg-4">
         <!-- Status Panel -->
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-light">
+            <div class="card-header py-3 bg-dark-subtle">
                 <h6 class="m-0 font-weight-bold text-primary">Workflow</h6>
             </div>
             <div class="card-body">
@@ -220,7 +220,7 @@
         
         <!-- Reporter Info Panel -->
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-light">
+            <div class="card-header py-3 bg-dark-subtle">
                 <h6 class="m-0 font-weight-bold text-primary">Reporter Information</h6>
             </div>
             <div class="card-body">

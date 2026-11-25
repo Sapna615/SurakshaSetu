@@ -24,16 +24,16 @@
     </div>
 }
 
-<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-dark-glass">
     <div class="card-body p-4">
         <form method="get" action="/Admin/EmergencyContacts" class="row g-3">
             <div class="col-md-6">
                 <label class="form-label fw-bold text-muted small">Search Contacts</label>
-                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Search by name, dept, role, phone, email..." value="@Model.SearchQuery">
+                <input type="text" name="searchQuery" class="form-control bg-dark-subtle" placeholder="Search by name, dept, role, phone, email..." value="@Model.SearchQuery">
             </div>
             <div class="col-md-4">
                 <label class="form-label fw-bold text-muted small">Category</label>
-                <select name="categoryFilter" class="form-select bg-light">
+                <select name="categoryFilter" class="form-select bg-dark-subtle">
                     <option value="">All Categories</option>
                     @foreach(var cat in Model.AvailableCategories)
                     {
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">

@@ -19,7 +19,7 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-10">
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
             <div class="card-body p-4 p-md-5">
                 
                 @if (!ViewData.ModelState.IsValid)
@@ -44,24 +44,24 @@
                             
                             <div class="mb-3">
                                 <label asp-for="Name" class="form-label fw-bold text-muted small">Contact / Department Name <span class="text-danger">*</span></label>
-                                <input asp-for="Name" class="form-control bg-light fw-bold" placeholder="e.g. Campus Security Main Office" />
+                                <input asp-for="Name" class="form-control bg-dark-subtle fw-bold" placeholder="e.g. Campus Security Main Office" />
                                 <span asp-validation-for="Name" class="text-danger small"></span>
                             </div>
                             
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <label asp-for="Department" class="form-label fw-bold text-muted small"></label>
-                                    <input asp-for="Department" class="form-control bg-light" />
+                                    <input asp-for="Department" class="form-control bg-dark-subtle" />
                                 </div>
                                 <div class="col-md-6">
                                     <label asp-for="Role" class="form-label fw-bold text-muted small"></label>
-                                    <input asp-for="Role" class="form-control bg-light" placeholder="e.g. Chief Officer" />
+                                    <input asp-for="Role" class="form-control bg-dark-subtle" placeholder="e.g. Chief Officer" />
                                 </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label asp-for="Category" class="form-label fw-bold text-muted small">Category <span class="text-danger">*</span></label>
-                                <select asp-for="Category" asp-items="Model.AvailableCategories" class="form-select bg-light">
+                                <select asp-for="Category" asp-items="Model.AvailableCategories" class="form-select bg-dark-subtle">
                                     <option value="">-- Select Category --</option>
                                 </select>
                                 <span asp-validation-for="Category" class="text-danger small"></span>
@@ -69,7 +69,7 @@
                             
                             <div class="mb-3">
                                 <label asp-for="Description" class="form-label fw-bold text-muted small"></label>
-                                <textarea asp-for="Description" class="form-control bg-light" rows="3" placeholder="Brief description visible to students..."></textarea>
+                                <textarea asp-for="Description" class="form-control bg-dark-subtle" rows="3" placeholder="Brief description visible to students..."></textarea>
                             </div>
                         </div>
 
@@ -80,28 +80,28 @@
                             <div class="mb-3">
                                 <label asp-for="PhoneNumber" class="form-label fw-bold text-muted small"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">📞</span>
-                                    <input asp-for="PhoneNumber" class="form-control bg-light border-start-0 ps-0" placeholder="+1 (555) 123-4567" />
+                                    <span class="input-group-text bg-dark-subtle border-end-0">📞</span>
+                                    <input asp-for="PhoneNumber" class="form-control bg-dark-subtle border-start-0 ps-0" placeholder="+1 (555) 123-4567" />
                                 </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label asp-for="Email" class="form-label fw-bold text-muted small"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">✉️</span>
-                                    <input asp-for="Email" class="form-control bg-light border-start-0 ps-0" type="email" placeholder="contact@campus.edu" />
+                                    <span class="input-group-text bg-dark-subtle border-end-0">✉️</span>
+                                    <input asp-for="Email" class="form-control bg-dark-subtle border-start-0 ps-0" type="email" placeholder="contact@campus.edu" />
                                 </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label asp-for="Location" class="form-label fw-bold text-muted small">Physical Location</label>
-                                <input asp-for="Location" class="form-control bg-light" placeholder="e.g. Main Building, Room 101" />
+                                <input asp-for="Location" class="form-control bg-dark-subtle" placeholder="e.g. Main Building, Room 101" />
                             </div>
                             
                             <div class="row g-3 mb-4">
                                 <div class="col-md-8">
                                     <label asp-for="Availability" class="form-label fw-bold text-muted small">Operating Hours</label>
-                                    <input asp-for="Availability" class="form-control bg-light" placeholder="e.g. Mon-Fri, 9AM-5PM" />
+                                    <input asp-for="Availability" class="form-control bg-dark-subtle" placeholder="e.g. Mon-Fri, 9AM-5PM" />
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end pb-2">
                                     <div class="form-check">
@@ -119,7 +119,7 @@
                     
                     <div class="row g-4 mb-4">
                         <div class="col-md-4">
-                            <div class="form-check form-switch p-3 bg-light rounded-3 border">
+                            <div class="form-check form-switch p-3 bg-dark-subtle rounded-3 border">
                                 <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" asp-for="IsEmergency">
                                 <label class="form-check-label fw-bold mt-1" asp-for="IsEmergency">Primary Emergency</label>
                                 <div class="text-muted small mt-1">Highlights this contact with red SOS styling.</div>
@@ -127,7 +127,7 @@
                         </div>
                         
                         <div class="col-md-4">
-                            <div class="form-check form-switch p-3 bg-light rounded-3 border">
+                            <div class="form-check form-switch p-3 bg-dark-subtle rounded-3 border">
                                 <input class="form-check-input ms-0 me-3" type="checkbox" role="switch" asp-for="ShowInQuickGuide">
                                 <label class="form-check-label fw-bold mt-1" asp-for="ShowInQuickGuide">Quick Guide</label>
                                 <div class="text-muted small mt-1">Show on the main "Who to Contact" student page.</div>
@@ -146,7 +146,7 @@
                     <div class="d-flex justify-content-between align-items-center pt-4 border-top">
                         <div class="d-flex align-items-center w-25">
                             <label asp-for="DisplayOrder" class="form-label fw-bold text-muted small me-2 mb-0 text-nowrap">Sort Order</label>
-                            <input asp-for="DisplayOrder" class="form-control form-control-sm bg-light w-50" type="number" />
+                            <input asp-for="DisplayOrder" class="form-control form-control-sm bg-dark-subtle w-50" type="number" />
                         </div>
                         
                         <div class="d-flex gap-2">

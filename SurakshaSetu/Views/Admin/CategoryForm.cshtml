@@ -19,7 +19,7 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
             <div class="card-body p-4 p-md-5">
                 
                 @if (!ViewData.ModelState.IsValid)
@@ -41,13 +41,13 @@
                     <div class="row g-4 mb-5">
                         <div class="col-12">
                             <label asp-for="Name" class="form-label fw-bold text-muted small">Category Name <span class="text-danger">*</span></label>
-                            <input asp-for="Name" class="form-control bg-light fs-5 fw-bold" placeholder="e.g. Theft, Harassment, Medical Emergency" />
+                            <input asp-for="Name" class="form-control bg-dark-subtle fs-5 fw-bold" placeholder="e.g. Theft, Harassment, Medical Emergency" />
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
                         
                         <div class="col-12">
                             <label asp-for="Description" class="form-label fw-bold text-muted small">Description</label>
-                            <textarea asp-for="Description" class="form-control bg-light" rows="3" placeholder="Brief description of what falls under this category..."></textarea>
+                            <textarea asp-for="Description" class="form-control bg-dark-subtle" rows="3" placeholder="Brief description of what falls under this category..."></textarea>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
                     </div>

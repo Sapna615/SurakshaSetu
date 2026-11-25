@@ -24,16 +24,16 @@
     </div>
 }
 
-<div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 mb-4 bg-dark-glass">
     <div class="card-body p-4">
         <form method="get" action="/Admin/Locations" class="row g-3">
             <div class="col-md-7">
                 <label class="form-label fw-bold text-muted small">Search Locations</label>
-                <input type="text" name="searchQuery" class="form-control bg-light" placeholder="Search by name or description..." value="@Model.SearchQuery">
+                <input type="text" name="searchQuery" class="form-control bg-dark-subtle" placeholder="Search by name or description..." value="@Model.SearchQuery">
             </div>
             <div class="col-md-3">
                 <label class="form-label fw-bold text-muted small">Location Type</label>
-                <select name="typeFilter" class="form-select bg-light">
+                <select name="typeFilter" class="form-select bg-dark-subtle">
                     <option value="">All Types</option>
                     @foreach(var type in Model.AvailableTypes)
                     {
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 bg-white">
+<div class="card border-0 shadow-sm rounded-4 bg-dark-glass">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
