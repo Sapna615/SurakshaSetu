@@ -187,12 +187,12 @@
                                 0
                             </span>
                         </span>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown" style="width: 300px; padding: 0;">
-                            <li class="dropdown-header fw-bold" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef; padding: 10px 15px;">Active SOS Alerts</li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown" style="width: 300px; padding: 0; background-color: #0d1726; border: 1px solid #1e2d42;">
+                            <li class="dropdown-header fw-bold" style="background-color: #0d1726; border-bottom: 1px solid #1e2d42; padding: 10px 15px; color: #ffffff;">Active SOS Alerts</li>
                             <div id="notificationList" style="max-height: 300px; overflow-y: auto;">
                                 <li class="p-3 text-center text-muted" id="noNotificationsMsg"><small>No active emergency alerts.</small></li>
                             </div>
-                            <li><a class="dropdown-item text-center fw-bold text-primary py-2" style="border-top: 1px solid #e9ecef; font-size: 0.85rem;" href="/Security/ActiveSOS">View All Active SOS</a></li>
+                            <li><a class="dropdown-item text-center fw-bold text-primary py-2" style="border-top: 1px solid #1e2d42; font-size: 0.85rem;" href="/Security/ActiveSOS">View All Active SOS</a></li>
                         </ul>
                     </div>
                     <span>
@@ -397,8 +397,8 @@
             transform: scale(0.95);
             transition: all 3s linear;
         }
-        .notification-item { border-bottom: 1px solid #f3f4f6; padding: 10px 15px; }
-        .notification-item:hover { background-color: #fef2f2; }
+        .notification-item { border-bottom: 1px solid #1e2d42; padding: 10px 15px; color: #f8fafc; }
+        .notification-item:hover { background-color: #17263d !important; }
         .pulse-animation { animation: pulse-red 2s infinite; }
         @@keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
     </style>
@@ -459,7 +459,7 @@
                             data.cancelled.forEach(item => {
                                 const time = new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                                 list.innerHTML += `
-                                    <a href="/Security/IncidentDetails/${item.id}" class="text-decoration-none text-dark d-block notification-item" style="background-color: #f8fafc; opacity: 0.9;">
+                                    <a href="/Security/IncidentDetails/${item.id}" class="text-decoration-none text-white d-block notification-item" style="background-color: #111a28; opacity: 0.95;">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="fw-bold text-secondary">🚫 SOS Cancelled by User</span>
                                             <small class="text-muted">${time}</small>
