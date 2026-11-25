@@ -12,20 +12,23 @@
         display: flex;
         flex-direction: column;
         height: calc(100vh - 150px);
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        background: rgba(30, 41, 59, 0.75) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.35);
         overflow: hidden;
-        border: 1px solid #e5e7eb;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #ffffff;
     }
     
     .map-header {
         padding: 20px;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #f9fafb;
+        background-color: #0f172a;
     }
     
     .map-body {
@@ -37,11 +40,12 @@
     .map-sidebar {
         width: 300px;
         padding: 20px;
-        border-right: 1px solid #e5e7eb;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         overflow-y: auto;
-        background: #ffffff;
+        background: rgba(15, 23, 42, 0.85);
         position: relative;
         z-index: 10;
+        color: #ffffff;
     }
     
     #map {
@@ -57,20 +61,34 @@
         align-items: center;
         gap: 10px;
         padding: 10px 15px;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: rgba(30, 41, 59, 0.6);
+        border-radius: 8px;
         margin-bottom: 10px;
         cursor: pointer;
         transition: all 0.2s;
+        color: #e2e8f0;
     }
     .filter-item:hover {
-        background-color: #f3f4f6;
+        background-color: #1e293b;
+        color: #ffffff;
+        border-color: rgba(96, 165, 250, 0.3);
     }
     .filter-item.active {
-        background-color: #eff6ff;
-        border-color: #bfdbfe;
-        color: #1e40af;
-        font-weight: 600;
+        background-color: rgba(37, 99, 235, 0.25);
+        border-color: rgba(96, 165, 250, 0.5);
+        color: #93c5fd;
+        font-weight: 700;
+    }
+
+    /* Search Input */
+    .map-search-input {
+        background: #0f172a !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    .map-search-input:focus {
+        border-color: #3b82f6 !important;
     }
 
     /* Custom Leaflet Popups */
@@ -170,18 +188,18 @@
 
 <div class="mb-4 d-flex justify-content-between align-items-end">
     <div>
-        <h2 class="fw-bold" style="color: #111827;">Campus Safety Map</h2>
-        <p class="text-muted mb-0">Find security points, medical facilities, and active campus safety alerts.</p>
+        <h2 class="fw-bold text-white">Campus Safety Map</h2>
+        <p class="text-secondary mb-0">Find security points, medical facilities, and active campus safety alerts.</p>
     </div>
 </div>
 
 <div class="map-container">
     <div class="map-header">
-        <div class="input-group" style="max-width: 300px;">
-            <span class="input-group-text bg-white">🔍</span>
-            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search campus location...">
+        <div class="input-group" style="max-width: 320px;">
+            <span class="input-group-text" style="background: #0f172a; border-color: rgba(255,255,255,0.2); color: #94a3b8;">🔍</span>
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search campus location..." style="background: #0f172a; color: #fff; border-color: rgba(255,255,255,0.2);">
         </div>
-        <button id="btnMyLocation" class="btn btn-outline-primary fw-bold">
+        <button id="btnMyLocation" class="btn btn-outline-primary fw-bold" style="border-color: #3b82f6; color: #60a5fa;">
             📍 My Location
         </button>
     </div>

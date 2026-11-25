@@ -14,29 +14,33 @@
     .ec-page {
         max-width: 1150px;
         margin: 0 auto;
-        background: #fff;
+        background: rgba(30, 41, 59, 0.75) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         padding: 40px;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        color: #ffffff !important;
     }
 
     .ec-kicker {
         font-size: .72rem;
         font-weight: 800;
         letter-spacing: 1.2px;
-        color: #2563eb;
+        color: #60a5fa !important;
         text-transform: uppercase;
     }
 
     .ec-title {
         font-size: 2.3rem;
         font-weight: 800;
-        color: #111827;
+        color: #ffffff !important;
         margin: 5px 0 8px;
     }
 
     .ec-subtitle {
-        color: #6b7280;
+        color: #cbd5e1 !important;
         font-size: .95rem;
         margin-bottom: 30px;
     }
@@ -47,13 +51,8 @@
        ============================================================ */
 
     .ec-danger {
-        background: linear-gradient(
-            135deg,
-            #fff1f2,
-            #fff7f7
-        );
-
-        border: 1px solid #fecdd3;
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(185, 28, 28, 0.35) 100%) !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
         border-radius: 14px;
         padding: 22px;
         display: flex;
@@ -64,16 +63,16 @@
     }
 
     .ec-danger-title {
-        color: #be123c;
+        color: #fca5a5 !important;
         font-weight: 800;
         font-size: 1.1rem;
         margin-bottom: 5px;
     }
 
     .ec-danger-text {
-        color: #4b5563;
+        color: #f1f5f9 !important;
         margin: 0;
-        font-size: .85rem;
+        font-size: .88rem;
         line-height: 1.5;
     }
 
@@ -91,23 +90,26 @@
     .ec-search {
         flex: 1;
         padding: 13px 16px;
-        border: 1px solid #dbe1e8;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background: #0f172a !important;
+        color: #ffffff !important;
         border-radius: 9px;
         outline: none;
         font-size: .9rem;
     }
 
     .ec-search:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,.25);
     }
 
     .ec-category {
         width: 220px;
         padding: 13px;
-        border: 1px solid #dbe1e8;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 9px;
-        background: #fff;
+        background: #0f172a !important;
+        color: #ffffff !important;
     }
 
 
@@ -120,7 +122,7 @@
         align-items: center;
         gap: 18px;
         padding: 20px 0;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     .ec-icon {
@@ -131,7 +133,8 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        background: #f1f5f9;
+        background: rgba(59, 130, 246, 0.15) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
         font-size: 1.25rem;
     }
 
@@ -148,31 +151,35 @@
 
     .ec-name {
         margin: 0;
-        font-size: .98rem;
-        font-weight: 750;
-        color: #111827;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #ffffff !important;
     }
 
     .ec-badge {
-        font-size: .65rem;
-        padding: 3px 8px;
+        font-size: .7rem;
+        padding: 3px 10px;
         border-radius: 20px;
-        color: #2563eb;
-        background: #eff6ff;
-        border: 1px solid #bfdbfe;
+        color: #93c5fd !important;
+        background: rgba(37, 99, 235, 0.25) !important;
+        border: 1px solid rgba(96, 165, 250, 0.3) !important;
     }
 
     .ec-description {
         margin: 0 0 6px;
-        color: #6b7280;
-        font-size: .82rem;
+        color: #cbd5e1 !important;
+        font-size: .85rem;
     }
 
     .ec-meta {
-        color: #9ca3af;
-        font-size: .72rem;
+        color: #94a3b8 !important;
+        font-size: .75rem;
         display: flex;
         gap: 15px;
+    }
+
+    .ec-meta span {
+        color: #94a3b8 !important;
     }
 
     .ec-actions {
@@ -181,13 +188,15 @@
     }
 
     .ec-small-btn {
-        border: 0;
+        border: 1px solid rgba(96, 165, 250, 0.4) !important;
         text-decoration: none;
-        padding: 7px 15px;
+        padding: 8px 16px;
         border-radius: 20px;
-        background: #eff6ff;
-        color: #2563eb;
-        font-size: .75rem;
+        background: rgba(37, 99, 235, 0.2) !important;
+        color: #60a5fa !important;
+        font-size: .78rem;
+        font-weight: 700;
+    }
         font-weight: 700;
         cursor: pointer;
     }
