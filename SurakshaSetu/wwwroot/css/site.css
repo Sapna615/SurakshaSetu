@@ -8,8 +8,21 @@ html {
   }
 }
 
+:root {
+  --bg-dark-main: #0b1120;
+  --bg-dark-card: #131c31;
+  --bg-dark-card-hover: #1e293b;
+  --bg-dark-sidebar: #0f172a;
+  --border-dark: rgba(255, 255, 255, 0.08);
+  --border-dark-hover: rgba(59, 130, 246, 0.35);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-blue: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.25);
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem #0b1120, 0 0 0 0.25rem #3b82f6;
 }
 
 html {
@@ -24,8 +37,80 @@ html, body, a, button, input, select, textarea, .btn {
 
 body {
   margin-bottom: 60px;
-  background: linear-gradient(180deg, #f0f4f9 0%, #e9eef5 100%);
+  background-color: var(--bg-dark-main) !important;
+  color: var(--text-main) !important;
   min-height: 100vh;
+}
+
+/* Dark Slate & Midnight Cards & Tables */
+.card, .info-card, .trust-stat-box, .stat-pill-box, .contact-item-row, .alert-card-item {
+  background-color: var(--bg-dark-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-dark) !important;
+}
+
+.card-header {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: var(--border-dark) !important;
+}
+
+.table {
+  color: var(--text-main) !important;
+  border-color: var(--border-dark) !important;
+}
+
+.table thead th, .table-light {
+  background-color: #0f172a !important;
+  color: #94a3b8 !important;
+  border-color: var(--border-dark) !important;
+}
+
+.table tbody tr {
+  background-color: var(--bg-dark-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-dark) !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--bg-dark-card-hover) !important;
+  color: #ffffff !important;
+}
+
+/* Form controls in dark mode */
+.form-control, .form-select {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #131c31 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Modals */
+.modal-content {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--border-dark) !important;
+}
+
+.text-dark {
+  color: #f8fafc !important;
+}
+
+.text-muted {
+  color: #94a3b8 !important;
+}
+
+.bg-light {
+  background-color: #131c31 !important;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
