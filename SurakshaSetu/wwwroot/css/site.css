@@ -122,14 +122,34 @@ small {
   font-weight: 700;
 }
 
-/* Tables with clear contrasting text */
+/* Tables with clear contrasting text - Bootstrap 5 override */
 .table {
+  --bs-table-bg: transparent !important;
+  --bs-table-accent-bg: transparent !important;
+  --bs-table-striped-bg: transparent !important;
+  --bs-table-active-bg: #17263d !important;
+  --bs-table-hover-bg: #17263d !important;
+  --bs-table-color: #f8fafc !important;
+  --bs-table-hover-color: #ffffff !important;
+  --bs-table-border-color: #1e2d42 !important;
   color: #f8fafc !important;
   border-color: #1e2d42 !important;
+  background-color: transparent !important;
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: #cbd5e1 !important;
+  box-shadow: none !important;
+  border-bottom-color: #1e2d42 !important;
 }
 
 .table thead th,
-.table-light {
+.table-light,
+.table-light > th,
+.table-light > td {
+  --bs-table-bg: #0d1726 !important;
+  --bs-table-color: #94a3b8 !important;
   background-color: #0d1726 !important;
   color: #94a3b8 !important;
   font-weight: 700;
@@ -137,6 +157,7 @@ small {
   font-size: 0.78rem;
   letter-spacing: 0.5px;
   border-bottom: 1px solid #1e2d42 !important;
+  box-shadow: none !important;
 }
 
 .table tbody tr {
@@ -145,9 +166,11 @@ small {
   border-bottom: 1px solid #172437 !important;
 }
 
-.table-hover tbody tr:hover td {
+.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: #17263d !important;
   background-color: #17263d !important;
   color: #ffffff !important;
+  box-shadow: none !important;
 }
 
 .table td,
