@@ -13,21 +13,24 @@
     @await RenderSectionAsync("Styles", required: false)
     <style>
         body {
+            background: radial-gradient(circle at top left, #1e293b 0%, #0b1120 60%) !important;
             background-color: #0b1120 !important;
+            background-attachment: fixed !important;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             overflow-x: hidden;
-            color: #f8fafc;
+            color: #ffffff;
         }
         .wrapper {
             display: flex;
             width: 100%;
             min-height: 100vh;
-            background-color: #0b1120;
+            background: transparent;
         }
         .sidebar {
             width: 260px;
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
@@ -40,7 +43,7 @@
             padding: 25px 20px;
             font-size: 1.25rem;
             font-weight: 700;
-            color: #f8fafc;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -50,7 +53,7 @@
             margin-bottom: 15px;
             font-size: 0.65rem;
             font-weight: 700;
-            color: #64748b;
+            color: #94a3b8;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -68,35 +71,36 @@
             align-items: center;
             gap: 12px;
             padding: 10px 15px;
-            color: #94a3b8;
+            color: #cbd5e1;
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.2s;
         }
         .sidebar-menu a:hover {
-            background-color: #1e293b;
+            background-color: rgba(59, 130, 246, 0.15);
             color: #ffffff;
         }
         .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(37,99,235,0.2) 0%, rgba(37,99,235,0.4) 100%) !important;
-            color: #60a5fa !important;
+            background: linear-gradient(135deg, rgba(37,99,235,0.3) 0%, rgba(37,99,235,0.6) 100%) !important;
+            color: #ffffff !important;
             font-weight: 700;
-            border: 1px solid rgba(96,165,250,0.3);
+            border: 1px solid rgba(96,165,250,0.4);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
         }
         .main-content {
             flex-grow: 1;
             margin-left: 260px;
             display: flex;
             flex-direction: column;
-            background: #0b1120;
+            background: transparent;
             min-height: 100vh;
         }
         .top-header {
             height: 64px;
             background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
@@ -113,7 +117,7 @@
         }
         .breadcrumb-title span {
             font-weight: 700;
-            color: #f8fafc;
+            color: #ffffff;
         }
         .user-profile {
             display: flex;
@@ -121,14 +125,14 @@
             gap: 20px;
             font-size: 0.85rem;
             font-weight: 600;
-            color: #f8fafc;
+            color: #ffffff;
         }
         .content-area {
             padding: 40px;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
-            background-color: #0b1120;
+            background: transparent;
         }
     </style>
 </head>
