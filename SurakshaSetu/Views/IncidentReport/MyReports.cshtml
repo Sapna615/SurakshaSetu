@@ -122,7 +122,7 @@
             </div>
 
             <button type="submit" class="btn-filter">Apply Filters</button>
-            <a asp-action="MyReports" class="btn-view" style="margin-left: 10px;">Clear</a>
+            <a asp-action="MyReports" class="btn-clear">Clear</a>
         </form>
     </div>
 
@@ -130,10 +130,10 @@
     <div class="report-list">
         @if (!Model.Reports.Any())
         {
-            <div style="text-align: center; padding: 40px; background: rgba(30, 41, 59, 0.75) !important; border-radius: 12px; border: 1px solid #e5e7eb;">
+            <div class="empty-reports-box">
                 <div style="font-size: 40px; margin-bottom: 10px;">📋</div>
                 <h3>No safety reports found</h3>
-                <p style="color: #6b7280; margin-bottom: 20px;">You have not submitted any safety concerns matching this criteria.</p>
+                <p style="margin-bottom: 20px;">You have not submitted any safety concerns matching this criteria.</p>
                 <a asp-action="Create" class="btn-filter" style="text-decoration: none;">Report a Safety Concern</a>
             </div>
         }
