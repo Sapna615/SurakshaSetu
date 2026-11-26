@@ -282,6 +282,24 @@ namespace SurakshaSetu.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        private async Task LogAuditAsync(string action, string? entityId = null, string? details = null)
+        {
+            var actorId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(actorId)) return;
+
+            _context.AuditLogs.Add(new AuditLog
+            {
+                Action = action,
+                UserId = actorId,
+                EntityId = entityId,
+                Timestamp = DateTime.UtcNow,
+                Details = details
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleUserStatus(string id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -299,11 +317,13 @@ namespace SurakshaSetu.Controllers
             if (currentlyActive)
             {
                 await _userManager.SetLockoutEndDateAsync(user, System.DateTimeOffset.MaxValue);
+                await LogAuditAsync("User Deactivated", user.Id, $"Deactivated user {user.FullName} ({user.Email})");
                 TempData["SuccessMessage"] = $"User {user.FullName} deactivated.";
             }
             else
             {
                 await _userManager.SetLockoutEndDateAsync(user, null);
+                await LogAuditAsync("User Activated", user.Id, $"Activated user {user.FullName} ({user.Email})");
                 TempData["SuccessMessage"] = $"User {user.FullName} activated.";
             }
 
