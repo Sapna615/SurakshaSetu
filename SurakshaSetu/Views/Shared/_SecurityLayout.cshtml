@@ -600,6 +600,13 @@
                 })
                 .catch(e => console.error("Error polling SOS:", e));
         }
+
+        // Ensure any Bootstrap modal inside nested containers (like tables with backdrop-filter) is moved to body so the backdrop never covers it
+        document.addEventListener('show.bs.modal', function (event) {
+            if (event.target && event.target.parentElement !== document.body) {
+                document.body.appendChild(event.target);
+            }
+        });
     </script>
     <partial name="_QuickHelpModal" />
     @await RenderSectionAsync("Scripts", required: false)
