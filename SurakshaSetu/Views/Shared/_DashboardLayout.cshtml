@@ -376,20 +376,12 @@
         });
 
         function checkActiveSOS() {
-            // If the user has already acknowledged/dismissed the active SOS modal in this browser session, don't popup on every page transition
             fetch('/api/sos/status')
                 .then(r => r.json())
                 .then(data => {
                     if(data.active) {
-                        const dismissedSosId = sessionStorage.getItem('dismissed_sos_id');
-                        if (dismissedSosId !== data.sos.requestId) {
-                            showSOSPopup(data.sos);
-                        } else {
-                            // Update currentSosRequestId silently in background so buttons still work
-                            currentSosRequestId = data.sos.requestId;
-                        }
-                    } else {
-                        sessionStorage.removeItem('dismissed_sos_id');
+                        currentSosRequestId = data.sos.requestId;
+                        // Keep currentSosRequestId in background; do not auto popup modal on page load
                     }
                 }).catch(e => console.error("SOS Status Error", e));
         }

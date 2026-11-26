@@ -413,14 +413,8 @@
                 .then(r => r.json())
                 .then(data => {
                     if(data.active) {
-                        const dismissedSosId = sessionStorage.getItem('dismissed_sos_id');
-                        if (dismissedSosId !== data.sos.requestId) {
-                            showSOSPopup(data.sos);
-                        } else {
-                            currentSosRequestId = data.sos.requestId;
-                        }
-                    } else {
-                        sessionStorage.removeItem('dismissed_sos_id');
+                        currentSosRequestId = data.sos.requestId;
+                        // Keep currentSosRequestId in background; do not auto popup modal on page load
                     }
                 }).catch(e => console.error("SOS Status Error", e));
         }

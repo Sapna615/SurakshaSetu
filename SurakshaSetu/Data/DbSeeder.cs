@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SurakshaSetu.Models;
 
 namespace SurakshaSetu.Data
@@ -66,9 +67,22 @@ namespace SurakshaSetu.Data
                 await context.SaveChangesAsync();
             }
 
+            // Resolve any stale active SOS alerts so no user is stuck with emergency popups on login
+            var staleActiveSos = await context.SafetyReports
+                .Where(s => s.ImmediateDanger && s.Status != "Cancelled" && s.Status != "Resolved")
+                .ToListAsync();
+            foreach (var s in staleActiveSos)
+            {
+                s.Status = "Resolved";
+                s.ResolvedAt = DateTime.UtcNow;
+            }
+            if (staleActiveSos.Any())
+            {
+                await context.SaveChangesAsync();
+            }
+
             // Seed Test Student
             await CreateTestUserAsync(userManager, "student@surakshasetu.edu", "Sapna Student", "Student");
-            await CreateTestUserAsync(userManager, "sapnarai2005@gmail.com", "Sapna Rai", "Student");
 
             // Seed Test Security Officer
             await CreateTestUserAsync(userManager, "security@surakshasetu.edu", "Officer Singh", "SecurityOfficer");
@@ -262,9 +276,7 @@ namespace SurakshaSetu.Data
             }
             else
             {
-                // Ensure password is reset to SurakshaSetu@2026! in case it was different
-                var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                await userManager.ResetPasswordAsync(user, token, "SurakshaSetu@2026!");
+                // User already exists — NEVER overwrite their password!
                 if (!await userManager.IsInRoleAsync(user, role))
                 {
                     await userManager.AddToRoleAsync(user, role);

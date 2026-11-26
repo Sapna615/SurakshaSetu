@@ -230,7 +230,7 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn py-2 fw-bold" data-bs-dismiss="modal" style="background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 10px;">
+                        <button type="button" class="btn py-2 fw-bold" data-bs-dismiss="modal" onclick="acknowledgeSOSModal()" style="background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 10px;">
                             <i class="bi bi-check-circle me-1" style="color: #38bdf8;"></i> Acknowledge & Keep SOS Active
                         </button>
                         <button type="button" class="btn py-2 fw-bold" onclick="cancelSOS()" style="background: transparent; color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 10px;">
@@ -310,9 +310,17 @@
                 .then(r => r.json())
                 .then(data => {
                     if(data.active) {
-                        showSOSPopup(data.sos);
+                        currentSosRequestId = data.sos.requestId;
+                        // Keep currentSosRequestId in background; do not auto popup modal on page load
                     }
                 }).catch(e => console.error("SOS Status Error", e));
+        }
+
+        function acknowledgeSOSModal() {
+            sosModal.hide();
+            if (currentSosRequestId) {
+                sessionStorage.setItem('dismissed_sos_id', currentSosRequestId);
+            }
         }
 
         function activateSOS() {

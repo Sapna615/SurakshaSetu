@@ -90,8 +90,10 @@ namespace SurakshaSetu.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
+            // An SOS is only active if created within the last 15 minutes and not cancelled or resolved
+            var cutoff = DateTime.UtcNow.AddMinutes(-15);
             var activeSOS = await _context.SafetyReports
-                .Where(s => s.UserId == user.Id && s.ImmediateDanger && s.Status != "Cancelled" && s.Status != "Resolved")
+                .Where(s => s.UserId == user.Id && s.ImmediateDanger && s.Status != "Cancelled" && s.Status != "Resolved" && s.CreatedAt >= cutoff)
                 .OrderByDescending(s => s.CreatedAt)
                 .FirstOrDefaultAsync();
 
