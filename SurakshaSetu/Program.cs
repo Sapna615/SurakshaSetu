@@ -23,9 +23,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-    if (conn.Contains(".db") || conn.Contains("Data Source") && !conn.Contains("Server="))
+    if (conn.Contains(".db") || (conn.Contains("Data Source") && !conn.Contains("Server=")))
     {
         options.UseSqlite(conn);
+    }
+    else if (conn.Contains("Port=3306") || conn.Contains("User=root") || conn.Contains("Uid="))
+    {
+        options.UseMySql(conn, ServerVersion.AutoDetect(conn));
     }
     else
     {
