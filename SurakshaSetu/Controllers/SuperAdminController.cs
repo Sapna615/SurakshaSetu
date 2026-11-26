@@ -23,35 +23,9 @@ namespace SurakshaSetu.Controllers
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Dashboard()
+        public IActionResult Dashboard()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
-
-            var studentUsers = await _userManager.GetUsersInRoleAsync("Student");
-            var securityUsers = await _userManager.GetUsersInRoleAsync("SecurityOfficer");
-            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
-            var superAdminUsers = await _userManager.GetUsersInRoleAsync("SuperAdmin");
-
-            var viewModel = new SuperAdminDashboardViewModel
-            {
-                SuperAdminName = user.FullName ?? user.UserName ?? "Super Admin",
-                TotalStudents = studentUsers.Count,
-                TotalSecurityOfficers = securityUsers.Count,
-                TotalAdmins = adminUsers.Count,
-                TotalSuperAdmins = superAdminUsers.Count,
-                RecentAuditLogs = new List<string> 
-                { 
-                    "System started", 
-                    "Role permissions synchronized",
-                    $"User {user.Email} accessed SuperAdmin dashboard"
-                }
-            };
-
-            ViewData["UserName"] = viewModel.SuperAdminName;
-            ViewData["RoleName"] = "Super Admin";
-
-            return View(viewModel);
+            return RedirectToAction("Dashboard", "Admin");
         }
 
         public async Task<IActionResult> Profile()

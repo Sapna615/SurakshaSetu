@@ -73,11 +73,7 @@ namespace SurakshaSetu.Areas.Identity.Pages.Account
                     if (user != null)
                     {
                         var roles = await _userManager.GetRolesAsync(user);
-                        if (roles.Contains("SuperAdmin"))
-                        {
-                            return LocalRedirect("~/SuperAdmin/Dashboard");
-                        }
-                        else if (roles.Contains("Admin"))
+                        if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
                         {
                             return LocalRedirect("~/Admin/Dashboard");
                         }

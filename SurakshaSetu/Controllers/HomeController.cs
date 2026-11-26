@@ -25,8 +25,7 @@ public class HomeController : Controller
         // Send them directly to their personalized safety dashboard.
         if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            if (User.IsInRole("SuperAdmin")) return RedirectToAction("Dashboard", "SuperAdmin");
-            if (User.IsInRole("Admin")) return RedirectToAction("Dashboard", "Admin");
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin")) return RedirectToAction("Dashboard", "Admin");
             if (User.IsInRole("SecurityOfficer")) return RedirectToAction("Dashboard", "Security");
             if (User.IsInRole("Student")) return RedirectToAction("Dashboard", "Student");
         }

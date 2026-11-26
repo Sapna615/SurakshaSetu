@@ -149,7 +149,7 @@
             </div>
             
             <ul class="sidebar-menu" style="margin-top: 20px;">
-                <li><a href="/SuperAdmin/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "SuperAdmin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>🏠</span> Dashboard</a></li>
+                <li><a href="/Admin/Dashboard" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")"><span>🏠</span> Dashboard</a></li>
                 <li><a href="/Admin/Users" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")"><span>👥</span> User Management</a></li>
                 <li><a href="/Admin/Cases" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Cases" ? "active" : "")"><span>📋</span> Case Management</a></li>
                 <li><a href="/Admin/SensitiveCases" class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "SensitiveCases" ? "active" : "")"><span>🫂</span> Sensitive Cases</a></li>
@@ -179,7 +179,7 @@
         
         <div class="main-content">
             <header class="top-header">
-                <div class="breadcrumb-title">Student Portal / <span>@ViewData["Title"]</span></div>
+                <div class="breadcrumb-title">Administration / <span>@ViewData["Title"]</span></div>
                 <div class="user-profile">
                     <span style="color:#f59e0b; cursor:pointer;">🔔</span>
                     <span>
