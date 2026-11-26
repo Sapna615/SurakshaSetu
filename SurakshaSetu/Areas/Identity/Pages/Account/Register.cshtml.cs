@@ -37,7 +37,7 @@ namespace SurakshaSetu.Areas.Identity.Pages.Account
             public string FullName { get; set; }
 
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Please enter a valid email address (e.g., email@gmail.com).")]
             [Display(Name = "University Email")]
             public string Email { get; set; }
 

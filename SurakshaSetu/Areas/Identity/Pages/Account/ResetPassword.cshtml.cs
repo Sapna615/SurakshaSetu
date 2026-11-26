@@ -23,7 +23,7 @@ namespace SurakshaSetu.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Please enter a valid email address (e.g., email@gmail.com).")]
             public string Email { get; set; } = string.Empty;
 
             [Required]

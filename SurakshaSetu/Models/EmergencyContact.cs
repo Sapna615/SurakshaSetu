@@ -84,7 +84,7 @@ namespace SurakshaSetu.Models
         public string PhoneNumber { get; set; } = string.Empty;
 
         [StringLength(150)]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address (e.g., email@gmail.com).")]
         public string Email { get; set; } = string.Empty;
 
         [StringLength(200)]

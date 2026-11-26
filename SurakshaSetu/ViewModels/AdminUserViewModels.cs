@@ -39,7 +39,7 @@ namespace SurakshaSetu.ViewModels
         public string FullName { get; set; } = string.Empty;
         
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address (e.g., email@gmail.com).")]
         public string Email { get; set; } = string.Empty;
         
         [Display(Name = "Student/Employee ID")]
