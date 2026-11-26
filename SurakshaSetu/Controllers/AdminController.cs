@@ -276,26 +276,9 @@ namespace SurakshaSetu.Controllers
                 }
             }
 
+            await LogAuditAsync("User Updated", user.Id, $"Updated user {user.Email} (Roles: {string.Join(", ", model.SelectedRoles)})");
             TempData["SuccessMessage"] = "User updated successfully.";
             return RedirectToAction(nameof(Users));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        private async Task LogAuditAsync(string action, string? entityId = null, string? details = null)
-        {
-            var actorId = _userManager.GetUserId(User);
-            if (string.IsNullOrEmpty(actorId)) return;
-
-            _context.AuditLogs.Add(new AuditLog
-            {
-                Action = action,
-                UserId = actorId,
-                EntityId = entityId,
-                Timestamp = DateTime.UtcNow,
-                Details = details
-            });
-            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -317,13 +300,13 @@ namespace SurakshaSetu.Controllers
             if (currentlyActive)
             {
                 await _userManager.SetLockoutEndDateAsync(user, System.DateTimeOffset.MaxValue);
-                await LogAuditAsync("User Deactivated", user.Id, $"Deactivated user {user.FullName} ({user.Email})");
+                await LogAuditAsync("User Deactivated", user.Id, $"Deactivated user {user.Email}");
                 TempData["SuccessMessage"] = $"User {user.FullName} deactivated.";
             }
             else
             {
                 await _userManager.SetLockoutEndDateAsync(user, null);
-                await LogAuditAsync("User Activated", user.Id, $"Activated user {user.FullName} ({user.Email})");
+                await LogAuditAsync("User Activated", user.Id, $"Activated user {user.Email}");
                 TempData["SuccessMessage"] = $"User {user.FullName} activated.";
             }
 
@@ -644,6 +627,7 @@ namespace SurakshaSetu.Controllers
 
             _context.SafetyAlerts.Add(alert);
             await _context.SaveChangesAsync();
+            await LogAuditAsync("Safety Alert Published", alert.SafetyAlertId.ToString(), $"Published alert '{alert.Title}' ({alert.Priority})");
 
             TempData["SuccessMessage"] = "Safety alert published successfully.";
             return RedirectToAction(nameof(SafetyAlerts));
@@ -1315,6 +1299,22 @@ namespace SurakshaSetu.Controllers
             };
 
             return View("~/Views/Management/Dashboard.cshtml", viewModel);
+        }
+
+        private async Task LogAuditAsync(string action, string? entityId = null, string? details = null)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return;
+
+            _context.AuditLogs.Add(new AuditLog
+            {
+                Action = action,
+                UserId = currentUser.Id,
+                EntityId = entityId,
+                Details = details,
+                Timestamp = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
         }
     }
 }
