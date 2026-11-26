@@ -188,11 +188,16 @@
                         
                         <div class="mb-3">
                             <label class="form-label small text-muted">Update Status</label>
-                            <select name="newStatus" class="form-select form-select-sm">
-                                <option value="">(No change)</option>
-                                <option value="Assigned">Assigned</option>
-                                <option value="In Progress">In Progress</option>
+                            <select name="newStatus" class="form-select form-select-sm" style="background-color: #09101a; color: #f8fafc; border-color: #1e2d42;">
+                                <option value="">(Keep Current: @Model.Incident.Status)</option>
+                                <option value="Pending">Pending / Awaiting Review</option>
+                                <option value="Under Review">Under Review</option>
+                                <option value="Assigned">Assigned to Officer</option>
+                                <option value="In Progress">In Progress (Active Response)</option>
                                 <option value="Under Investigation">Under Investigation</option>
+                                <option value="Action Taken">Action Taken</option>
+                                <option value="Resolved">Resolved & Closed</option>
+                                <option value="Rejected">Rejected</option>
                             </select>
                         </div>
                         

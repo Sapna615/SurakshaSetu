@@ -131,9 +131,49 @@
                 @report.ReportId
                 @{
                     var statusClass = report.Status.ToLower().Replace(" ", "-");
+                    var statusNorm = report.Status.Trim();
+                    int currentStep = statusNorm switch
+                    {
+                        "Pending" or "Submitted" => 1,
+                        "Assigned" or "Under Review" => 2,
+                        "In Progress" or "Under Investigation" or "Investigation" => 3,
+                        "Action Taken" => 4,
+                        "Resolved" => 5,
+                        _ => 1
+                    };
+                    bool isClosed = statusNorm is "Resolved";
+                    bool isAborted = statusNorm is "Rejected" or "Withdrawn" or "Cancelled";
+                    int progressPercent = isAborted ? 100 : (currentStep * 20);
                 }
                 <span class="badge badge-status-@statusClass" style="font-size: 14px; transform: translateY(-2px);">@report.Status</span>
             </h1>
+        </div>
+
+        <!-- Visual Multi-Stage Progress Stepper -->
+        <div class="mb-4 p-3 rounded-3" style="background: #162032; border: 1px solid #1e293b;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold" style="color: #38bdf8; font-size: 0.95rem;">
+                    📍 Live Tracking Position: 
+                    <span class="text-white">
+                        @if(currentStep == 1) { <text>Step 1: Submitted & Awaiting Review</text> }
+                        else if(currentStep == 2) { <text>Step 2: Assigned to Security Officer</text> }
+                        else if(currentStep == 3) { <text>Step 3: Active Investigation & Response</text> }
+                        else if(currentStep == 4) { <text>Step 4: Safety Action Taken</text> }
+                        else if(currentStep == 5) { <text>Step 5: Case Resolved & Closed</text> }
+                    </span>
+                </span>
+                <span class="badge bg-dark-subtle border border-secondary text-light px-3 py-1">@progressPercent% Complete</span>
+            </div>
+            <div class="progress mb-2" style="height: 8px; background-color: #0b1120; border-radius: 6px; overflow: hidden;">
+                <div class="progress-bar @(isAborted ? "bg-danger" : isClosed ? "bg-success" : "bg-primary") progress-bar-striped progress-bar-animated" role="progressbar" style="width: @progressPercent%;"></div>
+            </div>
+            <div class="d-flex justify-content-between mt-2 text-center" style="font-size: 0.78rem;">
+                <div style="flex: 1;" class="@(currentStep >= 1 ? "text-info fw-bold" : "text-muted")">1. Submitted</div>
+                <div style="flex: 1;" class="@(currentStep >= 2 ? "text-info fw-bold" : "text-muted")">2. Assigned</div>
+                <div style="flex: 1;" class="@(currentStep >= 3 ? "text-info fw-bold" : "text-muted")">3. In Progress</div>
+                <div style="flex: 1;" class="@(currentStep >= 4 ? "text-info fw-bold" : "text-muted")">4. Action Taken</div>
+                <div style="flex: 1;" class="@(currentStep >= 5 ? "text-success fw-bold" : "text-muted")">5. Resolved</div>
+            </div>
         </div>
 
         @if (TempData["ErrorMessage"] != null)
@@ -335,23 +375,23 @@
             
             <div class="timeline">
                 @{
-                    bool hasPending = history.Any(h => h.NewStatus == "Pending");
-                    bool hasReview = history.Any(h => h.NewStatus == "Under Review");
-                    bool hasInv = history.Any(h => h.NewStatus == "Investigation");
-                    bool hasAction = history.Any(h => h.NewStatus == "Action Taken");
-                    bool hasResolved = history.Any(h => h.NewStatus == "Resolved");
-                    bool hasRejected = history.Any(h => h.NewStatus == "Rejected");
-                    bool hasWithdrawn = history.Any(h => h.NewStatus == "Withdrawn");
+                    bool hasPending = history.Any(h => h.NewStatus is "Pending" or "Submitted");
+                    bool hasReview = history.Any(h => h.NewStatus is "Under Review" or "Assigned");
+                    bool hasInv = history.Any(h => h.NewStatus is "Investigation" or "Under Investigation" or "In Progress");
+                    bool hasAction = history.Any(h => h.NewStatus is "Action Taken");
+                    bool hasResolved = history.Any(h => h.NewStatus is "Resolved");
+                    bool hasRejected = history.Any(h => h.NewStatus is "Rejected");
+                    bool hasWithdrawn = history.Any(h => h.NewStatus is "Withdrawn");
 
                     // 1. Submitted
-                    var submittedItem = history.FirstOrDefault();
+                    var submittedItem = history.FirstOrDefault(h => h.NewStatus is "Pending" or "Submitted") ?? history.FirstOrDefault();
                 }
 
                 <div class="timeline-item @(submittedItem != null ? "completed" : "")">
                     <div class="timeline-icon">✓</div>
                     <div class="timeline-content">
                         <div style="font-weight: 600; font-size: 14px;">Report Submitted</div>
-                        <div class="timeline-date">@(submittedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt") ?? "-")</div>
+                        <div class="timeline-date">@(submittedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt") ?? report.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt"))</div>
                     </div>
                 </div>
 
@@ -369,7 +409,7 @@
                 }
                 else if (hasRejected)
                 {
-                    var reviewItem = history.FirstOrDefault(h => h.NewStatus == "Under Review");
+                    var reviewItem = history.FirstOrDefault(h => h.NewStatus is "Under Review" or "Assigned");
                     if (reviewItem != null)
                     {
                         <div class="timeline-item completed">
@@ -397,45 +437,69 @@
                 else
                 {
                     // Normal Flow
-                    var reviewItem = history.FirstOrDefault(h => h.NewStatus == "Under Review");
-                    <div class="timeline-item @(hasReview ? "completed" : report.Status == "Pending" ? "active" : "")">
-                        <div class="timeline-icon">@(hasReview ? "✓" : (report.Status == "Pending" ? "●" : "○"))</div>
+                    var reviewItem = history.FirstOrDefault(h => h.NewStatus is "Under Review" or "Assigned");
+                    bool reviewActive = report.Status is "Assigned" or "Under Review";
+                    <div class="timeline-item @(hasReview ? "completed" : (currentStep >= 2 ? "completed" : "active"))">
+                        <div class="timeline-icon">@(hasReview || currentStep >= 2 ? "✓" : (currentStep == 1 ? "●" : "○"))</div>
                         <div class="timeline-content">
-                            <div style="font-weight: 600; font-size: 14px;">Under Review</div>
+                            <div style="font-weight: 600; font-size: 14px;">Assigned / Under Review</div>
                             @if (hasReview) { <div class="timeline-date">@reviewItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
                         </div>
                     </div>
 
-                    var invItem = history.FirstOrDefault(h => h.NewStatus == "Investigation");
-                    <div class="timeline-item @(hasInv ? "completed" : report.Status == "Under Review" ? "active" : "")">
-                        <div class="timeline-icon">@(hasInv ? "✓" : (report.Status == "Under Review" ? "●" : "○"))</div>
+                    var invItem = history.FirstOrDefault(h => h.NewStatus is "Investigation" or "Under Investigation" or "In Progress");
+                    <div class="timeline-item @(hasInv ? "completed" : (currentStep >= 3 ? "completed" : reviewActive ? "active" : ""))">
+                        <div class="timeline-icon">@(hasInv || currentStep >= 3 ? "✓" : (currentStep == 2 ? "●" : "○"))</div>
                         <div class="timeline-content">
-                            <div style="font-weight: 600; font-size: 14px;">Investigation</div>
+                            <div style="font-weight: 600; font-size: 14px;">In Progress / Investigation</div>
                             @if (hasInv) { <div class="timeline-date">@invItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
                         </div>
                     </div>
 
-                    var actionItem = history.FirstOrDefault(h => h.NewStatus == "Action Taken");
-                    <div class="timeline-item @(hasAction ? "completed" : report.Status == "Investigation" ? "active" : "")">
-                        <div class="timeline-icon">@(hasAction ? "✓" : (report.Status == "Investigation" ? "●" : "○"))</div>
+                    var actionItem = history.FirstOrDefault(h => h.NewStatus is "Action Taken");
+                    <div class="timeline-item @(hasAction ? "completed" : (currentStep >= 4 ? "completed" : (currentStep == 3 ? "active" : "")))">
+                        <div class="timeline-icon">@(hasAction || currentStep >= 4 ? "✓" : (currentStep == 3 ? "●" : "○"))</div>
                         <div class="timeline-content">
                             <div style="font-weight: 600; font-size: 14px;">Action Taken</div>
                             @if (hasAction) { <div class="timeline-date">@actionItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
                         </div>
                     </div>
 
-                    var resolvedItem = history.FirstOrDefault(h => h.NewStatus == "Resolved");
-                    <div class="timeline-item @(hasResolved ? "completed" : report.Status == "Action Taken" ? "active" : "")" style="margin-bottom: 0;">
-                        <div class="timeline-icon" style="@(hasResolved ? "background: #16a34a; border-color: #16a34a;" : "")">
-                            @(hasResolved ? "✓" : (report.Status == "Action Taken" ? "●" : "○"))
+                    var resolvedItem = history.FirstOrDefault(h => h.NewStatus is "Resolved");
+                    <div class="timeline-item @(hasResolved ? "completed" : (currentStep >= 5 ? "completed" : (currentStep == 4 ? "active" : "")))" style="margin-bottom: 0;">
+                        <div class="timeline-icon" style="@(hasResolved || currentStep >= 5 ? "background: #16a34a; border-color: #16a34a;" : "")">
+                            @(hasResolved || currentStep >= 5 ? "✓" : (currentStep == 4 ? "●" : "○"))
                         </div>
-                        <div class="timeline-content" style="@(hasResolved ? "border-left: 3px solid #16a34a;" : "")">
-                            <div style="font-weight: 600; font-size: 14px; @(hasResolved ? "color: #15803d;" : "")">Resolved</div>
+                        <div class="timeline-content" style="@(hasResolved || currentStep >= 5 ? "border-left: 3px solid #16a34a;" : "")">
+                            <div style="font-weight: 600; font-size: 14px; @(hasResolved || currentStep >= 5 ? "color: #15803d;" : "")">Resolved</div>
                             @if (hasResolved) { <div class="timeline-date">@resolvedItem?.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div> }
                         </div>
                     </div>
                 }
             </div>
+
+            @if (history.Any())
+            {
+                <div class="mt-4 pt-3" style="border-top: 1px solid #283548;">
+                    <h4 style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <span>📋</span> Officer Updates Log
+                    </h4>
+                    @foreach (var h in history.OrderByDescending(x => x.ChangedAt))
+                    {
+                        <div class="mb-2 p-2 rounded" style="background: #0f172a; border: 1px solid #1e293b; font-size: 0.8rem;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-primary" style="font-size: 0.72rem;">@h.NewStatus</span>
+                                <span class="text-muted" style="font-size: 0.7rem;">@h.ChangedAt.ToLocalTime().ToString("dd MMM, hh:mm tt")</span>
+                            </div>
+                            <div class="text-white fw-bold" style="font-size: 0.78rem;">Updated by: <span class="text-info">@h.ChangedBy</span></div>
+                            @if (!string.IsNullOrEmpty(h.Comment))
+                            {
+                                <div class="text-muted mt-1 fst-italic" style="color: #cbd5e1 !important; font-size: 0.75rem;">"@h.Comment"</div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
         </div>
 
         @if (report.Status == "Pending")

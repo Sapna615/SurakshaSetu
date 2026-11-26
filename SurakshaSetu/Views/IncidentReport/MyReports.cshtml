@@ -157,6 +157,28 @@
                             
                             @{
                                 var statusClass = report.Status.ToLower().Replace(" ", "-");
+                                var statusNorm = report.Status.Trim();
+                                int currentStep = statusNorm switch
+                                {
+                                    "Pending" or "Submitted" => 1,
+                                    "Assigned" or "Under Review" => 2,
+                                    "In Progress" or "Under Investigation" or "Investigation" => 3,
+                                    "Action Taken" => 4,
+                                    "Resolved" => 5,
+                                    _ => 1
+                                };
+                                bool isClosed = statusNorm is "Resolved";
+                                bool isAborted = statusNorm is "Rejected" or "Withdrawn" or "Cancelled";
+                                int progressPercent = isAborted ? 100 : (currentStep * 20);
+                                string stepLabel = currentStep switch
+                                {
+                                    1 => "Step 1 of 5: Submitted & Awaiting Review",
+                                    2 => "Step 2 of 5: Assigned to Security Officer",
+                                    3 => "Step 3 of 5: Active Investigation / Response",
+                                    4 => "Step 4 of 5: Action Taken by Campus Security",
+                                    5 => "Step 5 of 5: Case Resolved",
+                                    _ => "Step 1 of 5: Submitted"
+                                };
                             }
                             <span class="badge badge-status-@statusClass">Status: @report.Status.ToUpper()</span>
                             
@@ -166,6 +188,26 @@
                             }
 
                             <span style="color: #9ca3af;">Last updated: @(report.UpdatedAt?.ToString("dd MMM yyyy, hh:mm tt") ?? report.CreatedAt.ToString("dd MMM yyyy, hh:mm tt"))</span>
+                        </div>
+
+                        <!-- Live Position & Progress Tracker for Students -->
+                        <div class="report-progress-track mt-3 pt-3" style="border-top: 1px solid #1e293b;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold" style="color: #38bdf8;">
+                                    📍 Live Position: <span class="text-white">@stepLabel</span>
+                                </span>
+                                <span class="small" style="color: #94a3b8;">@progressPercent% Complete</span>
+                            </div>
+                            <div class="progress" style="height: 6px; background-color: #0f172a; border-radius: 4px; overflow: hidden;">
+                                <div class="progress-bar @(isAborted ? "bg-danger" : isClosed ? "bg-success" : "bg-primary")" role="progressbar" style="width: @progressPercent%;" aria-valuenow="@progressPercent" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2" style="font-size: 0.72rem; color: #64748b;">
+                                <span class="@(currentStep >= 1 ? "text-info fw-bold" : "")">1. Submitted</span>
+                                <span class="@(currentStep >= 2 ? "text-info fw-bold" : "")">2. Assigned</span>
+                                <span class="@(currentStep >= 3 ? "text-info fw-bold" : "")">3. In Progress</span>
+                                <span class="@(currentStep >= 4 ? "text-info fw-bold" : "")">4. Action Taken</span>
+                                <span class="@(currentStep >= 5 ? "text-success fw-bold" : "")">5. Resolved</span>
+                            </div>
                         </div>
                     </div>
 

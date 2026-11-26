@@ -49,7 +49,52 @@
                             </td>
                             <td><span title="@item.UpdatedAt?.ToLocalTime()">@(item.UpdatedAt?.ToLocalTime().ToString("dd MMM yyyy, HH:mm") ?? item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy"))</span></td>
                             <td>
+                                <button type="button" class="btn btn-sm btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#statusModal_@item.SafetyReportId">
+                                    Update Status
+                                </button>
                                 <a asp-controller="Security" asp-action="IncidentDetails" asp-route-id="@item.SafetyReportId" class="btn btn-sm btn-outline-primary">Open Case</a>
+
+                                <!-- Quick Update Status Modal -->
+                                <div class="modal fade" id="statusModal_@item.SafetyReportId" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content" style="background: #111a28; border: 1px solid #1e2d42; color: #ffffff;">
+                                            <form asp-controller="Security" asp-action="UpdateIncidentStatus" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.SafetyReportId" />
+                                                <input type="hidden" name="returnUrl" value="/Security/MyCases" />
+                                                <div class="modal-header" style="border-bottom: 1px solid #1e2d42;">
+                                                    <h5 class="modal-title fw-bold">Update Status - @item.ReportId</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body text-start">
+                                                    <div class="mb-3">
+                                                        <label class="form-label small text-muted">Current Status</label>
+                                                        <div><span class="badge bg-primary px-3 py-2">@item.Status</span></div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small" style="color: #cbd5e1;">Select New Status</label>
+                                                        <select name="newStatus" class="form-select" required style="background: #09101a; border-color: #1e2d42; color: #ffffff;">
+                                                            <option value="Assigned" selected="@(item.Status == "Assigned")">Assigned</option>
+                                                            <option value="Under Review" selected="@(item.Status == "Under Review")">Under Review</option>
+                                                            <option value="In Progress" selected="@(item.Status == "In Progress")">In Progress (Active Response)</option>
+                                                            <option value="Under Investigation" selected="@(item.Status == "Under Investigation")">Under Investigation</option>
+                                                            <option value="Action Taken" selected="@(item.Status == "Action Taken")">Action Taken</option>
+                                                            <option value="Resolved" selected="@(item.Status == "Resolved")">Resolved & Closed</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small" style="color: #cbd5e1;">Action Taken / Officer Note</label>
+                                                        <textarea name="responseNote" class="form-control" rows="3" placeholder="Explain the current position / response taken (this is visible to the reporting student)..." style="background: #09101a; border-color: #1e2d42; color: #ffffff;"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="border-top: 1px solid #1e2d42;">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary fw-bold">Save Status Update</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     }

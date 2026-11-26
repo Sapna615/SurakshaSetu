@@ -243,7 +243,7 @@ namespace SurakshaSetu.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateIncidentStatus(int id, string newStatus, string responseNote, string assignToEmail)
+        public async Task<IActionResult> UpdateIncidentStatus(int id, string newStatus, string responseNote, string assignToEmail, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
@@ -251,9 +251,13 @@ namespace SurakshaSetu.Controllers
             var incident = await _context.SafetyReports.FirstOrDefaultAsync(r => r.SafetyReportId == id);
             if (incident == null) return NotFound();
 
-            if (!string.IsNullOrEmpty(newStatus))
+            var oldStatus = incident.Status;
+            bool statusChanged = false;
+
+            if (!string.IsNullOrEmpty(newStatus) && newStatus != incident.Status)
             {
                 incident.Status = newStatus;
+                statusChanged = true;
                 if (newStatus == "Resolved")
                 {
                     incident.ResolvedAt = System.DateTime.UtcNow;
@@ -263,8 +267,8 @@ namespace SurakshaSetu.Controllers
             if (!string.IsNullOrEmpty(responseNote))
             {
                 incident.ResolutionNotes = string.IsNullOrEmpty(incident.ResolutionNotes) 
-                    ? $"[{System.DateTime.UtcNow:yyyy-MM-dd HH:mm} - {user.FullName}] {responseNote}"
-                    : incident.ResolutionNotes + $"\n[{System.DateTime.UtcNow:yyyy-MM-dd HH:mm} - {user.FullName}] {responseNote}";
+                    ? $"[{System.DateTime.UtcNow:yyyy-MM-dd HH:mm} - {user.FullName ?? user.Email}] {responseNote}"
+                    : incident.ResolutionNotes + $"\n[{System.DateTime.UtcNow:yyyy-MM-dd HH:mm} - {user.FullName ?? user.Email}] {responseNote}";
             }
             
             if (!string.IsNullOrEmpty(assignToEmail))
@@ -273,24 +277,32 @@ namespace SurakshaSetu.Controllers
                 if (incident.Status == "Pending" || incident.Status == "Submitted")
                 {
                     incident.Status = "Assigned";
+                    statusChanged = true;
                 }
             }
 
             incident.UpdatedAt = System.DateTime.UtcNow;
             
+            // Record status change in history so the reporting student can track position in real-time
             var history = new SafetyReportStatusHistory
             {
                 SafetyReportId = incident.SafetyReportId,
+                OldStatus = oldStatus,
                 NewStatus = incident.Status,
-                ChangedBy = user.Id,
+                ChangedBy = user.FullName ?? user.Email ?? "Security Officer",
                 ChangedAt = System.DateTime.UtcNow,
-                Comment = responseNote
+                Comment = !string.IsNullOrEmpty(responseNote) ? responseNote : $"Status updated to '{incident.Status}'"
             };
-            _context.Set<SafetyReportStatusHistory>().Add(history);
+            _context.SafetyReportStatusHistories.Add(history);
 
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Incident updated successfully.";
+            TempData["SuccessMessage"] = $"Incident {incident.ReportId} updated to '{incident.Status}' successfully.";
+            
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction(nameof(IncidentDetails), new { id = incident.SafetyReportId });
         }
         [HttpGet]
