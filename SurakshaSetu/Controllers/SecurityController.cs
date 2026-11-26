@@ -243,7 +243,7 @@ namespace SurakshaSetu.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateIncidentStatus(int id, string newStatus, string responseNote, string assignToEmail, string? returnUrl = null)
+        public async Task<IActionResult> UpdateIncidentStatus(int id, string? newStatus = null, string? responseNote = null, string? assignToEmail = null, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
