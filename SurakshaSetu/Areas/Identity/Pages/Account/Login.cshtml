@@ -10,24 +10,26 @@
 <form id="account" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert" style="font-size: 0.9rem;"></div>
     
-    <div class="form-floating mb-3">
+    <div class="mb-3 text-start">
+        <label asp-for="Input.Email" class="form-label">Email Address</label>
         <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-        <label asp-for="Input.Email">Email Address</label>
         <span asp-validation-for="Input.Email" class="text-danger" style="font-size: 0.85rem;"></span>
     </div>
     
-    <div class="form-floating mb-4">
-        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-        <label asp-for="Input.Password">Password</label>
+    <div class="mb-3 text-start">
+        <label asp-for="Input.Password" class="form-label">Password</label>
+        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Enter your password" />
         <span asp-validation-for="Input.Password" class="text-danger" style="font-size: 0.85rem;"></span>
     </div>
     
-    <div class="checkbox mb-4 d-flex justify-content-between align-items-center">
-        <label asp-for="Input.RememberMe" class="form-label text-muted fw-medium m-0" style="font-size: 0.95rem;">
-            <input class="form-check-input me-2" asp-for="Input.RememberMe" style="cursor: pointer;" />
-            @Html.DisplayNameFor(m => m.Input.RememberMe)
-        </label>
-        <a id="forgot-password" asp-page="./ForgotPassword" style="font-size: 0.9rem; color: var(--primary); text-decoration: none; font-weight: 600;">Forgot password?</a>
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div class="form-check m-0">
+            <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMeCheck" style="cursor: pointer; background-color: #09101a; border-color: #1e2d42;" />
+            <label class="form-check-label text-muted" for="rememberMeCheck" style="font-size: 0.9rem; cursor: pointer; color: #94a3b8 !important;">
+                @Html.DisplayNameFor(m => m.Input.RememberMe)
+            </label>
+        </div>
+        <a id="forgot-password" asp-page="./ForgotPassword" style="font-size: 0.9rem; color: #38bdf8; text-decoration: none; font-weight: 500;">Forgot password?</a>
     </div>
     
     <button id="login-submit" type="submit" class="w-100 btn btn-primary">Sign In Securely</button>

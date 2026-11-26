@@ -296,13 +296,13 @@ div[style*="background-color: #f9fafb"] {
   color: #ffffff !important;
 }
 
-.form-floating>.form-control-plaintext::placeholder,
-.form-floating>.form-control::placeholder {
-  color: #64748b;
-  text-align: end;
+/* Form floating placeholder fix (prevent placeholder collision when floating) */
+.form-floating > .form-control:not(:focus)::placeholder {
+  color: transparent !important;
 }
 
-.form-floating>.form-control-plaintext:focus::placeholder,
-.form-floating>.form-control:focus::placeholder {
-  text-align: start;
+.form-label {
+  color: #cbd5e1;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
 }

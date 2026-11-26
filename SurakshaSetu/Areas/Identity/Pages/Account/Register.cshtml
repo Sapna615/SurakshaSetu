@@ -10,63 +10,63 @@
 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert" style="font-size: 0.9rem;"></div>
     
-    <div class="form-floating mb-3">
+    <div class="mb-3 text-start">
+        <label asp-for="Input.FullName" class="form-label">Full Name <span class="text-danger">*</span></label>
         <input asp-for="Input.FullName" class="form-control" aria-required="true" placeholder="John Doe" />
-        <label asp-for="Input.FullName">Full Name <span class="text-danger">*</span></label>
         <span asp-validation-for="Input.FullName" class="text-danger" style="font-size: 0.85rem;"></span>
     </div>
 
-    <div class="form-floating mb-3">
-        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-        <label asp-for="Input.Email">University Email <span class="text-danger">*</span></label>
+    <div class="mb-3 text-start">
+        <label asp-for="Input.Email" class="form-label">University Email <span class="text-danger">*</span></label>
+        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="student@university.edu" />
         <span asp-validation-for="Input.Email" class="text-danger" style="font-size: 0.85rem;"></span>
     </div>
 
-    <div class="row g-2 mb-3">
-        <div class="col-6 form-floating">
-            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-            <label asp-for="Input.Password" class="ms-1">Password <span class="text-danger">*</span></label>
+    <div class="row g-2 mb-3 text-start">
+        <div class="col-6">
+            <label asp-for="Input.Password" class="form-label">Password <span class="text-danger">*</span></label>
+            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
             <span asp-validation-for="Input.Password" class="text-danger" style="font-size: 0.85rem;"></span>
         </div>
-        <div class="col-6 form-floating">
-            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-            <label asp-for="Input.ConfirmPassword" class="ms-1">Confirm <span class="text-danger">*</span></label>
+        <div class="col-6">
+            <label asp-for="Input.ConfirmPassword" class="form-label">Confirm <span class="text-danger">*</span></label>
+            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
             <span asp-validation-for="Input.ConfirmPassword" class="text-danger" style="font-size: 0.85rem;"></span>
         </div>
     </div>
 
-    <div class="d-flex align-items-center mb-3">
+    <div class="d-flex align-items-center my-3">
         <div class="flex-grow-1" style="height: 1px; background: #1e2d42;"></div>
-        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; padding: 0 10px;">Optional Details</span>
+        <span style="font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; padding: 0 10px; letter-spacing: 0.5px;">Optional Details</span>
         <div class="flex-grow-1" style="height: 1px; background: #1e2d42;"></div>
     </div>
 
-    <div class="row g-2 mb-3">
-        <div class="col-4 form-floating">
-            <input asp-for="Input.StudentId" class="form-control" placeholder="ID" />
-            <label asp-for="Input.StudentId" class="ms-1">Student ID</label>
+    <div class="row g-2 mb-3 text-start">
+        <div class="col-4">
+            <label asp-for="Input.StudentId" class="form-label" style="font-size: 0.8rem;">Student ID</label>
+            <input asp-for="Input.StudentId" class="form-control" placeholder="e.g. 210101" />
             <span asp-validation-for="Input.StudentId" class="text-danger" style="font-size: 0.85rem;"></span>
         </div>
-        <div class="col-4 form-floating">
-            <input asp-for="Input.Department" class="form-control" placeholder="Dept" />
-            <label asp-for="Input.Department" class="ms-1">Dept</label>
+        <div class="col-4">
+            <label asp-for="Input.Department" class="form-label" style="font-size: 0.8rem;">Dept</label>
+            <input asp-for="Input.Department" class="form-control" placeholder="e.g. CSE" />
             <span asp-validation-for="Input.Department" class="text-danger" style="font-size: 0.85rem;"></span>
         </div>
-        <div class="col-4 form-floating">
-            <input asp-for="Input.Year" class="form-control" placeholder="Year" />
-            <label asp-for="Input.Year" class="ms-1">Year</label>
+        <div class="col-4">
+            <label asp-for="Input.Year" class="form-label" style="font-size: 0.8rem;">Year</label>
+            <input asp-for="Input.Year" class="form-control" placeholder="e.g. 3rd" />
             <span asp-validation-for="Input.Year" class="text-danger" style="font-size: 0.85rem;"></span>
         </div>
     </div>
 
-    <div class="form-floating mb-4">
-        <select asp-for="Input.Role" class="form-control" style="cursor: pointer; appearance: auto;">
+    <div class="mb-4 text-start">
+        <label asp-for="Input.Role" class="form-label">Account Role <span class="text-danger">*</span></label>
+        <select asp-for="Input.Role" class="form-select" style="cursor: pointer;">
             <option value="Student">Student (Default)</option>
             <option value="SecurityOfficer">Security Officer</option>
             <option value="Admin">Admin</option>
             <option value="SuperAdmin">Super Admin</option>
         </select>
-        <label asp-for="Input.Role">Account Role <span class="text-danger">*</span></label>
         <span asp-validation-for="Input.Role" class="text-danger" style="font-size: 0.85rem;"></span>
     </div>
 
