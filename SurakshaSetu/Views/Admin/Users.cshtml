@@ -139,18 +139,23 @@
                                     }
                                 </td>
                                 <td class="pe-4 text-end">
-                                    <a href="/Admin/EditUser/@user.Id" class="btn btn-sm btn-outline-primary fw-bold me-2">Edit</a>
+                                    <a href="/Admin/EditUser/@user.Id" class="btn btn-sm btn-outline-primary fw-bold me-1">Edit</a>
                                     
-                                    <form method="post" action="/Admin/ToggleUserStatus/@user.Id" class="d-inline">
+                                    <form method="post" action="/Admin/ToggleUserStatus/@user.Id" class="d-inline me-1">
                                         @Html.AntiForgeryToken()
                                         @if(user.IsActive)
                                         {
-                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold" onclick="return confirm('Are you sure you want to deactivate @user.FullName?');">Deactivate</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-warning fw-bold" onclick="return confirm('Are you sure you want to deactivate @user.FullName?');">Deactivate</button>
                                         }
                                         else
                                         {
                                             <button type="submit" class="btn btn-sm btn-outline-success fw-bold" onclick="return confirm('Are you sure you want to activate @user.FullName?');">Activate</button>
                                         }
+                                    </form>
+                                    
+                                    <form method="post" action="/Admin/DeleteUser/@user.Id" class="d-inline" onsubmit="return confirm('⚠️ WARNING: Are you sure you want to permanently delete @user.FullName (@user.Email)?\n\nThis will remove the account completely so you can register again with this email.');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">Delete</button>
                                     </form>
                                 </td>
                             </tr>

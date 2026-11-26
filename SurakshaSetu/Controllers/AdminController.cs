@@ -310,6 +310,78 @@ namespace SurakshaSetu.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser != null && id == currentUser.Id)
+            {
+                TempData["ErrorMessage"] = "You cannot delete your own account while logged in.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var userEmail = user.Email ?? user.UserName ?? "User";
+            var userFullName = user.FullName ?? userEmail;
+
+            try
+            {
+                // 1. Remove SOS Alerts created by this user
+                var userSos = await _context.SOSAlerts.Where(s => s.UserId == id).ToListAsync();
+                if (userSos.Any())
+                {
+                    _context.SOSAlerts.RemoveRange(userSos);
+                }
+
+                // 2. Remove Audit Logs created by this user
+                var userAuditLogs = await _context.AuditLogs.Where(a => a.UserId == id).ToListAsync();
+                if (userAuditLogs.Any())
+                {
+                    _context.AuditLogs.RemoveRange(userAuditLogs);
+                }
+
+                // 3. Unlink user from Safety Reports so incident history remains intact
+                var userReports = await _context.SafetyReports.Where(r => r.UserId == id).ToListAsync();
+                foreach (var r in userReports)
+                {
+                    r.UserId = null;
+                }
+
+                var assignedReports = await _context.SafetyReports.Where(r => r.AssignedTo == id).ToListAsync();
+                foreach (var r in assignedReports)
+                {
+                    r.AssignedTo = null;
+                }
+
+                await _context.SaveChangesAsync();
+
+                // 4. Delete user via UserManager (removes AspNetUserRoles, AspNetUserClaims, AspNetUserTokens, AspNetUserLogins, and AspNetUsers)
+                var deleteResult = await _userManager.DeleteAsync(user);
+                if (deleteResult.Succeeded)
+                {
+                    TempData["SuccessMessage"] = $"User {userFullName} ({userEmail}) was permanently deleted. You can now re-register with this email address.";
+                }
+                else
+                {
+                    var errors = string.Join(", ", deleteResult.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = $"Failed to delete user: {errors}";
+                }
+            }
+            catch (System.Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error deleting user: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Users));
+        }
+
         // ==========================================
         // PHASE 3: CASE MANAGEMENT
         // ==========================================

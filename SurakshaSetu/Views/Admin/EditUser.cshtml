@@ -84,10 +84,19 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                        <a href="/Admin/Users" class="btn btn-light fw-bold px-4">Cancel</a>
-                        <button type="submit" class="btn btn-primary fw-bold px-5 shadow-sm">Save Changes</button>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <button type="button" class="btn btn-outline-danger fw-bold px-3" onclick="if(confirm('⚠️ WARNING: Are you sure you want to permanently delete @Model.FullName (@Model.Email)?\n\nThis will remove the user completely so the email can be re-registered.')) { document.getElementById('deleteUserForm').submit(); }">
+                            🗑️ Delete User
+                        </button>
+                        <div class="d-flex gap-2">
+                            <a href="/Admin/Users" class="btn btn-light fw-bold px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary fw-bold px-5 shadow-sm">Save Changes</button>
+                        </div>
                     </div>
+                </form>
+                
+                <form id="deleteUserForm" method="post" action="/Admin/DeleteUser/@Model.Id" style="display:none;">
+                    @Html.AntiForgeryToken()
                 </form>
             </div>
         </div>
