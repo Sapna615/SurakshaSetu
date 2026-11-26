@@ -81,7 +81,7 @@
                                 <label asp-for="PhoneNumber" class="form-label fw-bold text-muted small"></label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-dark-subtle border-end-0">📞</span>
-                                    <input asp-for="PhoneNumber" class="form-control bg-dark-subtle border-start-0 ps-0" placeholder="+1 (555) 123-4567" />
+                                    <input asp-for="PhoneNumber" class="form-control bg-dark-subtle border-start-0 ps-0" maxlength="10" inputmode="numeric" pattern="\d{10}" placeholder="9876543210" />
                                 </div>
                             </div>
                             

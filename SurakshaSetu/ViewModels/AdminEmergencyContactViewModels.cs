@@ -34,7 +34,8 @@ namespace SurakshaSetu.ViewModels
         [StringLength(80)]
         public string Category { get; set; } = string.Empty;
 
-        [StringLength(50)]
+        [StringLength(10, ErrorMessage = "Phone number cannot exceed 10 digits.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; } = string.Empty;
 
