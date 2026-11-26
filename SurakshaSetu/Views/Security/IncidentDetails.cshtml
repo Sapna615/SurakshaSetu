@@ -187,8 +187,8 @@
                         <input type="hidden" name="id" value="@Model.Incident.SafetyReportId" />
                         
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Update Status</label>
-                            <select name="newStatus" class="form-select form-select-sm" style="background-color: #09101a; color: #f8fafc; border-color: #1e2d42;">
+                            <label class="form-label small text-light fw-semibold">Update Status</label>
+                            <select name="newStatus" class="form-select form-select-sm" style="background-color: #09101a; color: #f8fafc; border-color: #334155;">
                                 <option value="">(Keep Current: @Model.Incident.Status)</option>
                                 <option value="Pending">Pending / Awaiting Review</option>
                                 <option value="Under Review">Under Review</option>
@@ -202,8 +202,8 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Assign To</label>
-                            <select name="assignToEmail" class="form-select form-select-sm">
+                            <label class="form-label small text-light fw-semibold">Assign To</label>
+                            <select name="assignToEmail" class="form-select form-select-sm" style="background-color: #09101a; color: #f8fafc; border-color: #334155;">
                                 <option value="">(No change)</option>
                                 @foreach(var officer in Model.AvailableOfficers)
                                 {
@@ -213,8 +213,8 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Add Note</label>
-                            <textarea name="responseNote" class="form-control form-control-sm" rows="3" placeholder="Type response note here..."></textarea>
+                            <label class="form-label small text-light fw-semibold">Add Note</label>
+                            <textarea name="responseNote" class="form-control form-control-sm" rows="3" placeholder="Type response note here..." style="background-color: #09101a; color: #f8fafc; border-color: #334155;"></textarea>
                         </div>
                         
                         <button type="submit" class="btn btn-primary btn-sm w-100">Update Case</button>
