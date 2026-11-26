@@ -290,8 +290,8 @@
                 <div class="modal-body">
                     <p>Are you sure you want to mark this incident as resolved?</p>
                     <div class="mb-3">
-                        <label class="form-label">Resolution Note (Required)</label>
-                        <textarea name="responseNote" class="form-control" rows="4" required placeholder="Describe how this case was resolved..."></textarea>
+                        <label class="form-label text-light fw-semibold">Resolution Note (Required)</label>
+                        <textarea name="responseNote" class="form-control" rows="4" required placeholder="Describe how this case was resolved..." style="background-color: #09101a; color: #f8fafc; border-color: #334155;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -302,3 +302,14 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var resolveModalEl = document.getElementById('resolveModal');
+            if (resolveModalEl && resolveModalEl.parentElement !== document.body) {
+                document.body.appendChild(resolveModalEl);
+            }
+        });
+    </script>
+}
